@@ -65,6 +65,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--epochs", type=int, default=None, help="Override training epochs (train stage)")
     p.add_argument("--batch-size", type=int, default=None, help="Override batch size (train/eval stages)")
     p.add_argument("--model", type=str, default=None, help="Override model name (e.g., mlp, knn, svm_rbf)")
+    p.add_argument("--lr", type=float, default=None, help="Override learning rate (torch models)")
+    p.add_argument("--weight-decay", type=float, default=None, help="Override weight decay (torch models)")
+    p.add_argument("--num-workers", type=int, default=None, help="Override DataLoader num_workers")
+    p.add_argument("--early-stopping", type=str, default=None, choices=["on", "off"], help="Enable/disable early stopping")
+    p.add_argument("--patience", type=int, default=None, help="Early stopping patience (epochs)")
+    p.add_argument("--monitor", type=str, default=None, choices=["val_loss", "val_accuracy"], help="Early stopping monitor")
+    p.add_argument("--ckpt-metric", type=str, default=None, choices=["val_loss", "val_accuracy"], help="Checkpoint selection metric")
+    p.add_argument("--ckpt-mode", type=str, default=None, choices=["min", "max"], help="Checkpoint mode for ckpt-metric")
     return p.parse_args()
 
 
@@ -91,6 +99,25 @@ def load_config(args: argparse.Namespace) -> Dict[str, Any]:
         cfg.setdefault("eval", {})["batch_size"] = int(args.batch_size)
     if args.model is not None:
         cfg.setdefault("model", {})["name"] = str(args.model)
+    if args.lr is not None:
+        cfg.setdefault("train", {})["lr"] = float(args.lr)
+    if args.weight_decay is not None:
+        cfg.setdefault("train", {})["weight_decay"] = float(args.weight_decay)
+    if args.num_workers is not None:
+        cfg.setdefault("project", {})["num_workers"] = int(args.num_workers)
+    if args.early_stopping is not None:
+        cfg.setdefault("train", {}).setdefault("early_stopping", {})["enabled"] = args.early_stopping == "on"
+    if args.patience is not None:
+        cfg.setdefault("train", {}).setdefault("early_stopping", {})["patience"] = int(args.patience)
+    if args.monitor is not None:
+        cfg.setdefault("train", {}).setdefault("early_stopping", {})["monitor"] = str(args.monitor)
+        # auto-set mode for common monitors unless user overrides ckpt-mode
+        if args.ckpt_mode is None and str(args.monitor) == "val_accuracy":
+            cfg.setdefault("train", {}).setdefault("early_stopping", {})["mode"] = "max"
+    if args.ckpt_metric is not None:
+        cfg.setdefault("train", {}).setdefault("checkpoint", {})["metric"] = str(args.ckpt_metric)
+    if args.ckpt_mode is not None:
+        cfg.setdefault("train", {}).setdefault("checkpoint", {})["mode"] = str(args.ckpt_mode)
 
     # Resolve simple references (keep config lightweight; no Hydra/OmegaConf dependency)
     split_cfg = cfg.setdefault("data", {}).setdefault("split", {})
