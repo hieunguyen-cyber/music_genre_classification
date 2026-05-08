@@ -58,7 +58,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model-config", type=str, default="configs/model.yaml", help="Path to model.yaml")
     p.add_argument("--train-config", type=str, default="configs/train.yaml", help="Path to train.yaml")
     p.add_argument("--feature-config", type=str, default="configs/feature.yaml", help="Path to feature.yaml")
-    p.add_argument("--stage", type=str, required=True, choices=["preprocess", "feature", "train", "evaluate", "visualize", "full"], help="Pipeline stage")
+    p.add_argument("--stage", type=str, required=True, choices=["preprocess", "feature", "train", "evaluate", "visualize", "visualize-features", "full"], help="Pipeline stage")
     p.add_argument("--run-name", type=str, default=None, help="Override outputs run name")
     p.add_argument("--device", type=str, default=None, choices=["auto", "cpu", "cuda", "mps"], help="Override device")
     p.add_argument("--seed", type=int, default=None, help="Override seed")
@@ -500,8 +500,10 @@ def stage_evaluate(cfg: Dict[str, Any], run_paths) -> None:
             logger.warning(f"ROC/PR skipped: {e}")
 
 
-def stage_visualize(cfg: Dict[str, Any], run_paths) -> None:
-    logger = setup_logger("visualize", run_paths.logs_dir / "visualize.log")
+def stage_visualize_features(cfg: Dict[str, Any], run_paths) -> None:
+    """Visualize feature space, embeddings, and raw dataset statistics.
+    Run once per feature kind (tabular_csv or mel_from_audio), not per model."""
+    logger = setup_logger("visualize-features", run_paths.logs_dir / "visualize-features.log")
     root = project_root()
 
     meta_csv = root / cfg["paths"]["processed_dir"] / "metadata.csv"
@@ -547,6 +549,7 @@ def stage_visualize(cfg: Dict[str, Any], run_paths) -> None:
                 plot_umap(x_all, y_all, cache.classes, run_paths.figures_dir / "embedding_umap.png")
             except Exception as e:
                 logger.warning(f"UMAP skipped: {e}")
+        logger.info("Saved tabular feature visualizations")
     elif kind == "mel_from_audio":
         feature_yaml = cfg["_feature_yaml"]["mel_from_audio"]
         cache_path = root / cfg["paths"]["features_dir"] / feature_yaml["cache_name"]
@@ -575,10 +578,12 @@ def stage_visualize(cfg: Dict[str, Any], run_paths) -> None:
                 plot_umap(x_flat, y_all, cache.classes, run_paths.figures_dir / "embedding_umap.png")
             except Exception as e:
                 logger.warning(f"UMAP skipped: {e}")
+        logger.info("Saved mel feature visualizations")
     else:
         logger.warning(f"Unknown features.kind={kind} for visualization")
         return
 
+    # Audio sample visualization
     raw_root = root / cfg["paths"]["raw_root"]
     raw_genres = raw_root / "genres_original"
     if not raw_genres.exists():
@@ -595,15 +600,47 @@ def stage_visualize(cfg: Dict[str, Any], run_paths) -> None:
     )
     for p in pick:
         stem = f"{p.parent.name}_{p.stem}"
-        plot_waveform(p, run_paths.figures_dir / f"waveform_{stem}.png")
-        plot_stft(p, run_paths.figures_dir / f"stft_{stem}.png")
-        plot_mel_spectrogram(p, run_paths.figures_dir / f"mel_{stem}.png")
-        plot_mfcc(p, run_paths.figures_dir / f"mfcc_{stem}.png")
-        plot_chromagram(p, run_paths.figures_dir / f"chroma_{stem}.png")
-        plot_spectral_contrast(p, run_paths.figures_dir / f"contrast_{stem}.png")
-        plot_tempogram(p, run_paths.figures_dir / f"tempogram_{stem}.png")
-        plot_hpss(p, run_paths.figures_dir / f"hpss_{stem}.png")
+        try:
+            plot_waveform(p, run_paths.figures_dir / f"waveform_{stem}.png")
+            plot_stft(p, run_paths.figures_dir / f"stft_{stem}.png")
+            plot_mel_spectrogram(p, run_paths.figures_dir / f"mel_{stem}.png")
+            plot_mfcc(p, run_paths.figures_dir / f"mfcc_{stem}.png")
+            plot_chromagram(p, run_paths.figures_dir / f"chroma_{stem}.png")
+            plot_spectral_contrast(p, run_paths.figures_dir / f"contrast_{stem}.png")
+            plot_tempogram(p, run_paths.figures_dir / f"tempogram_{stem}.png")
+            plot_hpss(p, run_paths.figures_dir / f"hpss_{stem}.png")
+        except Exception as e:
+            logger.warning(f"Audio visualization skipped for {p}: {e}")
     logger.info(f"Saved audio visualizations for {len(pick)} files")
+
+
+def stage_visualize(cfg: Dict[str, Any], run_paths) -> None:
+    """Visualize model-specific results (training curves only).
+    Training curves are already generated during train stage, this stage just logs success.
+    Confusion matrix, ROC/PR curves are generated in evaluate stage."""
+    logger = setup_logger("visualize", run_paths.logs_dir / "visualize.log")
+    
+    hist_json = run_paths.reports_dir / "history.json"
+    if hist_json.exists():
+        logger.info("Training curves available (generated in train stage)")
+    else:
+        logger.warning("Training history not found (run --stage train first)")
+    
+    curves_path = run_paths.figures_dir / "training_curves.png"
+    if curves_path.exists():
+        logger.info(f"Training curves visualization: {curves_path}")
+    
+    cm_path = run_paths.figures_dir / "confusion_matrix.png"
+    if cm_path.exists():
+        logger.info(f"Confusion matrix visualization: {cm_path}")
+    
+    roc_path = run_paths.figures_dir / "roc_ovr.png"
+    pr_path = run_paths.figures_dir / "pr_ovr.png"
+    if roc_path.exists() and pr_path.exists():
+        logger.info(f"ROC/PR curves: {roc_path}, {pr_path}")
+    
+    logger.info("Model visualizations complete")
+
 
 
 def main() -> None:
@@ -630,6 +667,8 @@ def main() -> None:
         stage_train(cfg, run_paths)
     elif args.stage == "evaluate":
         stage_evaluate(cfg, run_paths)
+    elif args.stage == "visualize-features":
+        stage_visualize_features(cfg, run_paths)
     elif args.stage == "visualize":
         stage_visualize(cfg, run_paths)
     elif args.stage == "full":

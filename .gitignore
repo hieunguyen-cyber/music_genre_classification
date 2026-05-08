@@ -7,6 +7,6 @@ data/processed/
 data/features/
 data/splits/
 
-outputs/
+*.pt
 
 Data/
