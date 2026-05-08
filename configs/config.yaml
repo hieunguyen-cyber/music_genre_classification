@@ -1,0 +1,92 @@
+project:
+  name: music_genre_classification
+  seed: 42
+  num_workers: 2
+  device: auto  # auto|cpu|cuda|mps
+
+paths:
+  # Raw GTZAN layout (this repo currently keeps it in ./Data/)
+  raw_root: Data
+  features_csv: Data/features_3_sec.csv
+  images_root: Data/images_original
+
+  # Pipeline-managed data dirs
+  data_root: data
+  processed_dir: data/processed
+  features_dir: data/features
+  splits_dir: data/splits
+
+  # Outputs
+  outputs_root: outputs
+  run_name: default
+
+stages:
+  preprocess:
+    enabled: true
+  feature:
+    enabled: true
+  train:
+    enabled: true
+  evaluate:
+    enabled: true
+  visualize:
+    enabled: true
+
+data:
+  split:
+    test_size: 0.2
+    val_size: 0.1
+    stratify: true
+    random_state: ${project.seed}
+
+features:
+  kind: tabular_csv  # tabular_csv | mel_from_audio
+  tabular_csv:
+    drop_columns: ["filename", "label"]
+    label_column: "label"
+    filename_column: "filename"
+    standardize: true
+  mel_from_audio:
+    sample_rate: 22050
+    segment_seconds: 3.0
+    n_mels: 128
+    n_fft: 2048
+    hop_length: 512
+    fmin: 20
+    fmax: 8000
+
+model:
+  name: mlp  # mlp | (sklearn baselines) | (torch mel models)
+
+# sklearn baselines:
+#   knn | svm_rbf | linear_svm | logreg | naive_bayes | lda | qda
+#   random_forest | extra_trees | ada_boost | gbdt
+#   xgboost | lightgbm (optional deps)
+#
+# torch mel models (requires features.kind=mel_from_audio):
+#   cnn_mel | lstm_mel
+
+train:
+  epochs: 120
+  batch_size: 256
+  lr: 1.46e-4
+  weight_decay: 1.0e-4
+  early_stopping:
+    enabled: true
+    patience: 15
+    monitor: val_loss  # val_loss | val_accuracy
+    mode: min
+  checkpoint:
+    save_best_only: true
+    metric: val_loss
+    mode: min
+
+eval:
+  batch_size: 512
+
+visualize:
+  max_audio_files: 20
+  embedding:
+    pca: true
+    tsne: true
+    umap: true

@@ -1,0 +1,9 @@
+optimizer:
+  name: adam
+
+scheduler:
+  enabled: true
+  name: reduce_on_plateau  # reduce_on_plateau | none
+  factor: 0.5
+  patience: 5
+  min_lr: 1.0e-6
