@@ -72,40 +72,78 @@ File `Data/features_3_sec.csv` là dataset tabular đã trích xuất sẵn (th�
 
 - `filename`: tên segment (ví dụ `blues.00000.0.wav`)
 - `length`: độ dài tính theo frames/samples (tuỳ mirror)
-- Nhóm feature **spectral/temporal** dạng *mean/variance*:
-  - **Chroma STFT** (`chroma_stft_mean`, `chroma_stft_var`): "vân tay sắc thái" của âm nhạc — 12 chúng tôi tương ứng 12 nốt nhạc (C, C#, D, ..., B). Mạnh trong jazz/classical, yếu trong hiphop.
-  - **RMS Energy** (`rms_mean`, `rms_var`): năng lượng trung bình. Âm to ↔ RMS cao. Phân biệt vocal/percussion vs instrumental.
-  - **Spectral Centroid** (`spectral_centroid_mean/var`): "trọng tâm" tần số. Cao = âm sắc sáng, thấp = am tĭm. Giúp phân biệt vokal (cao) vs bass (thấp).
-  - **Spectral Bandwidth** (`spectral_bandwidth_*`): độ "rộng" của phổ. Cao = âm đa sắc (thường percussion), thấp = âm đơn sắc (flute/sine).
-  - **Spectral Rolloff** (`rolloff_*`): tần số dưới đó nằm 85% năng lượng. Phân biệt thiết bị phát âm (cao vs thấp).
-  - **Zero Crossing Rate (ZCR)** (`zero_crossing_rate_*`): số lần tín hiệu cắt qua 0 trên frame. Cao = âm tiếng (unvoiced consonants), thấp = âm vă (voiced). Mạnh trong phát hiện speech/noise.
-  - **Harmony/Percussive** (`harmony_*`, `perceptr_*`): từ HPSS (Harmonic/Percussive Source Separation). Harmony = phần nhạc cụ cơ bản (string/wind), Percussive = drums/percussion. Genre khác nhau có tỉ lệ khác nhau.
-  - **Tempo**: nhịp độ (BPM). Genre có BPM đặc trưng: EDM (120-140), slowbluescouldn't_know (~60-80), metal (~160+).
-  - **MFCC 1..20** (`mfcc{i}_mean`, `mfcc{i}_var`): "Mel-Frequency Cepstral Coefficients" — chuỗi hệ số đại diện cho thực tế thính giác. MFCC1 ≈ năng lượng tổng, MFCC2+ ≈ hình dạng phổ ở thang mel (gần cảm nhận tai người). **Đây là feature mạnh nhất** trong many ML tasks (speech recognition, genre, emotion).
+- Nhóm feature **spectral/temporal** dạng *mean/variance* (mean và variance tính trên toàn bộ khung 3s):
+   - **Chroma STFT** (`chroma_stft_mean`, `chroma_stft_var`): đại diện cho năng lượng theo 12 nốt (C..B). Mô tả sự hiện diện và phân bố hòa âm (chords, key, pitch class). Những thể loại có cấu trúc hòa âm rõ (jazz, classical) thường thể hiện patterns chroma rõ rệt; thể loại tập trung vào nhịp/percussion (hiphop, techno) có chroma kém rõ.
+   - **RMS Energy** (`rms_mean`, `rms_var`): năng lượng trung bình và biến thiên (âm lượng). Thể loại "loud"/"dense" (metal, rock, disco) thường có `rms_mean` cao; thể loại có động lực lớn theo nhịp (dance/disco) có `rms_var` lớn do biến thiên mạnh giữa phần đệm và đoạn cao trào.
+   - **Spectral Centroid** (`spectral_centroid_mean`, `spectral_centroid_var`): "trọng tâm" tần số (centroid đơn giản như trung bình tần số có trọng số năng lượng). Cao = phổ nghiêng về tần số cao (brighter timbre). Thể loại như metal, pop (vocal rõ, nhiều presence ở dải trung-cao) có centroid cao hơn so với blues/classical khi so sánh phần nhạc không có vocal mạnh.
+   - **Spectral Bandwidth** (`spectral_bandwidth_mean/var`): đo độ rộng phổ xung quanh centroid. Cao = phổ phân bố rộng (nhiều harmonic/percussive content). Thể loại có nhiều lớp âm thanh (metal, disco) thường có bandwidth lớn; nhạc cổ điển solo hoặc acoustic có bandwidth hẹp hơn.
+   - **Spectral Rolloff** (`rolloff_mean`, `rolloff_var`): tần số dưới đó chiếm 85% năng lượng. Phân biệt nội dung nhiều năng lượng cao (hi-hats, cymbals) vs nhiều năng lượng trầm (bass, kick). EDM/disco/metal có rolloff cao; reggae/folk có rolloff thấp.
+   - **Zero Crossing Rate (ZCR)** (`zero_crossing_rate_mean`, `zero_crossing_rate_var`): tỷ lệ số lần tín hiệu đổi dấu. Cao gợi ý nhiều thành phần noisy / percussive / high-frequency content. Hiphop (drum-heavy) và rock có ZCR cao hơn so với classical hoặc ambient.
+   - **Harmony / Percussive (HPSS)** (`harmony_mean/var`, `perceptr_mean/var`): tách tần số harmonic (sustained, tonal) và percussive (transients). Genres với focus vào nhạc cụ melody/harmony (classical, jazz) có harmony lớn; genres nhấn nhịp (rock, hiphop, disco) có percussive lớn.
+   - **Tempo**: ước lượng BPM trung bình trong 3s. Giá trị trung bình và biến thiên hữu dụng: disco/edm thường 110–140 BPM, metal/fast-rock có BPM cao hơn, blues/balada thường thấp (60–90 BPM). Lưu ý: 3s ngắn nên tempo ước lượng có độ tin cậy hạn chế, nhưng phân bố tổng vẫn informative.
+   - **MFCC 1..20** (`mfcc{i}_mean`, `mfcc{i}_var`): các hệ số Mel-frequency cepstral. MFCC1 thường tương quan với overall energy / log-spectrum bias; các MFCC tiếp theo mã hoá hình dạng phổ (timbre). MFCC là dạng feature rất mạnh cho phân loại timbre và thường khác nhau rõ giữa các genre: vocal-centric genres (pop, hiphop) và acoustic genres (classical, blues) có tập MFCC đặc trưng.
 
 **Tổng cộng**: ~58 features numeric (56 từ phổ + tempo). Mỗi mẫu có:
 - Input: vector 58D → các model tabular (SVM/RF/MLP)
 - Output: genre (0-9)
 
-### Tại sao features này lại hoạt động tốt?
+### 3.1 Tại sao features này hoạt động tốt?
 
-1. **Signal Processing wisdom**: những công thức này xuất phát từ 50 năm nghiên cứu MIR (Music Information Retrieval). Chúng giúp **nén** 30-44K samples của 3 giây audio thành 58 con số mà vẫn **giữ lại** thông tin âm nhạc cốt lõi.
-   
-2. **Perceptual alignment**: MFCC, mel-scale, chroma... được thiết kế để **sát với cách tai người nghe**. Genre phân biệt được chủ yếu từ timbre/harmony/rhythm → những features này hỗ trợ tốt.
+1. Signal-processing + perceptual design: những feature như MFCC, mel-scale, chroma trực tiếp phản ánh cách con người cảm nhận âm thanh (mel scale) hoặc cấu trúc hòa âm (chroma), do đó chúng nén thông tin hữu dụng cho phân loại.
+2. Mean/variance trên cửa sổ 3s cung cấp mô tả phân bố — giúp robustness với biến đổi nhỏ trong signal.
+3. Các feature này kết hợp cả thông tin tần số (timbre), thời gian (percussive/transient) và thống kê (tempo, RMS) — nên chịu trách nhiệm cho nhiều yếu tố phân biệt genre.
 
-3. **Robustness**: mean + variance cho mỗi feature = 2 con số để mô tả phân bố trên 3s. Nếu một note thay đổi nhẹ → mean/var vẫn ổn định, giúp model generalize tốt.
+### 3.2 Giải thích kỹ từng feature và khác biệt giá trị giữa các thể loại
 
-### Vấn đề: Leakage và Granularity
+Phần này mở rộng các điểm trên với chi tiết về ý nghĩa vật lý/toán học của feature, phạm vi giá trị điển hình và cách các genre thường khác nhau theo feature đó.
 
-**Tại sao có 2 file? `features_3_sec.csv` (~9990 rows) vs `features_30_sec.csv` (1000 rows)?**
+- **MFCC (Mel-Frequency Cepstral Coefficients)**
+   - Ý nghĩa: biểu diễn envelope của spectrum trên thang mel; các hệ số thấp (1–3) chứa thông tin chung về shape và năng lượng; các hệ số cao hơn chứa chi tiết timbre.
+   - Phạm vi: tuỳ implementation; thường MFCC1 có giá trị lớn hơn các MFCC tiếp theo; mean/var của MFCCs là chỉ báo timbre ổn định.
+   - Genre khác biệt: vocal-heavy genres (pop, hiphop) thường có pattern MFCC đặc trưng (do con sự hiện diện của formant vocal), guitar-driven genres (blues, country) có MFCC pattern khác do harmonic content khác.
 
-- GTZAN gốc: 1000 bài × 10 genre (100 mỗi thể loại). Mỗi bài 30 giây.
-- Để có nhiều mẫu train → người ta cắt mỗi bài 30s thành ~10 segment 3s → tổng ~10,000 mẫu.
-- Nhưng **đây là tẫm bẫm**: nếu split ngẫu nhiên theo row, segment của cùng bài có thể vào train+test → model học "memorize track ID" chứ không phải genre thực! Đây gọi là **data leakage**.
+- **Chroma STFT**
+   - Ý nghĩa: tóm tắt năng lượng theo 12 pitch classes (bỏ qua octave) — tốt để phát hiện key, chord progression.
+   - Phạm vi: giá trị normalized; mean gần 0..1.
+   - Genre khác biệt: jazz/classical hiển thị phân bố chroma phong phú và biến đổi, pop thường có chord progression lặp lại (các cromas cụ thể mạnh), hiphop less harmonic => cromas mờ.
 
-**Pipeline giải pháp**:
-- Nếu dùng `features_3_sec.csv` → **phải split theo `group` (track_id)** chứ không phải random row.
-- Hoặc dùng `features_30_sec.csv` (ít mẫu hơn nhưng sạch hơn).
+- **RMS Energy**
+   - Ý nghĩa: năng lượng (âm lượng) trung bình; variance cho biết dynamic range.
+   - Phạm vi: 0..1 (normalized) hoặc tuỳ scale của frame.
+   - Genre khác biệt: metal/rock/disco => `rms_mean` cao; classical có `rms_var` lớn do nhiều đổi động từ pianissimo tới fortissimo; lo-fi hoặc acoustic có `rms_mean` thấp.
+
+- **Spectral Centroid**
+   - Ý nghĩa: trung tâm quỹ đạo tần số (weighted mean frequency) — biểu thị brightness.
+   - Phạm vi: 0..sr/2 (Hz) nhưng thường scaled/normalized trong features.
+   - Genre khác biệt: metal và pop (presence nhiều energy cao) có centroid cao; reggae/blues có centroid thấp hơn.
+
+- **Spectral Bandwidth**
+   - Ý nghĩa: độ phân tán quanh trung tâm — biểu thị complexity/tone color.
+   - Genre khác biệt: electronic/metal có bandwidth lớn; solo-instrument pieces (classical solo) có bandwidth nhỏ hơn.
+
+- **Spectral Rolloff**
+   - Ý nghĩa: tần số dưới đó chứa X% năng lượng (thường 85%).
+   - Genre khác biệt: tracks with bright hi-frequency content (electronic, disco) có rolloff cao; bass-heavy genres có rolloff thấp.
+
+- **Zero Crossing Rate (ZCR)**
+   - Ý nghĩa: tần suất signal đổi dấu — proxy cho noisiness hoặc high-frequency transient content.
+   - Genre khác biệt: percussive-heavy (hiphop, rock) có ZCR cao; classical hoặc ambient có ZCR thấp.
+
+- **Harmony / Percussive (HPSS)**
+   - Ý nghĩa: tách phần harmonic (sustained tones) và percussive (transients). Thông số mean/var cho biết sự thống trị harmonic hay rhythmic.
+   - Genre khác biệt: classical/jazz → harmony cao; rock/hiphop/disco → percussive cao.
+
+- **Tempo (BPM)**
+   - Ý nghĩa: nhịp độ ước lượng. Trên 3s có giới hạn về độ tin cậy nhưng phân bố global vẫn hữu ích.
+   - Genre khác biệt: disco/edm: ~110–140 BPM; pop: ~100–130 BPM; hiphop: ~70–110 BPM (tuỳ subgenre); metal: có thể vượt 140 BPM; blues/classical: thường chậm hơn.
+
+Những khác biệt trên là xu hướng chung — không phải luật tuyệt đối. Trong dataset nhỏ như GTZAN, quality/recording/timbre cá nhân của track có thể dẫn tới outlier; do đó model học kết hợp nhiều feature (MFCC + chroma + RMS + HPSS) để phân biệt.
+
+### 3.3 Lưu ý khi dùng các feature (practical tips)
+
+- Luôn chuẩn hóa (`StandardScaler`) trên train rồi áp dụng cho val/test.
+- Tránh dùng `filename` hoặc các ID raw như feature đầu vào (risk of leakage).
+- Khi dùng `features_3_sec.csv`, luôn split theo group (track_id) — không được random row.
 
 ---
 
