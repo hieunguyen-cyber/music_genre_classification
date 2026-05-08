@@ -366,9 +366,9 @@ python src/main.py --stage visualize --run-name exp01
 
 ```bash
 python src/main.py --stage preprocess --run-name mel01
-python src/main.py --stage feature --run-name mel01
-python src/main.py --stage train --run-name mel01 --model cnn_mel
-python src/main.py --stage evaluate --run-name mel01 --model cnn_mel
+python src/main.py --stage feature --run-name mel01 --feature-kind mel_from_audio
+python src/main.py --stage train --run-name mel01 --model cnn_mel --feature-kind mel_from_audio
+python src/main.py --stage evaluate --run-name mel01 --model cnn_mel --feature-kind mel_from_audio
 python src/main.py --stage visualize --run-name mel01
 ```
 

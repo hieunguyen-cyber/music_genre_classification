@@ -65,6 +65,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--epochs", type=int, default=None, help="Override training epochs (train stage)")
     p.add_argument("--batch-size", type=int, default=None, help="Override batch size (train/eval stages)")
     p.add_argument("--model", type=str, default=None, help="Override model name (e.g., mlp, knn, svm_rbf)")
+    p.add_argument("--feature-kind", type=str, default=None, choices=["tabular_csv", "mel_from_audio"], help="Override features.kind")
     p.add_argument("--lr", type=float, default=None, help="Override learning rate (torch models)")
     p.add_argument("--weight-decay", type=float, default=None, help="Override weight decay (torch models)")
     p.add_argument("--num-workers", type=int, default=None, help="Override DataLoader num_workers")
@@ -99,6 +100,8 @@ def load_config(args: argparse.Namespace) -> Dict[str, Any]:
         cfg.setdefault("eval", {})["batch_size"] = int(args.batch_size)
     if args.model is not None:
         cfg.setdefault("model", {})["name"] = str(args.model)
+    if args.feature_kind is not None:
+        cfg.setdefault("features", {})["kind"] = str(args.feature_kind)
     if args.lr is not None:
         cfg.setdefault("train", {})["lr"] = float(args.lr)
     if args.weight_decay is not None:
@@ -258,6 +261,16 @@ def stage_train(cfg: Dict[str, Any], run_paths) -> None:
 
     model_name = cfg["model"]["name"]
     model_cfg = cfg["_model_yaml"][model_name]
+    if model_name in {"cnn_mel", "lstm_mel"} and kind != "mel_from_audio":
+        raise ValueError(
+            f"{model_name} requires features.kind=mel_from_audio. "
+            "Set `features.kind` in your config or pass `--feature-kind mel_from_audio`."
+        )
+    if kind == "mel_from_audio" and model_name not in {"cnn_mel", "lstm_mel"}:
+        raise ValueError(
+            f"{model_name} is not supported with features.kind=mel_from_audio. "
+            "Use `cnn_mel` or `lstm_mel` for mel_from_audio features."
+        )
     from src.models.sklearn_models import SKLEARN_MODEL_NAMES
     if model_name in SKLEARN_MODEL_NAMES:
         from src.models.sklearn_models import create_sklearn_model
