@@ -6,14 +6,14 @@ Repo này refactor notebook `music-genre-classification.ipynb` thành một pipe
 
 ## 1) Bài toán là gì? (Problem statement)
 
-**Music Genre Classification**: cho một đoạn audio (hoặc feature trích xuất từ audio), dự đoán nhãn thể loại nhạc (genre) trong tập hữu hạn \(C\) lớp. Với GTZAN (mirror phổ biến), \(C=10\):
+**Music Genre Classification**: cho một đoạn audio (hoặc feature trích xuất từ audio), dự đoán nhãn thể loại nhạc (genre) trong tập hữu hạn $C$ lớp. Với GTZAN (mirror phổ biến), $C=10$:
 
 - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock
 
 Ta xem đây là bài toán **multi-class classification**:
 
-- Input: \(x\) (audio waveform hoặc vector feature)
-- Output: \(y \in \{0,1,\dots,C-1\}\)
+- Input: $x$ (audio waveform hoặc vector feature)
+- Output: $y \in \{0,1,\dots,C-1\}$
 
 ### Vì sao bài toán này quan trọng?
 
@@ -37,19 +37,32 @@ Repo hiện chứa GTZAN mirror trong `Data/`:
 - `Data/features_3_sec.csv` — tabular features cho các segment 3s (khoảng 9990 rows; mỗi track thường ~10 segment)
 - `Data/images_original/` — ảnh spectrogram theo file 30-sec (tuỳ mirror)
 
-### Hai “granularity” dữ liệu
+### Hai "granularity" dữ liệu — Trade-off giữa số lượng và chất lượng
 
-1) **Track-level (30s)**
-- Ít mẫu hơn (1000), nhưng mỗi mẫu đầy đủ bài.
-- Dễ split đúng (theo bài), ít leakage hơn.
+**1) Track-level (30s) — Ít nhưng Sạch**
 
-2) **Segment-level (3s)**
-- Nhiều mẫu hơn (~9990), train nhanh và thường tăng accuracy.
-- Nhưng **rất dễ leakage** nếu split theo row ngẫu nhiên (segment của cùng bài có thể vào nhiều split).
+- **Số lượng**: 1000 mẫu (100 mỗi genre)
+- **Ưu điểm**:
+  - Ít mẫu → model train chậm hơn, nhưng dễ overfit trên dataset nhỏ.
+  - Không leakage nếu split theo track (mỗi row = 1 track độc lập).
+  - Biểu diễn đầy đủ 1 bài nhạc (30s = 1,320,000 sample ở 44kHz).
+- **Nhược điểm**:
+  - Quá ít cho deep learning (CNN/LSTM cần hàng ngàn mẫu để train tốt).
+  - K-fold cross-validation khó (10 fold × 10 genre = 1 mẫu/fold/genre).
+
+**2) Segment-level (3s) — Nhiều nhưng Rủi Ro**
+
+- **Số lượng**: ~10,000 mẫu (10 segment/track × 1000 track)
+- **Ưu điểm**:
+  - Đủ mẫu cho deep learning, hỗ trợ batch training, data augmentation hiệu quả.
+  - Tăng khả năng phát hiện local pattern (ví dụ solo guitar 3s).
+- **Nhược điểm**:
+  - **Leakage nguy hiểm nếu split sai**: segment của cùng track dễ vào train+test → model "cheat" học track ID.
+  - Mất thông tin global (solo/bridge ở 1 segment không đủ để phân loại chính xác).
 
 Trong pipeline:
-- `features.kind=tabular_csv` (mặc định) giữ logic notebook: đọc `features_3_sec.csv` và split theo row.
-- `features.kind=mel_from_audio` (end-to-end) sẽ cắt segment từ raw audio và **split theo track group** để tránh leakage.
+- `features.kind=tabular_csv` (mặc định): dùng `features_3_sec.csv` nhưng **split theo track group** để tránh leakage.
+- `features.kind=mel_from_audio` (end-to-end): cắt mel spectrogram từ raw audio, tự split theo track group.
 
 ---
 
@@ -60,18 +73,71 @@ File `Data/features_3_sec.csv` là dataset tabular đã trích xuất sẵn (th�
 - `filename`: tên segment (ví dụ `blues.00000.0.wav`)
 - `length`: độ dài tính theo frames/samples (tuỳ mirror)
 - Nhóm feature **spectral/temporal** dạng *mean/variance*:
-  - Chroma STFT: `chroma_stft_mean`, `chroma_stft_var`
-  - RMS energy: `rms_mean`, `rms_var`
-  - Spectral centroid/bandwidth/rolloff: `spectral_centroid_*`, `spectral_bandwidth_*`, `rolloff_*`
-  - Zero crossing rate: `zero_crossing_rate_*`
-  - Harmony/percussive (HPSS-related): `harmony_*`, `perceptr_*` (tuỳ mirror đặt tên)
-  - `tempo`
-  - MFCC 1..20: `mfcc{i}_mean`, `mfcc{i}_var`
-- `label`: genre (string)
+  - **Chroma STFT** (`chroma_stft_mean`, `chroma_stft_var`): "vân tay sắc thái" của âm nhạc — 12 chúng tôi tương ứng 12 nốt nhạc (C, C#, D, ..., B). Mạnh trong jazz/classical, yếu trong hiphop.
+  - **RMS Energy** (`rms_mean`, `rms_var`): năng lượng trung bình. Âm to ↔ RMS cao. Phân biệt vocal/percussion vs instrumental.
+  - **Spectral Centroid** (`spectral_centroid_mean/var`): "trọng tâm" tần số. Cao = âm sắc sáng, thấp = am tĭm. Giúp phân biệt vokal (cao) vs bass (thấp).
+  - **Spectral Bandwidth** (`spectral_bandwidth_*`): độ "rộng" của phổ. Cao = âm đa sắc (thường percussion), thấp = âm đơn sắc (flute/sine).
+  - **Spectral Rolloff** (`rolloff_*`): tần số dưới đó nằm 85% năng lượng. Phân biệt thiết bị phát âm (cao vs thấp).
+  - **Zero Crossing Rate (ZCR)** (`zero_crossing_rate_*`): số lần tín hiệu cắt qua 0 trên frame. Cao = âm tiếng (unvoiced consonants), thấp = âm vă (voiced). Mạnh trong phát hiện speech/noise.
+  - **Harmony/Percussive** (`harmony_*`, `perceptr_*`): từ HPSS (Harmonic/Percussive Source Separation). Harmony = phần nhạc cụ cơ bản (string/wind), Percussive = drums/percussion. Genre khác nhau có tỉ lệ khác nhau.
+  - **Tempo**: nhịp độ (BPM). Genre có BPM đặc trưng: EDM (120-140), slowbluescouldn't_know (~60-80), metal (~160+).
+  - **MFCC 1..20** (`mfcc{i}_mean`, `mfcc{i}_var`): "Mel-Frequency Cepstral Coefficients" — chuỗi hệ số đại diện cho thực tế thính giác. MFCC1 ≈ năng lượng tổng, MFCC2+ ≈ hình dạng phổ ở thang mel (gần cảm nhận tai người). **Đây là feature mạnh nhất** trong many ML tasks (speech recognition, genre, emotion).
 
-Ý nghĩa: biến 3 giây audio thành vector số thực \(x \in \mathbb{R}^d\) (với \(d \approx 58\) trong file này), giúp dùng được các model tabular: KNN/SVM/MLP/RandomForest…
+**Tổng cộng**: ~58 features numeric (56 từ phổ + tempo). Mỗi mẫu có:
+- Input: vector 58D → các model tabular (SVM/RF/MLP)
+- Output: genre (0-9)
+
+### Tại sao features này lại hoạt động tốt?
+
+1. **Signal Processing wisdom**: những công thức này xuất phát từ 50 năm nghiên cứu MIR (Music Information Retrieval). Chúng giúp **nén** 30-44K samples của 3 giây audio thành 58 con số mà vẫn **giữ lại** thông tin âm nhạc cốt lõi.
+   
+2. **Perceptual alignment**: MFCC, mel-scale, chroma... được thiết kế để **sát với cách tai người nghe**. Genre phân biệt được chủ yếu từ timbre/harmony/rhythm → những features này hỗ trợ tốt.
+
+3. **Robustness**: mean + variance cho mỗi feature = 2 con số để mô tả phân bố trên 3s. Nếu một note thay đổi nhẹ → mean/var vẫn ổn định, giúp model generalize tốt.
+
+### Vấn đề: Leakage và Granularity
+
+**Tại sao có 2 file? `features_3_sec.csv` (~9990 rows) vs `features_30_sec.csv` (1000 rows)?**
+
+- GTZAN gốc: 1000 bài × 10 genre (100 mỗi thể loại). Mỗi bài 30 giây.
+- Để có nhiều mẫu train → người ta cắt mỗi bài 30s thành ~10 segment 3s → tổng ~10,000 mẫu.
+- Nhưng **đây là tẫm bẫm**: nếu split ngẫu nhiên theo row, segment của cùng bài có thể vào train+test → model học "memorize track ID" chứ không phải genre thực! Đây gọi là **data leakage**.
+
+**Pipeline giải pháp**:
+- Nếu dùng `features_3_sec.csv` → **phải split theo `group` (track_id)** chứ không phải random row.
+- Hoặc dùng `features_30_sec.csv` (ít mẫu hơn nhưng sạch hơn).
 
 ---
+
+## 3.1) Giải thích chi tiết Leakage — tại sao nó xảy ra?
+
+Ví dụ đơn giản:
+- Track 0 (blues) cắt thành segment 0.0, 0.1, 0.2, ..., 0.9 (10 cái)
+- Track 1 (blues) cắt thành segment 1.0, 1.1, ..., 1.9
+- ...
+- Total: 1000 × 10 = 10,000 segment
+
+**Nguy hiểm**:
+```
+# WRONG (random shuffle):
+train: [0.0, 0.3, 1.2, 0.7, ...]  # mixed segments từ track 0,1,...
+test:  [0.1, 0.5, 1.1, 2.0, ...]  # CÓ 0.1 (cùng track với 0.0, 0.3 trong train!)
+```
+
+→ Model học: "segment có MFCC pattern thế này + RMS pattern thế này → blues". Nhưng thực ra học luôn "track ID 0 → blues", vì segment cùng track đều cùng recording.
+
+**Đúng** (group-stratified split):
+```
+train: track 0, 1, 3, 4, 5, 7, 8, 9   (8 track × 10 segment = 800)
+val:   track 2, 6                      (2 track × 10 segment = 200)
+test:  track 0-9 từ một tập riêng      (hoặc external test set)
+```
+
+→ Model không bao giờ thấy cùng track ở train+val/test. Đánh giá **thật**.
+
+---
+
+
 
 ## 4) Tiền xử lý (Preprocessing) — kèm toán học và ý nghĩa
 
@@ -82,81 +148,95 @@ Pipeline có 2 track preprocessing tương ứng 2 kiểu feature.
 #### (A) Label encoding
 
 Chuyển `label` (string) → chỉ số lớp:
-\[
-f: \\{\\text{genre strings}\\} \\to \\{0,1,\\dots,C-1\\}
-\]
 
-Trong code dùng `LabelEncoder` fit trên train split để đảm bảo mapping ổn định.
+$$f: \{\text{genre strings}\} \to \{0,1,\dots,C-1\}$$
+
+**Ý nghĩa**: Các model machine learning yêu cầu đầu ra là số (integer hoặc float), không phải string. `LabelEncoder` tạo mapping:
+- blues → 0, classical → 1, ..., rock → 9
+
+**Quan trọng**: Fit LabelEncoder **trên train** rồi áp dụng cho val/test. Nếu fit trên toàn bộ dữ liệu → test set bị "leak" thông tin từ train.
 
 #### (B) Drop cột không dùng cho model
 
-`filename` không mang thông tin âm học trực tiếp (và có thể gây leakage theo id) nên loại bỏ khỏi \(X\).
+`filename` không mang thông tin âm học trực tiếp (và có thể gây leakage theo id) nên loại bỏ khỏi $X$.
 
 #### (C) Standardization (z-score scaling)
 
-Nhiều thuật toán (SVM, Logistic Regression, MLP) nhạy với thang đo feature. Ta chuẩn hóa từng feature \(j\):
+Nhiều thuật toán (SVM, Logistic Regression, MLP) **rất nhạy** với thang đo feature. Ví dụ:
+- MFCC range: [0, 100]
+- RMS range: [0, 1]
+- Spectral centroid range: [0, 22050] (Hz)
 
-\[
-\\mu_j = \\frac{1}{N_{train}}\\sum_{i \\in train} x_{ij}, \\quad
-\\sigma_j = \\sqrt{\\frac{1}{N_{train}}\\sum_{i \\in train} (x_{ij}-\\mu_j)^2}
-\]
-\[
-\\tilde{x}_{ij} = \\frac{x_{ij}-\\mu_j}{\\sigma_j + \\epsilon}
-\]
+Nếu không chuẩn hóa, features có range lớn → model sẽ ignore features có range nhỏ.
 
-**Quan trọng**: \(\mu_j, \sigma_j\) chỉ được fit trên **train**, rồi áp dụng cho val/test để tránh “peek” vào test.
+Ta chuẩn hóa từng feature $j$:
+
+$$\mu_j = \frac{1}{N_{train}}\sum_{i \in \text{train}} x_{ij}, \quad \sigma_j = \sqrt{\frac{1}{N_{train}}\sum_{i \in \text{train}} (x_{ij}-\mu_j)^2}$$
+
+$$\tilde{x}_{ij} = \frac{x_{ij}-\mu_j}{\sigma_j + \epsilon}$$
+
+**Quan trọng**: $\mu_j, \sigma_j$ chỉ được fit trên **train**, rồi áp dụng cho val/test để tránh "peek" vào test.
+
+**Ý nghĩa**: Sau chuẩn hóa, mỗi feature có mean ≈ 0, std ≈ 1 → model "công bằng" với tất cả features → hội tụ nhanh hơn, kết quả ổn định.
 
 #### (D) Split train/val/test (stratified)
 
 Giữ tỷ lệ lớp gần giống nhau giữa các split bằng stratification. Mục tiêu:
-- train: học tham số
-- val: chọn hyperparameter / early stopping
-- test: ước lượng performance cuối cùng
+- **train** (60-70%): học tham số
+- **val** (10-15%): chọn hyperparameter / early stopping (không dùng để update tham số)
+- **test** (15-20%): ước lượng performance cuối cùng (chỉ chạy 1 lần, cuối cùng)
 
-Pipeline lưu split vào `data/splits/*.csv` để reproducible.
+**Stratified** = mỗi genre chiếm ~10% trong mỗi split. Nếu split ngẫu nhiên, có thể train thiếu classical (0%) nhưng test có 20% → không đánh giá được.
+
+Pipeline lưu split vào `data/splits/*.csv` để reproducible (chạy 2 lần lại được train/val/test giống nhau).
 
 ### 4.2 Track B: End-to-end raw audio → mel spectrogram
 
 #### (A) Waveform
 
-Audio rời rạc \(x[n]\) với sample rate \(sr\) Hz. Thời gian tương ứng:
-\[
-t = \\frac{n}{sr}
-\]
+Audio rời rạc $x[n]$ với sample rate $sr$ Hz. Thời gian tương ứng:
+
+$$t = \frac{n}{sr}$$
+
+**Ý nghĩa**: 44.1 kHz = 44,100 sample/giây → 1 giây audio = 44,100 số. 3 giây = 132,300 số. Quá nhiều để model xử lý trực tiếp. Cần feature extraction.
 
 #### (B) STFT (Short-Time Fourier Transform)
 
 Âm nhạc biến đổi theo thời gian → ta dùng STFT trên từng frame:
-\[
-X(m,k) = \\sum_{n=0}^{N-1} x[n+mH] \\, w[n] \\, e^{-j2\\pi kn/N}
-\]
-- \(w[n]\): window (Hann…)
-- \(N\): FFT size
-- \(H\): hop length
+
+$$X(m,k) = \sum_{n=0}^{N-1} x[n+mH] \, w[n] \, e^{-j2\pi kn/N}$$
+
+- $w[n]$: window (Hann, Hamming) — giảm rò rỉ spectral ở biên frame
+- $N$: FFT size (thường 2048) — độ phân giải tần số
+- $H$: hop length (thường 512) — khoảng cách giữa các frame (50% overlap = $H = N/2$)
 
 Spectrogram magnitude/power:
-\[
-S(m,k) = |X(m,k)|^2
-\]
+
+$$S(m,k) = |X(m,k)|^2$$
+
+**Ý nghĩa**: Từ time-domain raw audio → frequency-domain spectrogram. Mỗi cell $(m, k)$ = năng lượng ở tần số $k$ ở khung thời gian $m$. Dễ nhìn pattern: bass (row dưới), treble (row trên), drum beat (vertical lines).
 
 #### (C) Mel filter bank → Mel spectrogram
 
-Mel scale (một công thức phổ biến):
-\[
-m = 2595 \\, \\log_{10}\\left(1 + \\frac{f}{700}\\right)
-\]
+Phổ tần số không được perceived **tuyến tính** bởi tai người. Tần số cao được compress hơn.
 
-Mel filter bank \(M\) gom năng lượng theo dải mel:
-\[
-S_{mel} = M S
-\]
+Mel scale (công thức phổ biến):
+
+$$m = 2595 \, \log_{10}\left(1 + \frac{f}{700}\right)$$
+
+Mel filter bank $M$ (triangular filters) gom năng lượng theo dải mel:
+
+$$S_{\text{mel}} = M S$$
 
 Đưa về dB (log-compression):
-\[
-S_{dB} = 10\\log_{10}(S_{mel} + \\epsilon)
-\]
 
-**Ý nghĩa**: Mel spectrogram gần với cảm nhận thính giác; log giúp “nén” dynamic range và ổn định cho model.
+$$S_{\text{dB}} = 10\log_{10}(S_{\text{mel}} + \epsilon)$$
+
+**Ý nghĩa**: 
+- **Mel scale**: Gần với cách tai người nghe (100 Hz ≈ 200 Hz khoảng cách nhỏ; 8000 Hz ≈ 9000 Hz khoảng cách lớn trong Mel scale). Giúp model không "lãng phí" capacity học frequency resolution ở region mà tai không phân biệt tốt.
+- **Log compression**: Dynamic range audio rất lớn (quiet violin vs. drums) → log nén lại → model training ổn định hơn. Con người cũng perceive volume theo log scale (mỗi +10dB nghe "gấp đôi" to).
+
+**Kết quả**: Mel spectrogram shape $(T, 128)$ (T ≈ 130 timeframes, 128 mel bands) → CNN/LSTM có thể xử lý.
 
 #### (D) Split theo track group (chống leakage segment)
 
@@ -169,18 +249,22 @@ Một track 30s được cắt thành nhiều segment 3s. Để tránh leakage, 
 
 ### 5.1 Classical ML baselines (tabular)
 
-- **KNN**: dự đoán theo đa số láng giềng gần nhất (nhạy scaling).
-- **SVM (RBF/Linear)**: tìm siêu phẳng phân tách; RBF cho biên phi tuyến.
-- **Logistic Regression (multinomial)**: baseline tuyến tính mạnh khi feature tốt.
-- **Naive Bayes / LDA / QDA**: giả định phân phối (Gaussian), nhanh và hay dùng làm baseline.
-- **RandomForest / ExtraTrees / AdaBoost / GBDT**: mô hình cây + ensemble, mạnh trên tabular.
-- **XGBoost / LightGBM**: gradient boosting tối ưu (optional dependency).
+Những model này được thiết kế cho dữ liệu **tabular** — vector feature 58D. Chúng nhanh, dễ giải thích, và thường là baseline tốt trước khi thử deep learning:
+
+- **KNN (k-Nearest Neighbors)**: dự đoán theo đa số $k$ láng giềng gần nhất trong không gian feature. Đơn giản nhưng nhạy với scaling và khoảng cách metric. Tốt cho dataset nhỏ.
+- **SVM (Support Vector Machine)**: tìm siêu phẳng (hyperplane) phân tách các lớp với lề cực đại. Kernel **RBF** (Radial Basis Function) giúp xử lý biên phi tuyến (non-linear). **Linear** cho biên thẳng. Mạnh với dữ liệu cao chiều.
+- **Logistic Regression (multinomial)**: baseline tuyến tính — học một hyperplane cho mỗi lớp. Nhanh, dễ tuỳ chỉnh regularization, kết quả dễ diễn giải.
+- **Naive Bayes / LDA / QDA**: giả định dữ liệu tuân theo phân phối Gaussian. Nhanh, ít tham số, tốt khi giả định này đúng.
+- **RandomForest / ExtraTrees / AdaBoost / GBDT**: **ensemble** — kết hợp nhiều cây quyết định. Không cần tuỳ chỉnh scaling, tự học tương tác giữa features, rất mạnh trên tabular.
+- **XGBoost / LightGBM**: gradient boosting tối ưu cao — tăng cường và cải thiện cây lỗi. Thường cho kết quả tốt nhất trên tabular, nhưng cần tuỳ chỉnh nhiều hyperparameter.
 
 ### 5.2 Neural models (PyTorch)
 
-- **MLP (tabular)**: tương đương logic notebook (Dense + Dropout). Loss dùng Cross Entropy.
-- **CNN on mel**: dùng convolution 2D học pattern theo tần số–thời gian.
-- **LSTM on mel**: xem mel như chuỗi theo thời gian \(t\), học phụ thuộc dài hạn.
+Dành cho **dữ liệu phức tạp** (raw spectrogram):
+
+- **MLP (Multi-Layer Perceptron)** — tabular: tương đương logic notebook. Dùng Dense layers + Dropout. Loss = Cross Entropy. Linh hoạt nhưng cần chuẩn hóa đầu vào tốt.
+- **CNN (Convolutional Neural Network)** — mel spectrogram: convolution 2D học **spatial pattern** trên tần số (vertical) × thời gian (horizontal). Giúp phát hiện motif (ví dụ "drum pattern", "chord progression"). Tốt cho dữ liệu grid-like.
+- **LSTM (Long Short-Term Memory)** — mel spectrogram: xem mel như **chuỗi** theo thời gian $t$, học **phụ thuộc dài hạn** (long-range dependency). Giúp model nhớ context xa → tốt cho cấu trúc bài nhạc (intro → verse → chorus).
 
 ---
 
@@ -188,30 +272,25 @@ Một track 30s được cắt thành nhiều segment 3s. Để tránh leakage, 
 
 ### 6.1 Softmax
 
-Với logits \(z \\in \\mathbb{R}^C\):
-\[
-p_i = \\frac{e^{z_i}}{\\sum_{j=1}^{C} e^{z_j}}
-\]
+Với logits $z \in \mathbb{R}^C$:
+
+$$p_i = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}}$$
 
 ### 6.2 Cross Entropy (multi-class)
 
-Với nhãn đúng \(y\):
-\[
-\\mathcal{L} = -\\log(p_y)
-\]
+Với nhãn đúng $y$:
+
+$$\mathcal{L} = -\log(p_y)$$
 
 Notebook dùng `sparse_categorical_crossentropy`; trong pipeline PyTorch dùng `CrossEntropyLoss` (tương đương softmax + negative log-likelihood).
 
 ### 6.3 Adam optimizer (tóm tắt)
 
-Với gradient \(g_t\):
-\[
-m_t = \\beta_1 m_{t-1} + (1-\\beta_1) g_t,\quad
-v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2
-\]
-\[
-\\theta_t = \\theta_{t-1} - \\alpha \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t}+\\epsilon}
-\]
+Với gradient $g_t$:
+
+$$m_t = \beta_1 m_{t-1} + (1-\beta_1) g_t, \quad v_t = \beta_2 v_{t-1} + (1-\beta_2) g_t^2$$
+
+$$\theta_t = \theta_{t-1} - \alpha \frac{\hat{m}_t}{\sqrt{\hat{v}_t}+\epsilon}$$
 
 ---
 
@@ -219,18 +298,15 @@ v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2
 
 ### 7.1 Confusion matrix
 
-Ma trận \(C\\) với \(C_{ij}\) = số mẫu lớp thật \(i\) được dự đoán thành \(j\).
+Ma trận $C$ với $C_{ij}$ = số mẫu lớp thật $i$ được dự đoán thành $j$.
 
 ### 7.2 Accuracy
-\[
-\\text{Acc} = \\frac{1}{N}\\sum_{i=1}^{N} \\mathbb{1}[\\hat{y}_i = y_i]
-\]
+
+$$\text{Acc} = \frac{1}{N}\sum_{i=1}^{N} \mathbb{1}[\hat{y}_i = y_i]$$
 
 ### 7.3 Precision / Recall / F1 (1 lớp)
-\[
-P = \\frac{TP}{TP+FP},\\quad R = \\frac{TP}{TP+FN},\\quad
-F1 = \\frac{2PR}{P+R}
-\]
+
+$$P = \frac{TP}{TP+FP}, \quad R = \frac{TP}{TP+FN}, \quad F1 = \frac{2PR}{P+R}$$
 
 ### 7.4 Macro-F1 vs Weighted-F1
 
@@ -400,3 +476,87 @@ outputs/
 - `docs/MATH.md` — Fourier/STFT/Mel/MFCC/Cross-Entropy/Adam/metrics
 - `docs/VISUALIZATION.md` — cách đọc plots
 - `docs/EXPERIMENTS.md` — template ghi lại thí nghiệm
+
+---
+
+## 8) Tóm tắt luồng dữ liệu (Data Flow Summary)
+
+Để hiểu rõ cách hệ thống hoạt động, hãy theo dõi luồng dữ liệu từ raw audio đến dự đoán:
+
+### Track A: Tabular Features (CSV)
+
+```
+1. Raw audio .wav (30s, 44.1 kHz)
+   ↓
+2. Feature extraction offline (Librosa)
+   - MFCC, Spectral Centroid, RMS, ...
+   ↓
+3. features_3_sec.csv / features_30_sec.csv
+   - 58D vector per segment/track
+   ↓
+4. Preprocessing: Label encode → Drop filename → Standardize
+   ↓
+5. Split (stratified, GROUP by track_id để tránh leakage)
+   ↓
+6. Train: KNN/SVM/RandomForest/MLP
+   - Input: 58D vector
+   - Output: logits (10 classes)
+   ↓
+7. Softmax + argmax → predicted genre
+```
+
+### Track B: End-to-End (Mel Spectrogram)
+
+```
+1. Raw audio .wav (30s, 44.1 kHz)
+   ↓
+2. On-the-fly feature extraction:
+   - Waveform: 44.1k samples/s
+   ↓
+3. STFT: Chuyển từ time-domain → frequency-domain
+   - Window size N=2048, hop H=512
+   - Tạo spectrogram $(m, k)$: time × frequency
+   ↓
+4. Mel filter bank + log compression
+   - Chuẩn hóa theo cách tai người nghe
+   - Kết quả: $(T, 128)$ mel spectrogram
+   ↓
+5. Segment cắt 3s, Group split theo track_id
+   ↓
+6. Train: CNN/LSTM (PyTorch)
+   - Input: $(1, T, 128)$ image / sequence
+   - Convolution/LSTM → tìm spatial/temporal patterns
+   ↓
+7. Softmax + argmax → predicted genre
+```
+
+### Các bước quan trọng để tránh lỗi
+
+| Bước | Sai lầm | Giải pháp |
+|------|--------|----------|
+| Label Encoding | Fit trên toàn bộ dữ liệu | Fit **chỉ trên train** |
+| Standardization | Fit trên toàn bộ dữ liệu | Fit **chỉ trên train**, apply đến val/test |
+| Train/Val/Test Split | Random shuffle toàn bộ | Stratified split, **group by track_id** |
+| Mel Spectrogram | Không normalize log | Bắt buộc log-compression để tránh model instability |
+| Feature Selection | Dùng filename làm feature | Drop filename (potential leakage) |
+
+---
+
+## 9) Quick Reference: Features và ý nghĩa
+
+| Feature | Range | Ý nghĩa | Phân biệt |
+|---------|-------|----------|----------|
+| **MFCC** | [0, 100]+ | Hệ số cepstral (voice-like), **mạnh nhất** | Giọng hát, timbre |
+| **Chroma** | [0, 1] | Nốt nhạc (C, C#, ..., B) | Hòa âm, key của bài |
+| **RMS Energy** | [0, 1] | Năng lượng trung bình (volume) | Vocal vs Instrumental |
+| **Spectral Centroid** | [0, 22050] Hz | "Vị trí trọng tâm" tần số | Bright vs Dark |
+| **Spectral Bandwidth** | [0, 22050] Hz | Độ "rộng" của phổ | Timbre complexity |
+| **Spectral Rolloff** | [0, 22050] Hz | 85% năng lượng nằm dưới tần số nào | Harmonic content |
+| **Zero Crossing Rate** | [0, 1] | Số lần cắt qua 0 / frame | Voiced vs Unvoiced |
+| **Tempo** | [0, 300] BPM | Nhịp độ | Genre rhythm |
+| **Harmony** | Real | Phần harmonic (string/wind) | Instrument type |
+| **Percussive** | Real | Phần percussion (drums) | Rhythm presence |
+
+---
+
+
