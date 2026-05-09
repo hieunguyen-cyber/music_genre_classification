@@ -3,10 +3,13 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 
+# Ignore các thư mục con trong data nhưng giữ lại src/data
 data/processed/
 data/features/
 data/splits/
+Data/
+
+# Quy tắc cho phép Git theo dõi thư mục src/data
+!src/data/
 
 *.pt
-
-Data/
