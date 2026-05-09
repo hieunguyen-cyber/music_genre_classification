@@ -1,0 +1,5 @@
+{
+  "model_name": "gbdt",
+  "val_accuracy": 0.87625,
+  "val_log_loss": 0.42549968159080287
+}

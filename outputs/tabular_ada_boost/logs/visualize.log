@@ -1,0 +1,4 @@
+2026-05-09 22:40:12 | WARNING | visualize | Training history not found (run --stage train first)
+2026-05-09 22:40:12 | INFO | visualize | Confusion matrix visualization: D:\ML\music_genre_classification\outputs\tabular_ada_boost\figures\confusion_matrix.png
+2026-05-09 22:40:12 | INFO | visualize | ROC/PR curves: D:\ML\music_genre_classification\outputs\tabular_ada_boost\figures\roc_ovr.png, D:\ML\music_genre_classification\outputs\tabular_ada_boost\figures\pr_ovr.png
+2026-05-09 22:40:12 | INFO | visualize | Model visualizations complete

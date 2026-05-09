@@ -1,0 +1,3 @@
+2026-05-09 22:39:15 | INFO | train | device=cuda
+2026-05-09 22:39:15 | INFO | train | model=extra_trees (sklearn) input_dim=58 classes=10
+2026-05-09 22:39:18 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_extra_trees\checkpoints\model.joblib val_accuracy=0.9012 val_log_loss=0.7598953487756451

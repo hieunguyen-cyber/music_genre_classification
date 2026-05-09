@@ -2,3 +2,7 @@
 2026-05-08 21:54:39 | INFO | train | model=cnn_mel (torch, mel) classes=10
 2026-05-08 22:36:03 | INFO | train | best_checkpoint=/Users/hieunguyen/music_genre_classification/outputs/mel_cnn/checkpoints/best.pt
 2026-05-08 22:36:03 | INFO | train | Saved curves: /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/training_curves.png
+2026-05-09 22:57:04 | INFO | train | device=cuda
+2026-05-09 22:57:08 | INFO | train | model=cnn_mel (torch, mel) classes=10
+2026-05-09 23:23:45 | INFO | train | best_checkpoint=D:\ML\music_genre_classification\outputs\mel_cnn\checkpoints\best.pt
+2026-05-09 23:23:46 | INFO | train | Saved curves: D:\ML\music_genre_classification\outputs\mel_cnn\figures\training_curves.png

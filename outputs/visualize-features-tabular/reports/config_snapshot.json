@@ -1,0 +1,202 @@
+{
+  "project": {
+    "name": "music_genre_classification",
+    "seed": 42,
+    "num_workers": 2,
+    "device": "auto"
+  },
+  "paths": {
+    "raw_root": "Data",
+    "features_csv": "Data/features_3_sec.csv",
+    "images_root": "Data/images_original",
+    "data_root": "data",
+    "processed_dir": "data/processed",
+    "features_dir": "data/features",
+    "splits_dir": "data/splits",
+    "outputs_root": "outputs",
+    "run_name": "visualize-features-tabular"
+  },
+  "stages": {
+    "preprocess": {
+      "enabled": true
+    },
+    "feature": {
+      "enabled": true
+    },
+    "train": {
+      "enabled": true
+    },
+    "evaluate": {
+      "enabled": true
+    },
+    "visualize": {
+      "enabled": true
+    }
+  },
+  "data": {
+    "split": {
+      "test_size": 0.2,
+      "val_size": 0.1,
+      "stratify": true,
+      "random_state": 42
+    }
+  },
+  "features": {
+    "kind": "tabular_csv",
+    "tabular_csv": {
+      "drop_columns": [
+        "filename",
+        "label"
+      ],
+      "label_column": "label",
+      "filename_column": "filename",
+      "standardize": true
+    },
+    "mel_from_audio": {
+      "sample_rate": 22050,
+      "segment_seconds": 3.0,
+      "n_mels": 128,
+      "n_fft": 2048,
+      "hop_length": 512,
+      "fmin": 20,
+      "fmax": 8000
+    }
+  },
+  "model": {
+    "name": "mlp",
+    "_file": "configs/model.yaml"
+  },
+  "train": {
+    "epochs": 120,
+    "batch_size": 256,
+    "lr": 0.000146,
+    "weight_decay": 0.0001,
+    "early_stopping": {
+      "enabled": true,
+      "patience": 15,
+      "monitor": "val_loss",
+      "mode": "min"
+    },
+    "checkpoint": {
+      "save_best_only": true,
+      "metric": "val_loss",
+      "mode": "min"
+    }
+  },
+  "eval": {
+    "batch_size": 512
+  },
+  "visualize": {
+    "max_audio_files": 20,
+    "embedding": {
+      "pca": true,
+      "tsne": true,
+      "umap": true
+    }
+  },
+  "_model_yaml": {
+    "mlp": {
+      "hidden_sizes": [
+        512,
+        256,
+        128,
+        64,
+        32
+      ],
+      "dropout": 0.2
+    },
+    "knn": {
+      "n_neighbors": 3,
+      "weights": "uniform"
+    },
+    "svm_rbf": {
+      "C": 10.0,
+      "gamma": "scale"
+    },
+    "linear_svm": {
+      "C": 1.0
+    },
+    "logreg": {
+      "C": 1.0,
+      "max_iter": 2000
+    },
+    "naive_bayes": {},
+    "lda": {
+      "solver": "svd"
+    },
+    "qda": {
+      "reg_param": 0.0
+    },
+    "random_forest": {
+      "n_estimators": 500,
+      "max_depth": null,
+      "min_samples_split": 2,
+      "min_samples_leaf": 1
+    },
+    "extra_trees": {
+      "n_estimators": 800,
+      "max_depth": null
+    },
+    "ada_boost": {
+      "n_estimators": 400,
+      "learning_rate": 0.05
+    },
+    "gbdt": {
+      "n_estimators": 500,
+      "learning_rate": 0.05,
+      "max_depth": 3
+    },
+    "xgboost": {
+      "n_estimators": 800,
+      "learning_rate": 0.05,
+      "max_depth": 6,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8
+    },
+    "lightgbm": {
+      "n_estimators": 1200,
+      "learning_rate": 0.05,
+      "num_leaves": 63,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8
+    },
+    "cnn_mel": {
+      "channels": [
+        32,
+        64,
+        128
+      ],
+      "dropout": 0.3
+    },
+    "lstm_mel": {
+      "hidden_size": 128,
+      "num_layers": 2,
+      "bidirectional": true,
+      "dropout": 0.2
+    }
+  },
+  "_train_yaml": {
+    "optimizer": {
+      "name": "adam"
+    },
+    "scheduler": {
+      "enabled": true,
+      "name": "reduce_on_plateau",
+      "factor": 0.5,
+      "patience": 5,
+      "min_lr": 1e-06
+    }
+  },
+  "_feature_yaml": {
+    "tabular_csv": {
+      "cache_name": "tabular_features_v1.npz",
+      "scaler_name": "tabular_scaler.pkl",
+      "label_map_name": "label_map.json",
+      "split_name": "split_v1.csv"
+    },
+    "mel_from_audio": {
+      "cache_name": "mel_features_v1.npz",
+      "split_name": "mel_split_by_track_v1.csv"
+    }
+  }
+}

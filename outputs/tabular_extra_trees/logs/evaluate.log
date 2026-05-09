@@ -1,0 +1,6 @@
+2026-05-09 22:39:22 | INFO | evaluate | device=cuda
+2026-05-09 22:39:24 | INFO | evaluate | accuracy=0.8904 macro_f1=0.8900 weighted_f1=0.8900 roc_auc_ovr_macro=0.9901778804889835
+2026-05-09 22:39:24 | INFO | evaluate | Saved report: D:\ML\music_genre_classification\outputs\tabular_extra_trees\reports\evaluation_report.md
+2026-05-09 22:39:24 | INFO | evaluate | Saved confusion matrix: D:\ML\music_genre_classification\outputs\tabular_extra_trees\figures\confusion_matrix.png
+2026-05-09 22:39:24 | INFO | evaluate | Saved misclassified table: D:\ML\music_genre_classification\outputs\tabular_extra_trees\reports\misclassified.csv
+2026-05-09 22:39:25 | INFO | evaluate | Saved ROC/PR curves

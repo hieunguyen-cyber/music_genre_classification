@@ -31,7 +31,7 @@ def set_global_seed(seed: int, deterministic: bool = True) -> None:
 
 def seed_worker(worker_id: int) -> None:
     """Seed PyTorch DataLoader workers."""
-    worker_seed = (np.random.get_state()[1][0] + worker_id) % 2**32
-    worker_seed_int = int(worker_seed)
+    # Cast to Python int first to avoid numpy uint32 overflow before the modulo
+    worker_seed_int = (int(np.random.get_state()[1][0]) + worker_id) % 2**32
     np.random.seed(worker_seed_int)
     random.seed(worker_seed_int)

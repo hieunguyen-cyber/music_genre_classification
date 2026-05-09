@@ -1,0 +1,5 @@
+{
+  "model_name": "logreg",
+  "val_accuracy": 0.7075,
+  "val_log_loss": 0.8644675089056038
+}

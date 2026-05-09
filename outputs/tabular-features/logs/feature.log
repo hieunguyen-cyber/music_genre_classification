@@ -1,0 +1,6 @@
+2026-05-09 21:54:56 | INFO | feature | Creating new split (stratified)
+2026-05-09 21:54:56 | INFO | feature | Saved split to: D:\ML\music_genre_classification\data\splits\split_v1.csv
+2026-05-09 21:54:56 | INFO | feature | Building feature cache: D:\ML\music_genre_classification\data\features\tabular_features_v1.npz
+2026-05-09 21:54:56 | INFO | feature | Done
+2026-05-09 22:01:22 | INFO | feature | Loading existing split: D:\ML\music_genre_classification\data\splits\split_v1.csv
+2026-05-09 22:01:22 | INFO | feature | Feature cache exists: D:\ML\music_genre_classification\data\features\tabular_features_v1.npz

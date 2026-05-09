@@ -3,3 +3,8 @@
 2026-05-08 22:37:52 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/confusion_matrix.png
 2026-05-08 22:37:52 | INFO | visualize | ROC/PR curves: /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/roc_ovr.png, /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/pr_ovr.png
 2026-05-08 22:37:52 | INFO | visualize | Model visualizations complete
+2026-05-09 23:24:21 | INFO | visualize | Training curves available (generated in train stage)
+2026-05-09 23:24:21 | INFO | visualize | Training curves visualization: D:\ML\music_genre_classification\outputs\mel_cnn\figures\training_curves.png
+2026-05-09 23:24:21 | INFO | visualize | Confusion matrix visualization: D:\ML\music_genre_classification\outputs\mel_cnn\figures\confusion_matrix.png
+2026-05-09 23:24:21 | INFO | visualize | ROC/PR curves: D:\ML\music_genre_classification\outputs\mel_cnn\figures\roc_ovr.png, D:\ML\music_genre_classification\outputs\mel_cnn\figures\pr_ovr.png
+2026-05-09 23:24:21 | INFO | visualize | Model visualizations complete

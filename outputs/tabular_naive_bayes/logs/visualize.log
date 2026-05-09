@@ -1,0 +1,4 @@
+2026-05-09 22:38:19 | WARNING | visualize | Training history not found (run --stage train first)
+2026-05-09 22:38:19 | INFO | visualize | Confusion matrix visualization: D:\ML\music_genre_classification\outputs\tabular_naive_bayes\figures\confusion_matrix.png
+2026-05-09 22:38:19 | INFO | visualize | ROC/PR curves: D:\ML\music_genre_classification\outputs\tabular_naive_bayes\figures\roc_ovr.png, D:\ML\music_genre_classification\outputs\tabular_naive_bayes\figures\pr_ovr.png
+2026-05-09 22:38:19 | INFO | visualize | Model visualizations complete

@@ -1,0 +1,5 @@
+{
+  "model_name": "lda",
+  "val_accuracy": 0.65,
+  "val_log_loss": 1.0160161770740457
+}

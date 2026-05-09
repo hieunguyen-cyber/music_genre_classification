@@ -1,0 +1,4 @@
+2026-05-09 21:54:50 | WARNING | visualize-features | Metadata not found: D:\ML\music_genre_classification\data\processed\metadata.csv (run --stage preprocess)
+2026-05-09 21:54:50 | WARNING | visualize-features | Mel cache not found: D:\ML\music_genre_classification\data\features\mel_features_v1.npz (run --stage feature)
+2026-05-09 22:01:17 | WARNING | visualize-features | Metadata not found: D:\ML\music_genre_classification\data\processed\metadata.csv (run --stage preprocess)
+2026-05-09 22:01:17 | WARNING | visualize-features | Mel cache not found: D:\ML\music_genre_classification\data\features\mel_features_v1.npz (run --stage feature)

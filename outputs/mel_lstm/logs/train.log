@@ -1,0 +1,4 @@
+2026-05-09 23:24:28 | INFO | train | device=cuda
+2026-05-09 23:24:33 | INFO | train | model=lstm_mel (torch, mel) classes=10
+2026-05-09 23:44:12 | INFO | train | best_checkpoint=D:\ML\music_genre_classification\outputs\mel_lstm\checkpoints\best.pt
+2026-05-09 23:44:13 | INFO | train | Saved curves: D:\ML\music_genre_classification\outputs\mel_lstm\figures\training_curves.png

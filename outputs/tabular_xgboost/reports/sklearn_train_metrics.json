@@ -1,0 +1,5 @@
+{
+  "model_name": "xgboost",
+  "val_accuracy": 0.92375,
+  "val_log_loss": 0.2593574174408992
+}

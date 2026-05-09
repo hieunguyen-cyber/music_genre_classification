@@ -1,0 +1,5 @@
+{
+  "model_name": "extra_trees",
+  "val_accuracy": 0.90125,
+  "val_log_loss": 0.7598953487756451
+}
