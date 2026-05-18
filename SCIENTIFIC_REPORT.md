@@ -181,9 +181,7 @@ Below, each feature is described mathematically and interpreted using actual gen
 ## 4.2 STFT spectrogram (log-frequency, dB)
 
 **Meaning.** The Short-Time Fourier Transform (STFT) reveals energy over time and frequency:
-$
-X(m, k) = \sum_{n=0}^{N-1} x[n+mH]w[n]e^{-j 2\pi kn/N}, \quad S(m,k)=|X(m,k)|
-$
+$X(m, k) = \sum_{n=0}^{N-1} x[n+mH]w[n]e^{-j 2\pi kn/N}, \quad S(m,k)=|X(m,k)|$
 The plots use `src/visualization/spectrogram.py::plot_stft` with default `n_fft=2048`, `hop_length=512`.
 
 **What it captures.**
@@ -203,9 +201,7 @@ The plots use `src/visualization/spectrogram.py::plot_stft` with default `n_fft=
 ## 4.3 Mel spectrogram (dB) — the end-to-end representation
 
 **Meaning.** The mel spectrogram projects a power spectrogram through a mel filterbank and then applies log compression:
-$
-m = 2595\log_{10}(1 + f/700), \quad S_{mel} = M S, \quad S_{dB}=10\log_{10}(S_{mel}+\epsilon)
-$
+$m = 2595\log_{10}(1 + f/700), \quad S_{mel} = M S, \quad S_{dB}=10\log_{10}(S_{mel}+\epsilon)$
 In this pipeline:
 - `features.kind=mel_from_audio` extracts mel using `librosa.feature.melspectrogram` and `power_to_db`.
 - Configuration is in `configs/config.yaml`:
