@@ -539,6 +539,11 @@
   .shadow-xs {
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
+    figure {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
 
   </style>
 </head>
@@ -822,7 +827,7 @@ small variance (min ≈ 29.93 s, max ≈ 30.65 s)</p>
 <p><strong>Figure 1.</strong> Raw audio duration distribution
 (metadata).</p>
 <figure>
-<img
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/raw_duration_distribution.png"
 alt="Figure 1: Audio duration distribution (sec) from Data/processed/metadata.csv." />
 <figcaption aria-hidden="true">Figure 1: Audio duration distribution
@@ -830,7 +835,7 @@ alt="Figure 1: Audio duration distribution (sec) from Data/processed/metadata.cs
 </figure>
 <p><strong>Figure 2.</strong> Raw audio sample rate distribution.</p>
 <figure>
-<img
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/raw_sample_rate_distribution.png"
 alt="Figure 2: Sample rate distribution (Hz) from Data/processed/metadata.csv." />
 <figcaption aria-hidden="true">Figure 2: Sample rate distribution (Hz)
@@ -1097,13 +1102,13 @@ amplitude dynamics (compression vs. dynamic range), - silence/structure,
 - transient density (percussive activity).</p>
 <p><strong>Figure 3–6.</strong> Example waveforms across genres
 (3-second windows).</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/waveform_blues_blues.00084.png"
-alt="Figure 3: Waveform example (blues)." /> <img
+alt="Figure 3: Waveform example (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/waveform_classical_classical.00099.png"
-alt="Figure 4: Waveform example (classical)." /> <img
+alt="Figure 4: Waveform example (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/waveform_hiphop_hiphop.00026.png"
-alt="Figure 5: Waveform example (hiphop)." /> <img
+alt="Figure 5: Waveform example (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/waveform_metal_metal.00088.png"
 alt="Figure 6: Waveform example (metal)." /></p>
 <p><strong>Interpretation.</strong> Percussive-heavy segments typically
@@ -1123,13 +1128,13 @@ structure</strong> (bass lines, kick drum), - <strong>high-frequency
 content</strong> (hi-hats, distortion, brightness), - transient
 vs. harmonic texture (vertical vs. horizontal patterns).</p>
 <p><strong>Figure 7–10.</strong> STFT examples across genres.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/stft_blues_blues.00084.png"
-alt="Figure 7: STFT spectrogram (blues)." /> <img
+alt="Figure 7: STFT spectrogram (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/stft_classical_classical.00099.png"
-alt="Figure 8: STFT spectrogram (classical)." /> <img
+alt="Figure 8: STFT spectrogram (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/stft_hiphop_hiphop.00026.png"
-alt="Figure 9: STFT spectrogram (hiphop)." /> <img
+alt="Figure 9: STFT spectrogram (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/stft_metal_metal.00088.png"
 alt="Figure 10: STFT spectrogram (metal)." /></p>
 <p><strong>Interpretation.</strong> Metal tends to exhibit dense
@@ -1155,13 +1160,13 @@ S_{dB}=10<em>{10}(S</em>{mel}+) $ In this pipeline: -
 structure and align frequency resolution with human perception, making
 them a strong input for CNN/LSTM.</p>
 <p><strong>Figure 11–14.</strong> Mel spectrogram examples.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mel_blues_blues.00084.png"
-alt="Figure 11: Mel spectrogram (blues)." /> <img
+alt="Figure 11: Mel spectrogram (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mel_classical_classical.00099.png"
-alt="Figure 12: Mel spectrogram (classical)." /> <img
+alt="Figure 12: Mel spectrogram (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mel_hiphop_hiphop.00026.png"
-alt="Figure 13: Mel spectrogram (hiphop)." /> <img
+alt="Figure 13: Mel spectrogram (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mel_metal_metal.00088.png"
 alt="Figure 14: Mel spectrogram (metal)." /></p>
 <p><strong>Interpretation.</strong> Relative energy distribution across
@@ -1177,13 +1182,13 @@ and appear as the dominant engineered subfamily in
 <code>features_3_sec.csv</code>
 (<code>mfcc1..mfcc20_mean/var</code>).</p>
 <p><strong>Figure 15–18.</strong> MFCC heatmaps across genres.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mfcc_blues_blues.00084.png"
-alt="Figure 15: MFCC (blues)." /> <img
+alt="Figure 15: MFCC (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mfcc_classical_classical.00099.png"
-alt="Figure 16: MFCC (classical)." /> <img
+alt="Figure 16: MFCC (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mfcc_hiphop_hiphop.00026.png"
-alt="Figure 17: MFCC (hiphop)." /> <img
+alt="Figure 17: MFCC (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/mfcc_metal_metal.00088.png"
 alt="Figure 18: MFCC (metal)." /></p>
 <p><strong>Interpretation.</strong> MFCCs compress spectral detail but
@@ -1199,13 +1204,13 @@ energy)</h2>
 classes (C…B), discarding octave. It reflects harmonic progression and
 tonality.</p>
 <p><strong>Figure 19–22.</strong> Chromagrams across genres.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/chroma_blues_blues.00084.png"
-alt="Figure 19: Chromagram (blues)." /> <img
+alt="Figure 19: Chromagram (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/chroma_classical_classical.00099.png"
-alt="Figure 20: Chromagram (classical)." /> <img
+alt="Figure 20: Chromagram (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/chroma_hiphop_hiphop.00026.png"
-alt="Figure 21: Chromagram (hiphop)." /> <img
+alt="Figure 21: Chromagram (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/chroma_jazz_jazz.00021.png"
 alt="Figure 22: Chromagram (jazz)." /></p>
 <p><strong>Interpretation.</strong> Genres with richer harmonic movement
@@ -1218,13 +1223,13 @@ Spectral contrast (peak–valley structure across subbands)</h2>
 differences between spectral peaks and valleys across frequency
 subbands. It is sensitive to instrumentation and timbral “texture”.</p>
 <p><strong>Figure 23–26.</strong> Spectral contrast examples.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/contrast_blues_blues.00084.png"
-alt="Figure 23: Spectral contrast (blues)." /> <img
+alt="Figure 23: Spectral contrast (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/contrast_classical_classical.00099.png"
-alt="Figure 24: Spectral contrast (classical)." /> <img
+alt="Figure 24: Spectral contrast (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/contrast_hiphop_hiphop.00026.png"
-alt="Figure 25: Spectral contrast (hiphop)." /> <img
+alt="Figure 25: Spectral contrast (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/contrast_metal_metal.00088.png"
 alt="Figure 26: Spectral contrast (metal)." /></p>
 <p><strong>Interpretation.</strong> Dense, compressed mixes often reduce
@@ -1237,13 +1242,13 @@ periodicity)</h2>
 strength over time and captures rhythmic periodicities (tempo-related
 structure).</p>
 <p><strong>Figure 27–30.</strong> Tempograms across genres.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/tempogram_blues_blues.00084.png"
-alt="Figure 27: Tempogram (blues)." /> <img
+alt="Figure 27: Tempogram (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/tempogram_classical_classical.00027.png"
-alt="Figure 28: Tempogram (classical)." /> <img
+alt="Figure 28: Tempogram (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/tempogram_hiphop_hiphop.00026.png"
-alt="Figure 29: Tempogram (hiphop)." /> <img
+alt="Figure 29: Tempogram (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/tempogram_reggae_reggae.00046.png"
 alt="Figure 30: Tempogram (reggae)." /></p>
 <p><strong>Interpretation.</strong> Disco/hiphop typically show stronger
@@ -1257,13 +1262,13 @@ in the tabular feature set.</p>
 CSV includes <code>harmony_*</code> and <code>perceptr_*</code>
 statistics, and the project provides HPSS visualizations.</p>
 <p><strong>Figure 31–34.</strong> HPSS visualizations across genres.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/hpss_blues_blues.00084.png"
-alt="Figure 31: HPSS (blues)." /> <img
+alt="Figure 31: HPSS (blues)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/hpss_classical_classical.00099.png"
-alt="Figure 32: HPSS (classical)." /> <img
+alt="Figure 32: HPSS (classical)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/hpss_hiphop_hiphop.00026.png"
-alt="Figure 33: HPSS (hiphop)." /> <img
+alt="Figure 33: HPSS (hiphop)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/test-visualize-features/figures/hpss_metal_metal.00088.png"
 alt="Figure 34: HPSS (metal)." /></p>
 <p><strong>Interpretation.</strong> Classical/jazz segments often
@@ -1279,18 +1284,18 @@ embeddings.</p>
 <p><strong>Figure 35.</strong> Feature correlation heatmap (subset of
 first 40 features).</p>
 <figure>
-<img
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/visualize-features-tabular/figures/feature_correlation.png"
 alt="Figure 35: Feature correlation heatmap for tabular inputs." />
 <figcaption aria-hidden="true">Figure 35: Feature correlation heatmap
 for tabular inputs.</figcaption>
 </figure>
 <p><strong>Figure 36–38.</strong> Embeddings of tabular features.</p>
-<p><img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/visualize-features-tabular/figures/embedding_pca.png"
-alt="Figure 36: PCA embedding (tabular)." /> <img
+alt="Figure 36: PCA embedding (tabular)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/visualize-features-tabular/figures/embedding_tsne.png"
-alt="Figure 37: t-SNE embedding (tabular)." /> <img
+alt="Figure 37: t-SNE embedding (tabular)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/visualize-features-tabular/figures/embedding_umap.png"
 alt="Figure 38: UMAP embedding (tabular)." /></p>
 <p><strong>Interpretation.</strong> Clear clustering in these embeddings
@@ -1541,7 +1546,7 @@ CNN vs. LSTM</h2>
 <p><strong>Figure 39.</strong> CNN training curves
 (<code>outputs/mel_cnn/figures/training_curves.png</code>).</p>
 <figure>
-<img src="outputs/mel_cnn/figures/training_curves.png"
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/mel_cnn/figures/training_curves.png"
 alt="Figure 39: Training curves for mel CNN." />
 <figcaption aria-hidden="true">Figure 39: Training curves for mel
 CNN.</figcaption>
@@ -1549,7 +1554,7 @@ CNN.</figcaption>
 <p><strong>Figure 40.</strong> LSTM training curves
 (<code>outputs/mel_lstm/figures/training_curves.png</code>).</p>
 <figure>
-<img src="outputs/mel_lstm/figures/training_curves.png"
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/mel_lstm/figures/training_curves.png"
 alt="Figure 40: Training curves for mel LSTM." />
 <figcaption aria-hidden="true">Figure 40: Training curves for mel
 LSTM.</figcaption>
@@ -1557,17 +1562,17 @@ LSTM.</figcaption>
 <h3 id="confusion-matrices-and-ranking-curves">7.2.2 Confusion matrices
 and ranking curves</h3>
 <p><strong>Figure 41–43.</strong> CNN evaluation plots.</p>
-<p><img src="outputs/mel_cnn/figures/confusion_matrix.png"
-alt="Figure 41: Confusion matrix (mel CNN, normalized)." /> <img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/mel_cnn/figures/confusion_matrix.png"
+alt="Figure 41: Confusion matrix (mel CNN, normalized)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/mel_cnn/figures/roc_ovr.png"
-alt="Figure 42: ROC curves (OvR) for mel CNN." /> <img
+alt="Figure 42: ROC curves (OvR) for mel CNN." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/mel_cnn/figures/pr_ovr.png"
 alt="Figure 43: Precision–Recall curves (OvR) for mel CNN." /></p>
 <p><strong>Figure 44–46.</strong> LSTM evaluation plots.</p>
-<p><img src="outputs/mel_lstm/figures/confusion_matrix.png"
-alt="Figure 44: Confusion matrix (mel LSTM, normalized)." /> <img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/mel_lstm/figures/confusion_matrix.png"
+alt="Figure 44: Confusion matrix (mel LSTM, normalized)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/mel_lstm/figures/roc_ovr.png"
-alt="Figure 45: ROC curves (OvR) for mel LSTM." /> <img
+alt="Figure 45: ROC curves (OvR) for mel LSTM." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/mel_lstm/figures/pr_ovr.png"
 alt="Figure 46: Precision–Recall curves (OvR) for mel LSTM." /></p>
 <h3 id="class-wise-performance-highlights-from-evaluation-reports">7.2.3
@@ -1591,10 +1596,10 @@ model families best fit the engineered feature space.</p>
 <h3 id="lightgbm-best-tabular-run">7.3.1 LightGBM (best tabular
 run)</h3>
 <p><strong>Figure 47–49.</strong> LightGBM evaluation plots.</p>
-<p><img src="outputs/tabular_lightgbm/figures/confusion_matrix.png"
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/tabular_lightgbm/figures/confusion_matrix.png"
 alt="Figure 47: Confusion matrix (tabular LightGBM, normalized)." />
-<img src="outputs/tabular_lightgbm/figures/roc_ovr.png"
-alt="Figure 48: ROC curves (OvR) for tabular LightGBM." /> <img
+<img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/tabular_lightgbm/figures/roc_ovr.png"
+alt="Figure 48: ROC curves (OvR) for tabular LightGBM." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_lightgbm/figures/pr_ovr.png"
 alt="Figure 49: Precision–Recall curves (OvR) for tabular LightGBM." /></p>
 <p><strong>Class-wise extremes (from
@@ -1609,26 +1614,26 @@ harmonic/timbre signatures for short segments.</p>
 <h3 id="svm-rbf-and-xgboost-competitive-tabular-runs">7.3.2 SVM-RBF and
 XGBoost (competitive tabular runs)</h3>
 <p><strong>Figure 50–52.</strong> SVM-RBF evaluation plots.</p>
-<p><img src="outputs/tabular_svm_rbf/figures/confusion_matrix.png"
-alt="Figure 50: Confusion matrix (tabular SVM-RBF)." /> <img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/tabular_svm_rbf/figures/confusion_matrix.png"
+alt="Figure 50: Confusion matrix (tabular SVM-RBF)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_svm_rbf/figures/roc_ovr.png"
-alt="Figure 51: ROC curves (OvR) for tabular SVM-RBF." /> <img
+alt="Figure 51: ROC curves (OvR) for tabular SVM-RBF." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_svm_rbf/figures/pr_ovr.png"
 alt="Figure 52: Precision–Recall curves (OvR) for tabular SVM-RBF." /></p>
 <p><strong>Figure 53–55.</strong> XGBoost evaluation plots.</p>
-<p><img src="outputs/tabular_xgboost/figures/confusion_matrix.png"
-alt="Figure 53: Confusion matrix (tabular XGBoost)." /> <img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/tabular_xgboost/figures/confusion_matrix.png"
+alt="Figure 53: Confusion matrix (tabular XGBoost)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_xgboost/figures/roc_ovr.png"
-alt="Figure 54: ROC curves (OvR) for tabular XGBoost." /> <img
+alt="Figure 54: ROC curves (OvR) for tabular XGBoost." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_xgboost/figures/pr_ovr.png"
 alt="Figure 55: Precision–Recall curves (OvR) for tabular XGBoost." /></p>
 <h3 id="mlp-tabular-neural-baseline">7.3.3 MLP (tabular, neural
 baseline)</h3>
 <p><strong>Figure 56–58.</strong> Tabular MLP plots.</p>
-<p><img src="outputs/tabular_mlp/figures/training_curves.png"
-alt="Figure 56: Training curves (tabular MLP)." /> <img
+<p><img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;" src="outputs/tabular_mlp/figures/training_curves.png"
+alt="Figure 56: Training curves (tabular MLP)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_mlp/figures/confusion_matrix.png"
-alt="Figure 57: Confusion matrix (tabular MLP)." /> <img
+alt="Figure 57: Confusion matrix (tabular MLP)." /> <img class="report-figure" style="width:100%;max-width:760px;height:auto;display:block;margin:12px auto;page-break-inside:avoid;break-inside:avoid;"
 src="outputs/tabular_mlp/figures/roc_ovr.png"
 alt="Figure 58: ROC curves (OvR) for tabular MLP." /></p>
 <hr />
