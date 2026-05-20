@@ -3,14 +3,17 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+
+from src.data.augmentation import MixupCfg
 
 
 @dataclass
@@ -61,6 +64,17 @@ def better(a: float, b: float, mode: str) -> bool:
     return a < b if mode == "min" else a > b
 
 
+def _mixup_loss(
+    logits: torch.Tensor,
+    y_a: torch.Tensor,
+    y_b: torch.Tensor,
+    lam: float,
+    criterion: nn.Module,
+) -> torch.Tensor:
+    """Mixup loss: lambda * CE(logits, y_a) + (1-lambda) * CE(logits, y_b)."""
+    return lam * criterion(logits, y_a) + (1.0 - lam) * criterion(logits, y_b)
+
+
 def train(
     *,
     model: nn.Module,
@@ -74,17 +88,28 @@ def train(
     early_stopping: EarlyStoppingCfg,
     checkpoint_metric: str,
     checkpoint_mode: str,
+    mixup_cfg: Optional[MixupCfg] = None,
 ) -> Tuple[nn.Module, TrainHistory, Path]:
     """
-    Train a classifier with CrossEntropyLoss.
+    Train a classifier with CrossEntropyLoss, optionally with Mixup.
 
     Saves:
       - `best.pt` checkpoint
       - `history.json`
+
+    Mixup (Zhang et al. 2018):
+      When ``mixup_cfg.enabled=True``, pairs of training samples are linearly
+      interpolated (lambda ~ Beta(alpha, alpha)).  The loss is computed as a
+      convex combination of the two cross-entropy losses, which regularises
+      the model's decision boundaries and reduces overconfidence — directly
+      addressing genre-overlap issues.
     """
     optimizer = Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=5, min_lr=1e-6)
     criterion = nn.CrossEntropyLoss()
+
+    use_mixup = (mixup_cfg is not None) and mixup_cfg.enabled
+    rng = np.random.default_rng(42)
 
     model.to(device)
     best_metric = float("inf") if checkpoint_mode == "min" else float("-inf")
@@ -102,14 +127,35 @@ def train(
             x = x.to(device)
             y = y.to(device)
             optimizer.zero_grad(set_to_none=True)
-            logits = model(x)
-            loss = criterion(logits, y)
+
+            if use_mixup and rng.random() < (mixup_cfg.prob if mixup_cfg else 1.0):
+                # ── Mixup forward pass ─────────────────────────────────────
+                alpha = mixup_cfg.alpha  # type: ignore[union-attr]
+                lam = float(rng.beta(alpha, alpha)) if alpha > 0 else 1.0
+                batch_size = x.size(0)
+                idx = torch.randperm(batch_size, device=device)
+                x_mix = lam * x + (1.0 - lam) * x[idx]
+                y_a, y_b = y, y[idx]
+                logits = model(x_mix)
+                loss = _mixup_loss(logits, y_a, y_b, lam, criterion)
+                # Accuracy against the dominant label (for monitoring only)
+                acc = accuracy_from_logits(logits.detach(), y_a if lam >= 0.5 else y_b)
+            else:
+                logits = model(x)
+                loss = criterion(logits, y)
+                acc = accuracy_from_logits(logits.detach(), y)
+
             loss.backward()
             optimizer.step()
 
             train_losses.append(float(loss.item()))
-            train_accs.append(accuracy_from_logits(logits.detach(), y))
-            pbar.set_postfix(loss=np.mean(train_losses), acc=np.mean(train_accs), lr=optimizer.param_groups[0]["lr"])
+            train_accs.append(acc)
+            pbar.set_postfix(
+                loss=np.mean(train_losses),
+                acc=np.mean(train_accs),
+                lr=optimizer.param_groups[0]["lr"],
+                mixup=use_mixup,
+            )
 
         model.eval()
         val_losses = []
@@ -119,7 +165,7 @@ def train(
                 x = x.to(device)
                 y = y.to(device)
                 logits = model(x)
-                loss = criterion(logits, y)
+                loss = criterion(logits, y)  # val always uses standard CE
                 val_losses.append(float(loss.item()))
                 val_accs.append(accuracy_from_logits(logits, y))
 

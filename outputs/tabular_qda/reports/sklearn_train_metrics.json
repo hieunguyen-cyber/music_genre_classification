@@ -1,5 +1,5 @@
 {
   "model_name": "qda",
-  "val_accuracy": 0.76375,
-  "val_log_loss": 2.0605454984925924
+  "val_accuracy": 0.60875,
+  "val_log_loss": 4.9427493435376375
 }

@@ -11,7 +11,7 @@
 
 This project implements a modular, reproducible pipeline for **music genre classification** on a GTZAN mirror stored under `Data/`. Two modeling tracks are supported: (i) **tabular learning** on pre-extracted 3-second segment features from `Data/features_3_sec.csv` (58-dimensional input after dropping identifier columns), and (ii) **end-to-end neural learning** from raw audio by extracting **mel spectrogram** segments (3 seconds, 128 mel bins) and training deep models (CNN/LSTM). The repository includes stage-wise caching, logging, checkpointing, evaluation reports, and extensive visualizations (audio waveforms, STFT/mel/MFCC/chroma/spectral contrast/tempograms/HPSS, plus embeddings and correlation analysis).
 
-Across the included experimental runs in `outputs/`, the best reported test accuracy is achieved by gradient-boosted tabular models (LightGBM/XGBoost/SVM-RBF) with accuracies around **0.90–0.91**. However, a critical audit of the provided tabular split (`Data/splits/split_v1.csv`) shows severe **track-level leakage**: **966/1000 original tracks** have segments appearing in more than one split (train/val/test). Consequently, tabular results should be interpreted as **optimistic upper bounds** under a leaky protocol. In contrast, the mel track uses **group splits by track** with zero overlap across splits, yielding more realistic performance for end-to-end models (CNN: **0.6310**; LSTM: **0.5195**). The report analyzes dataset structure, feature semantics with visual evidence, model architectures and training configurations, and results with a focus on methodological correctness and interpretability.
+A critical audit of the original tabular split (`Data/splits/split_v1.csv`) revealed severe **track-level leakage**: **966/1000 original tracks** had segments appearing in more than one split (train/val/test), inflating reported accuracy. This has been **corrected**: both tracks now use a **group-level split** (`make_group_splits_from_filenames`) that guarantees all segments of a given 30-second track fall into exactly one split. The corrected tabular split is saved as `Data/splits/split_by_track_v2.csv`. The mel track had already used track-disjoint group splits and required no change. Additionally, two new data augmentation strategies have been added to address genre overlap (`Mixup`) and domain shift (`SpecAugment`), with configuration under `data.augmentation` in `configs/config.yaml`. Results under the corrected protocol are pending re-run.
 
 ---
 
@@ -112,17 +112,30 @@ Class distribution per split (derived by joining `split_v1.csv` with `features_3
 | classical |     719 |    80 |    199 |     998 |
 | country   |     718 |    80 |    199 |     997 |
 | disco     |     719 |    80 |    200 |     999 |
-| hiphop    |     718 |    80 |    200 |     998 |
-| jazz      |     720 |    80 |    200 |    1000 |
-| metal     |     720 |    80 |    200 |    1000 |
-| pop       |     720 |    80 |    200 |    1000 |
-| reggae    |     720 |    80 |    200 |    1000 |
-| rock      |     718 |    80 |    200 |     998 |
-| TOTAL     |    7192 |   800 |   1998 |    9990 |
+### 3.4.1 Tabular split (segment-level, track-disjoint)
 
-**Critical leakage finding (evidence from filenames).** Filenames are of the form `genre.trackid.segment.wav` (e.g., `blues.00000.0.wav`). Auditing `split_v1.csv` shows that **966 out of 1000 track IDs** have segments appearing in more than one split (train/val/test). This means the tabular evaluation protocol is **not track-disjoint**, and test performance is inflated by exposure to the same track’s audio characteristics during training.
+**Split correctness (v2, fixed).** Starting from `feature.yaml` version `split_by_track_v2.csv`, the tabular pipeline uses `src/data/split.py::make_group_splits_from_filenames`. This function:
+1. Extracts the track group ID from each filename: `blues.00000.0.wav` → group `blues.00000`.
+2. Performs a **stratified group-level split** (via `make_group_splits`), so all segments of a track go to the same split.
+3. Persists the result to `Data/splits/split_by_track_v2.csv` (row-indexed, compatible with `build_tabular_cache`).
 
-> Consequence: tabular results in `outputs/tabular_*` are best interpreted as performance under a **segment-level split with track leakage**, not as a strict generalization estimate to unseen tracks.
+Result of the v2 group split (seed=42, test=0.2, val=0.1):
+
+| label | train | val | test | TOTAL |
+|:---|---:|---:|---:|---:|
+| blues | 720 | 80 | 200 | 1000 |
+| classical | 718 | 80 | 200 | 998 |
+| country | 727 | 70 | 200 | 997 |
+| disco | 729 | 70 | 200 | 999 |
+| hiphop | 688 | 110 | 200 | 998 |
+| jazz | 740 | 60 | 200 | 1000 |
+| metal | 710 | 90 | 200 | 1000 |
+| pop | 760 | 40 | 200 | 1000 |
+| reggae | 680 | 120 | 200 | 1000 |
+| rock | 718 | 80 | 200 | 998 |
+| **TOTAL** | **7190** | **800** | **2000** | **9990** |
+
+**Zero track overlap confirmed**: 0 of 1000 tracks appear in more than one split (verified programmatically).
 
 ### 3.4.2 Mel split (segment-level, *track-disjoint by construction*)
 
@@ -380,6 +393,42 @@ Configuration is centralized in `configs/config.yaml` and `configs/train.yaml`.
 - STFT: `n_fft=2048`, `hop_length=512`
 - Mel bands: `128`, `fmin=20`, `fmax=8000`
 
+## 6.4 Data augmentation strategies (configured in `data.augmentation`)
+
+Three challenges motivated the following augmentations, all implemented in `src/data/augmentation.py`:
+
+### Genre Overlap → Mixup (`data.augmentation.mixup`)
+
+Mixup interpolates training sample pairs to expose models to synthetic boundary examples:
+$$x_{\text{mix}} = \lambda x_i + (1-\lambda) x_j, \quad y_{\text{mix}} = \lambda y_i + (1-\lambda) y_j, \quad \lambda \sim \text{Beta}(\alpha, \alpha)$$
+This regularises the model to predict smooth transitions between genre distributions, rather than committing to sharp decision boundaries. Effective for genres sharing instrumentation (rock/metal, blues/country).
+
+| Parameter | Default | Notes |
+|---|---|---|
+| `enabled` | `false` | Enable for MLP/CNN/LSTM training |
+| `alpha` | `0.2` | Controls interpolation strength; higher = more mixing |
+| `prob` | `1.0` | Fraction of batches to apply |
+
+### Domain Shift → SpecAugment (`data.augmentation.spec_augment`)
+
+SpecAugment (Park et al., 2019) masks contiguous frequency bands and time frames of the mel spectrogram:
+- **Frequency masking**: zeroes out $f$ consecutive mel bins, simulating microphone roll-off or band-limited environments.
+- **Time masking**: zeroes out $t$ consecutive time frames, simulating recording dropouts or noise bursts.
+
+This forces the model to rely on the remaining intact signal rather than memorising specific frequency/time signatures of the training domain.
+
+| Parameter | Default | Notes |
+|---|---|---|
+| `enabled` | `false` | Only applicable for `mel_from_audio` |
+| `freq_mask_param` | `20` | Max mel bins to mask |
+| `time_mask_param` | `20` | Max time frames to mask |
+| `n_freq_masks` | `2` | Number of frequency masks |
+| `n_time_masks` | `2` | Number of time masks |
+
+### Data Leakage → Fixed at split level (no augmentation needed)
+
+Track-level leakage is **structurally eliminated** by the group-level split (`make_group_splits_from_filenames`). No augmentation can substitute for a correct split.
+
 ---
 
 # 7. Experimental Results
@@ -502,12 +551,10 @@ suggesting overlap between harmonic/timbre signatures for short segments.
 
 ## 8.1 Performance vs. protocol correctness
 
-The most important comparative result in this repository is not simply “which model has the highest accuracy,” but **which evaluation protocol is valid** for the intended claim (generalization to unseen tracks).
+**Tabular track (v2 split, corrected):** both tracks now use track-disjoint group splits. Previous results under the leaky `split_v1.csv` are invalidated; re-run is needed to obtain valid tabular estimates.
+- **Mel track (group split):** evaluated under a track-disjoint protocol (CNN 0.6310, LSTM 0.5195 under the original run). These figures remain valid under the corrected protocol since no change was made to the mel split.
 
-- **Tabular track (as currently split):** very high reported accuracies (≈0.91) but invalid as a track-level estimate due to leakage (966/1000 tracks cross splits).
-- **Mel track (group split):** lower reported accuracy (CNN 0.6310) but evaluated under a track-disjoint protocol.
-
-**Recommendation for fair comparison.** To compare tabular and mel models fairly, the tabular split must be changed to be **group-disjoint by track ID** (derivable from `filename`). This is consistent with the intent documented in `README.md` (leakage discussion) and would likely reduce tabular performance substantially.
+**Current state.** As of this version, both tracks share the same evaluation protocol. Tabular results are pending re-run with `features.kind=tabular_csv` after deleting the v1 cache (`Data/features/tabular_features_v1.npz`).
 
 ## 8.2 Efficiency and complexity trade-offs (as observed from logs)
 
@@ -525,34 +572,36 @@ The most important comparative result in this repository is not simply “which 
 - **Reproducibility:** seed control, cached features, split files, and `config_snapshot.json` per run.
 - **Comprehensive visualization:** waveform, STFT/mel/MFCC/chroma/contrast/tempogram/HPSS, plus embeddings and correlation analysis.
 - **Model zoo:** broad baseline coverage for tabular learning, plus CNN/LSTM for mel.
+- **Correct evaluation protocol (v2):** both tabular and mel tracks now use track-disjoint group splits, eliminating data leakage.
+- **Augmentation suite:** Mixup (genre overlap), SpecAugment (domain shift), and waveform-level augmentations (noise, time-stretch, pitch-shift) are all implemented and configurable.
 
-## 9.2 Limitations and risks (evidence-based)
+## 9.2 Remaining limitations and risks
 
-### (A) Evaluation leakage in tabular track (confirmed)
-
-The current tabular split file is **not** track-disjoint, strongly inflating performance. This issue is not hypothetical; it is measurable directly from filenames and split assignments.
-
-### (B) Short-context ambiguity for mel models
+### (A) Short-context ambiguity for mel models
 
 Mel models operate on 3-second segments. Many genre cues are global (song-level arrangement) rather than local (short snippet). Confusions such as country ↔ rock/classical in `mel_cnn` align with this limitation.
 
-### (C) Dataset size and domain constraints
+### (B) Dataset size and domain constraints
 
 GTZAN is relatively small and can be sensitive to recording artifacts and duplication issues across mirrors. The pipeline correctly includes metadata checks and corruption handling (one unreadable file detected).
 
+### (C) Augmentation not yet wired into training loop
+
+Mixup (`src/data/augmentation.py::mixup_batch`) and SpecAugment (`apply_spec_augment`) are implemented and unit-tested, but are not yet integrated into the PyTorch training loop in `src/models/trainer.py`. This is the next engineering step before running ablations.
+
 ## 9.3 Future improvements (actionable)
 
-1. **Fix tabular split to be track-disjoint** by grouping `filename` into track IDs (e.g., `genre.00000`) and splitting by group, mirroring the mel pipeline.
-2. **Add a track-level evaluation aggregation** for mel: aggregate segment predictions into a track prediction (majority vote or mean probability), matching real-world “song-level” classification.
-3. **Stronger mel architectures:** consider CRNNs (CNN front-end + recurrent temporal modeling) or attention-based pooling over time.
-4. **Augmentation ablations:** the mel extraction code supports an augmentation config (`src/data/augmentation.py`); systematic experiments could improve robustness.
-5. **Calibrated comparisons:** ensure identical track-disjoint splits across all modeling tracks and report confidence intervals via repeated splits.
+1. **Wire Mixup into MLP/CNN/LSTM training loops** — call `mixup_batch` per batch inside `src/models/trainer.py` when `cfg.data.augmentation.mixup.enabled=true`.
+2. **Wire SpecAugment into MelDataset** — apply `apply_spec_augment` in `MelDataset.__getitem__` during training only.
+3. **Track-level evaluation aggregation** — aggregate segment predictions per track (majority vote or mean probability) to report song-level accuracy alongside segment-level accuracy.
+4. **Stronger mel architectures** — consider CRNNs (CNN front-end + recurrent temporal modeling) or attention-based pooling over time.
+5. **Re-run all tabular experiments** with the v2 group split to obtain valid baseline numbers for comparison against mel models.
 
 ---
 
 # 10. Conclusion
 
-This repository provides a well-engineered research pipeline for GTZAN music genre classification, integrating feature caching, logging, checkpointing, and rich visualization. Empirically, the best reported tabular models achieve ≈0.91 test accuracy, but this performance is not a valid track-level generalization estimate due to severe segment leakage across splits. The end-to-end mel pipeline, evaluated under a correct track-disjoint split, yields more conservative but methodologically sound results (CNN 0.6310; LSTM 0.5195). The project’s most impactful next step is to align the tabular evaluation protocol with the mel pipeline via group-disjoint splitting, enabling fair scientific comparisons between engineered features and learned time–frequency representations.
+This repository provides a well-engineered, methodologically sound research pipeline for GTZAN music genre classification, integrating feature caching, logging, checkpointing, and rich visualization. The critical track-level data leakage that previously affected the tabular evaluation protocol has been **eliminated**: both tabular and mel tracks now use track-disjoint group splits, ensuring that no segment from a training track appears in the validation or test set. Two augmentation strategies — Mixup (for genre overlap) and SpecAugment (for domain shift) — have been implemented and are ready for experimental integration. The next priorities are wiring augmentation into the training loop, re-running tabular experiments under the corrected protocol, and implementing track-level prediction aggregation for a fairer real-world evaluation.
 
 ---
 
@@ -564,3 +613,5 @@ This repository provides a well-engineered research pipeline for GTZAN music gen
 4. A. Paszke et al., “PyTorch: An Imperative Style, High-Performance Deep Learning Library,” *NeurIPS*, 2019.
 5. T. Chen and C. Guestrin, “XGBoost: A Scalable Tree Boosting System,” *KDD*, 2016.
 6. G. Ke et al., “LightGBM: A Highly Efficient Gradient Boosting Decision Tree,” *NeurIPS*, 2017.
+7. H. Zhang et al., “mixup: Beyond Empirical Risk Minimization,” *ICLR*, 2018.
+8. D. S. Park et al., “SpecAugment: A Simple Data Augmentation Method for Automatic Speech Recognition,” *Interspeech*, 2019.

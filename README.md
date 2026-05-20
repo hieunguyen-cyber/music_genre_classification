@@ -61,7 +61,7 @@ Repo hiện chứa GTZAN mirror trong `Data/`:
   - Mất thông tin global (solo/bridge ở 1 segment không đủ để phân loại chính xác).
 
 Trong pipeline:
-- `features.kind=tabular_csv` (mặc định): dùng `features_3_sec.csv` nhưng **split theo track group** để tránh leakage.
+- `features.kind=tabular_csv` (mặc định): dùng `features_3_sec.csv` và **split theo track group** (tất cả segment của cùng bài nhạc chỉ xuất hiện trong một split duy nhất) — đây là cách đúng về mặt phương pháp luận.
 - `features.kind=mel_from_audio` (end-to-end): cắt mel spectrogram từ raw audio, tự split theo track group.
 
 ---
@@ -164,14 +164,16 @@ test:  [0.1, 0.5, 1.1, 2.0, ...]  # CÓ 0.1 (cùng track với 0.0, 0.3 trong tr
 
 → Model học: "segment có MFCC pattern thế này + RMS pattern thế này → blues". Nhưng thực ra học luôn "track ID 0 → blues", vì segment cùng track đều cùng recording.
 
-**Đúng** (group-stratified split):
+**Đúng** (group-stratified split theo track ID — cách pipeline hiện dùng):
 ```
-train: track 0, 1, 3, 4, 5, 7, 8, 9   (8 track × 10 segment = 800)
-val:   track 2, 6                      (2 track × 10 segment = 200)
-test:  track 0-9 từ một tập riêng      (hoặc external test set)
+train: tracks 0, 1, 3, 4, 5, 7, 8, 9   (800 segs = 8 tracks × 10 segs)
+val:   tracks 2, 6                       (200 segs = 2 tracks × 10 segs)
+test:  tracks từ partition riêng         (tracks không xuất hiện ở train/val)
 ```
 
 → Model không bao giờ thấy cùng track ở train+val/test. Đánh giá **thật**.
+
+**Cơ chế trong code**: `src/data/split.py::make_group_splits_from_filenames` trích xuất track group từ tên file (`blues.00000.0.wav` → group `blues.00000`), sau đó split theo group. Split được lưu tại `Data/splits/split_by_track_v2.csv`.
 
 ---
 
@@ -227,6 +229,8 @@ Giữ tỷ lệ lớp gần giống nhau giữa các split bằng stratification
 **Stratified** = mỗi genre chiếm ~10% trong mỗi split. Nếu split ngẫu nhiên, có thể train thiếu classical (0%) nhưng test có 20% → không đánh giá được.
 
 Pipeline lưu split vào `data/splits/*.csv` để reproducible (chạy 2 lần lại được train/val/test giống nhau).
+
+**Đặc biệt với `tabular_csv`**: pipeline dùng `make_group_splits_from_filenames` để extract `track_id` từ `filename` column và split theo group. Kết quả split được lưu ở `Data/splits/split_by_track_v2.csv`.
 
 ### 4.2 Track B: End-to-end raw audio → mel spectrogram
 

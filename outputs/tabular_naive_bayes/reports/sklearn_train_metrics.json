@@ -1,5 +1,5 @@
 {
   "model_name": "naive_bayes",
-  "val_accuracy": 0.5225,
-  "val_log_loss": 5.223640522348265
+  "val_accuracy": 0.485,
+  "val_log_loss": 5.446822018047132
 }

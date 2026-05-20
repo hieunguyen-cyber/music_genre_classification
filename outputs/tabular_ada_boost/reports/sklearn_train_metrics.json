@@ -1,5 +1,5 @@
 {
   "model_name": "ada_boost",
-  "val_accuracy": 0.46875,
-  "val_log_loss": 2.2936911593785676
+  "val_accuracy": 0.43125,
+  "val_log_loss": 2.109582396231485
 }

@@ -39,6 +39,20 @@
       "val_size": 0.1,
       "stratify": true,
       "random_state": 42
+    },
+    "augmentation": {
+      "mixup": {
+        "enabled": false,
+        "alpha": 0.2,
+        "prob": 1.0
+      },
+      "spec_augment": {
+        "enabled": false,
+        "freq_mask_param": 20,
+        "time_mask_param": 20,
+        "n_freq_masks": 2,
+        "n_time_masks": 2
+      }
     }
   },
   "features": {
@@ -173,6 +187,16 @@
       "num_layers": 2,
       "bidirectional": true,
       "dropout": 0.2
+    },
+    "crnn_mel": {
+      "cnn_channels": [
+        32,
+        64,
+        128
+      ],
+      "lstm_hidden": 128,
+      "lstm_layers": 2,
+      "dropout": 0.3
     }
   },
   "_train_yaml": {
@@ -189,10 +213,10 @@
   },
   "_feature_yaml": {
     "tabular_csv": {
-      "cache_name": "tabular_features_v1.npz",
-      "scaler_name": "tabular_scaler.pkl",
+      "cache_name": "tabular_features_v2.npz",
+      "scaler_name": "tabular_scaler_v2.pkl",
       "label_map_name": "label_map.json",
-      "split_name": "split_v1.csv"
+      "split_name": "split_by_track_v2.csv"
     },
     "mel_from_audio": {
       "cache_name": "mel_features_v1.npz",

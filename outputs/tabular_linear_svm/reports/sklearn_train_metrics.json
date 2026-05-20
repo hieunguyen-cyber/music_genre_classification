@@ -1,5 +1,5 @@
 {
   "model_name": "linear_svm",
-  "val_accuracy": 0.69625,
+  "val_accuracy": 0.61,
   "val_log_loss": null
 }

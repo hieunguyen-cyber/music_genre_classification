@@ -6,7 +6,10 @@ from typing import Any, Dict, List, Sequence
 import torch.nn as nn
 
 from src.models.cnn import CNNMel
+from src.models.crnn import CRNNMel
 from src.models.lstm import LSTMMel
+
+MEL_MODEL_NAMES = {"cnn_mel", "lstm_mel", "crnn_mel"}
 
 
 class MLP(nn.Module):
@@ -58,5 +61,17 @@ def create_model(
             num_layers=int(model_cfg.get("num_layers", 2)),
             bidirectional=bool(model_cfg.get("bidirectional", True)),
             dropout=float(model_cfg.get("dropout", 0.2)),
+        )
+    if model_name == "crnn_mel":
+        if n_mels is None:
+            raise ValueError("n_mels is required for crnn_mel")
+        cnn_channels = tuple(model_cfg.get("cnn_channels", [32, 64, 128]))
+        return CRNNMel(
+            n_mels=n_mels,
+            n_classes=n_classes,
+            cnn_channels=cnn_channels,
+            lstm_hidden=int(model_cfg.get("lstm_hidden", 128)),
+            lstm_layers=int(model_cfg.get("lstm_layers", 2)),
+            dropout=float(model_cfg.get("dropout", 0.3)),
         )
     raise ValueError(f"Unknown model name: {model_name}")

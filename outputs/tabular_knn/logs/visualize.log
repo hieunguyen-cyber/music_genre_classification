@@ -2,3 +2,7 @@
 2026-05-09 22:37:05 | INFO | visualize | Confusion matrix visualization: D:\ML\music_genre_classification\outputs\tabular_knn\figures\confusion_matrix.png
 2026-05-09 22:37:05 | INFO | visualize | ROC/PR curves: D:\ML\music_genre_classification\outputs\tabular_knn\figures\roc_ovr.png, D:\ML\music_genre_classification\outputs\tabular_knn\figures\pr_ovr.png
 2026-05-09 22:37:05 | INFO | visualize | Model visualizations complete
+2026-05-19 22:52:03 | WARNING | visualize | Training history not found (run --stage train first)
+2026-05-19 22:52:03 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/tabular_knn/figures/confusion_matrix.png
+2026-05-19 22:52:03 | INFO | visualize | ROC/PR curves: /Users/hieunguyen/music_genre_classification/outputs/tabular_knn/figures/roc_ovr.png, /Users/hieunguyen/music_genre_classification/outputs/tabular_knn/figures/pr_ovr.png
+2026-05-19 22:52:03 | INFO | visualize | Model visualizations complete

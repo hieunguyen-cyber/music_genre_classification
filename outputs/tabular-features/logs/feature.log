@@ -4,3 +4,7 @@
 2026-05-09 21:54:56 | INFO | feature | Done
 2026-05-09 22:01:22 | INFO | feature | Loading existing split: D:\ML\music_genre_classification\data\splits\split_v1.csv
 2026-05-09 22:01:22 | INFO | feature | Feature cache exists: D:\ML\music_genre_classification\data\features\tabular_features_v1.npz
+2026-05-19 22:51:55 | INFO | feature | Creating new group-level split (track-disjoint, no leakage). All segments of each 30-sec track will be assigned to the same split.
+2026-05-19 22:51:55 | INFO | feature | Saved group split to: /Users/hieunguyen/music_genre_classification/data/splits/split_by_track_v2.csv
+2026-05-19 22:51:55 | INFO | feature | Building feature cache: /Users/hieunguyen/music_genre_classification/data/features/tabular_features_v2.npz
+2026-05-19 22:51:55 | INFO | feature | Done

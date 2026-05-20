@@ -1,0 +1,8 @@
+2026-05-20 01:55:13 | INFO | evaluate | device=mps
+2026-05-20 01:55:30 | INFO | evaluate | accuracy=0.6670 macro_f1=0.6626 weighted_f1=0.6626 roc_auc_ovr_macro=0.9411505555555555
+2026-05-20 01:55:30 | INFO | evaluate | Saved report: /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/reports/evaluation_report.md
+2026-05-20 01:55:31 | INFO | evaluate | Saved confusion matrix: /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/figures/confusion_matrix.png
+2026-05-20 01:55:31 | INFO | evaluate | Saved misclassified table (groups): /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/reports/misclassified.csv
+2026-05-20 01:55:31 | INFO | evaluate | Track-level (majority_vote): accuracy=0.7200 tracks=200 -> /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/reports/track_level_majority_vote.md
+2026-05-20 01:55:31 | INFO | evaluate | Track-level (mean_proba): accuracy=0.7300 tracks=200 -> /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/reports/track_level_mean_proba.md
+2026-05-20 01:55:31 | INFO | evaluate | Saved ROC/PR curves

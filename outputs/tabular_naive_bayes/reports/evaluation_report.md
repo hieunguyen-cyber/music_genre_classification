@@ -1,34 +1,34 @@
 # Evaluation Report
 
 - Run: `tabular_naive_bayes`
-- Timestamp: 2026-05-09T22:38:13
-- Device: `cuda`
+- Timestamp: 2026-05-19T22:52:45
+- Device: `mps`
 
 ## Summary
 
-- Accuracy: **0.4990**
-- Macro F1: **0.4795**
-- Weighted F1: **0.4794**
-- ROC-AUC (OvR, macro): **0.8807**
+- Accuracy: **0.5065**
+- Macro F1: **0.4846**
+- Weighted F1: **0.4846**
+- ROC-AUC (OvR, macro): **0.8694**
 
 ## Classification Report
 
 ```
               precision    recall  f1-score   support
 
-       blues     0.4112    0.2200    0.2866       200
-   classical     0.7236    0.8945    0.8000       199
-     country     0.3918    0.6281    0.4826       199
-       disco     0.4178    0.3050    0.3526       200
-      hiphop     0.7500    0.3300    0.4583       200
-        jazz     0.5929    0.3350    0.4281       200
-       metal     0.4349    0.8850    0.5832       200
-         pop     0.6168    0.6600    0.6377       200
-      reggae     0.4798    0.4750    0.4774       200
-        rock     0.3250    0.2600    0.2889       200
+       blues     0.4766    0.2550    0.3322       200
+   classical     0.7231    0.9400    0.8174       200
+     country     0.4218    0.5800    0.4884       200
+       disco     0.3981    0.2050    0.2706       200
+      hiphop     0.6496    0.3800    0.4795       200
+        jazz     0.5899    0.4100    0.4838       200
+       metal     0.4396    0.8000    0.5674       200
+         pop     0.5763    0.7550    0.6537       200
+      reggae     0.4623    0.4900    0.4757       200
+        rock     0.3106    0.2500    0.2770       200
 
-    accuracy                         0.4990      1998
-   macro avg     0.5144    0.4993    0.4795      1998
-weighted avg     0.5143    0.4990    0.4794      1998
+    accuracy                         0.5065      2000
+   macro avg     0.5048    0.5065    0.4846      2000
+weighted avg     0.5048    0.5065    0.4846      2000
 
 ```

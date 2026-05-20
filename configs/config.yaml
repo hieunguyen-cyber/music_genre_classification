@@ -34,10 +34,30 @@ stages:
 
 data:
   split:
+    # NOTE: tabular_csv track always uses group-level (track-disjoint) splitting
+    # via make_group_splits_from_filenames — this prevents data leakage from
+    # segment-level random splitting.
     test_size: 0.2
     val_size: 0.1
     stratify: true
     random_state: ${project.seed}
+
+  augmentation:
+    # Mixup: addresses genre overlap by interpolating feature pairs.
+    # Enable for tabular (MLP) or mel (CNN/LSTM) training.
+    mixup:
+      enabled: false
+      alpha: 0.2      # Beta(alpha, alpha) shape; 0 = no mixup
+      prob: 1.0       # fraction of batches to apply mixup
+
+    # SpecAugment: addresses domain shift by masking mel frequency/time bands.
+    # Only applicable when features.kind=mel_from_audio.
+    spec_augment:
+      enabled: false
+      freq_mask_param: 20   # max mel bins to mask
+      time_mask_param: 20   # max time frames to mask
+      n_freq_masks: 2
+      n_time_masks: 2
 
 features:
   kind: tabular_csv  # tabular_csv | mel_from_audio

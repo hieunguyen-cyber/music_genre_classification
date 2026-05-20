@@ -1,3 +1,6 @@
 2026-05-09 22:37:32 | INFO | train | device=cuda
 2026-05-09 22:37:32 | INFO | train | model=linear_svm (sklearn) input_dim=58 classes=10
 2026-05-09 22:37:33 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_linear_svm\checkpoints\model.joblib val_accuracy=0.6963 val_log_loss=None
+2026-05-19 22:52:22 | INFO | train | device=mps
+2026-05-19 22:52:22 | INFO | train | model=linear_svm (sklearn) input_dim=58 classes=10
+2026-05-19 22:52:24 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/checkpoints/model.joblib val_accuracy=0.6100 val_log_loss=None

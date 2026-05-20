@@ -1,5 +1,5 @@
 {
   "model_name": "logreg",
-  "val_accuracy": 0.7075,
-  "val_log_loss": 0.8644675089056038
+  "val_accuracy": 0.6175,
+  "val_log_loss": 1.266251068695582
 }

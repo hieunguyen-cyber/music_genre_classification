@@ -1,3 +1,6 @@
 2026-05-09 22:54:07 | INFO | train | device=cuda
 2026-05-09 22:54:07 | INFO | train | model=xgboost (sklearn) input_dim=58 classes=10
 2026-05-09 22:54:23 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_xgboost\checkpoints\model.joblib val_accuracy=0.9237 val_log_loss=0.2593574174408992
+2026-05-19 23:01:02 | INFO | train | device=mps
+2026-05-19 23:01:02 | INFO | train | model=xgboost (sklearn) input_dim=58 classes=10
+2026-05-19 23:01:12 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_xgboost/checkpoints/model.joblib val_accuracy=0.6763 val_log_loss=1.0913612875797032

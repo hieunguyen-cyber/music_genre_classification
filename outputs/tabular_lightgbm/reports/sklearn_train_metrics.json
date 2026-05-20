@@ -1,5 +1,5 @@
 {
   "model_name": "lightgbm",
-  "val_accuracy": 0.93,
-  "val_log_loss": 0.28938440836172746
+  "val_accuracy": 0.675,
+  "val_log_loss": 1.701915346459322
 }

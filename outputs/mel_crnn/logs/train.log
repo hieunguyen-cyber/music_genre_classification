@@ -1,0 +1,4 @@
+2026-05-20 00:31:56 | INFO | train | device=mps
+2026-05-20 00:31:59 | INFO | train | model=crnn_mel (torch, mel) classes=10
+2026-05-20 01:54:54 | INFO | train | best_checkpoint=/Users/hieunguyen/music_genre_classification/outputs/mel_crnn/checkpoints/best.pt
+2026-05-20 01:54:56 | INFO | train | Saved curves: /Users/hieunguyen/music_genre_classification/outputs/mel_crnn/figures/training_curves.png

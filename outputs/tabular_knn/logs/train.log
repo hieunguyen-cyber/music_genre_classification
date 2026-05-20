@@ -1,3 +1,6 @@
 2026-05-09 22:36:44 | INFO | train | device=cuda
 2026-05-09 22:36:44 | INFO | train | model=knn (sklearn) input_dim=58 classes=10
 2026-05-09 22:36:50 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_knn\checkpoints\model.joblib val_accuracy=0.8925 val_log_loss=1.5152562353664822
+2026-05-19 22:51:57 | INFO | train | device=mps
+2026-05-19 22:51:57 | INFO | train | model=knn (sklearn) input_dim=58 classes=10
+2026-05-19 22:51:58 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_knn/checkpoints/model.joblib val_accuracy=0.6275 val_log_loss=8.63672594318913

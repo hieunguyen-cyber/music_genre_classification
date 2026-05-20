@@ -1,34 +1,34 @@
 # Evaluation Report
 
 - Run: `tabular_mlp`
-- Timestamp: 2026-05-09T22:36:33
-- Device: `cuda`
+- Timestamp: 2026-05-19T23:35:54
+- Device: `mps`
 
 ## Summary
 
-- Accuracy: **0.8078**
-- Macro F1: **0.8064**
-- Weighted F1: **0.8063**
-- ROC-AUC (OvR, macro): **0.9777**
+- Accuracy: **0.6785**
+- Macro F1: **0.6719**
+- Weighted F1: **0.6719**
+- ROC-AUC (OvR, macro): **0.9368**
 
 ## Classification Report
 
 ```
               precision    recall  f1-score   support
 
-       blues     0.7814    0.8400    0.8096       200
-   classical     0.8767    0.9648    0.9187       199
-     country     0.7685    0.7839    0.7761       199
-       disco     0.7238    0.7600    0.7415       200
-      hiphop     0.8298    0.7800    0.8041       200
-        jazz     0.8458    0.8500    0.8479       200
-       metal     0.8732    0.8950    0.8840       200
-         pop     0.8466    0.8000    0.8226       200
-      reggae     0.7970    0.7850    0.7909       200
-        rock     0.7251    0.6200    0.6685       200
+       blues     0.6195    0.6350    0.6272       200
+   classical     0.8268    0.9550    0.8863       200
+     country     0.6761    0.5950    0.6330       200
+       disco     0.6067    0.4550    0.5200       200
+      hiphop     0.6749    0.6850    0.6799       200
+        jazz     0.7330    0.8100    0.7696       200
+       metal     0.8376    0.8250    0.8312       200
+         pop     0.6190    0.7800    0.6903       200
+      reggae     0.5753    0.6300    0.6014       200
+        rock     0.5685    0.4150    0.4798       200
 
-    accuracy                         0.8078      1998
-   macro avg     0.8068    0.8079    0.8064      1998
-weighted avg     0.8068    0.8078    0.8063      1998
+    accuracy                         0.6785      2000
+   macro avg     0.6738    0.6785    0.6719      2000
+weighted avg     0.6738    0.6785    0.6719      2000
 
 ```

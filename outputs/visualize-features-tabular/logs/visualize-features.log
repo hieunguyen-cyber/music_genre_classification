@@ -3,3 +3,5 @@
 2026-05-09 21:56:46 | WARNING | visualize-features | Metadata not found: D:\ML\music_genre_classification\data\processed\metadata.csv (run --stage preprocess)
 2026-05-09 21:58:16 | INFO | visualize-features | Saved tabular feature visualizations
 2026-05-09 22:01:11 | INFO | visualize-features | Saved audio visualizations for 20 files
+2026-05-19 22:49:34 | INFO | visualize-features | Saved raw dataset stats
+2026-05-19 22:49:34 | WARNING | visualize-features | Feature cache not found: /Users/hieunguyen/music_genre_classification/data/features/tabular_features_v2.npz (run --stage feature)

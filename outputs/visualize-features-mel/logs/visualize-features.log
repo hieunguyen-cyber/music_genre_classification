@@ -6,3 +6,7 @@
 2026-05-16 21:23:42 | WARNING | visualize-features | UMAP skipped: UMAP requires `umap-learn`. Install it or disable in config.
 2026-05-16 21:23:42 | INFO | visualize-features | Saved mel feature visualizations
 2026-05-16 21:25:05 | INFO | visualize-features | Saved audio visualizations for 20 files
+2026-05-19 22:49:37 | INFO | visualize-features | Saved raw dataset stats
+2026-05-19 22:50:30 | WARNING | visualize-features | UMAP skipped: UMAP requires `umap-learn`. Install it or disable in config.
+2026-05-19 22:50:30 | INFO | visualize-features | Saved mel feature visualizations
+2026-05-19 22:51:51 | INFO | visualize-features | Saved audio visualizations for 20 files

@@ -1,3 +1,6 @@
 2026-05-09 22:39:35 | INFO | train | device=cuda
 2026-05-09 22:39:35 | INFO | train | model=ada_boost (sklearn) input_dim=58 classes=10
 2026-05-09 22:40:01 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_ada_boost\checkpoints\model.joblib val_accuracy=0.4688 val_log_loss=2.2936911593785676
+2026-05-19 22:53:32 | INFO | train | device=mps
+2026-05-19 22:53:32 | INFO | train | model=ada_boost (sklearn) input_dim=58 classes=10
+2026-05-19 22:53:47 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_ada_boost/checkpoints/model.joblib val_accuracy=0.4313 val_log_loss=2.109582396231485

@@ -67,3 +67,9 @@ lstm_mel:
   num_layers: 2
   bidirectional: true
   dropout: 0.2
+
+crnn_mel:
+  cnn_channels: [32, 64, 128]
+  lstm_hidden: 128
+  lstm_layers: 2
+  dropout: 0.3

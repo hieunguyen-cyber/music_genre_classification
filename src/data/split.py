@@ -30,6 +30,10 @@ def make_splits(
 
     val_size is measured as a fraction of the *remaining* after test split, so that
     final fractions are approximately: test=test_size, val=val_size*(1-test_size).
+
+    WARNING: This function splits by row (segment level). For datasets where multiple
+    rows belong to the same recording (e.g. 3-sec segments from the same track), use
+    make_group_splits_from_filenames() instead to avoid track-level data leakage.
     """
     y = df[label_column].values
     idx = np.arange(len(df))
@@ -95,6 +99,62 @@ def make_group_splits(
     for g in g_test:
         mapping[str(g)] = "test"
     return mapping
+
+
+def make_group_splits_from_filenames(
+    df: pd.DataFrame,
+    *,
+    filename_column: str,
+    label_column: str,
+    test_size: float,
+    val_size: float,
+    random_state: int,
+    stratify: bool = True,
+) -> pd.DataFrame:
+    """
+    Group-level split for the tabular CSV track (features_3_sec.csv).
+
+    Filenames are expected in the form ``genre.trackid.segment.wav``
+    (e.g. ``blues.00000.0.wav``).  The function extracts the track group as
+    ``genre.trackid`` (e.g. ``blues.00000``) and performs a stratified split
+    *at track level*, ensuring that all segments of a track fall into exactly
+    one split (train / val / test).  This eliminates track-level data leakage
+    that occurs when splitting by individual rows/segments.
+
+    Returns
+    -------
+    pd.DataFrame with columns ``index`` (row position in df) and ``split``
+    (one of "train" / "val" / "test").  Drop-in compatible with
+    ``build_tabular_cache``.
+    """
+    # ── extract track group from filename ─────────────────────────────────
+    filenames = df[filename_column].astype(str)
+    # Pattern: genre.NNNNN.seg.wav  ->  genre.NNNNN
+    groups_series = filenames.str.extract(r"^(.+\.\d+)\.\d+\.wav$")[0]
+
+    # Fallback: if extraction fails (non-standard naming), treat each filename as own group
+    missing_mask = groups_series.isna()
+    if missing_mask.any():
+        groups_series[missing_mask] = filenames[missing_mask]
+
+    groups = groups_series.values
+    labels = df[label_column].astype(str).values
+
+    # ── group-level split ──────────────────────────────────────────────────
+    group_to_split = make_group_splits(
+        groups=groups,
+        labels=labels,
+        test_size=test_size,
+        val_size=val_size,
+        random_state=random_state,
+        stratify=stratify,
+    )
+
+    # ── map back to individual rows ────────────────────────────────────────
+    row_splits = np.array([group_to_split[str(g)] for g in groups], dtype=object)
+    idx = np.arange(len(df))
+    split_df = pd.DataFrame({"index": idx, "split": row_splits})
+    return split_df
 
 
 def save_split(split_df: pd.DataFrame, path: Path) -> None:

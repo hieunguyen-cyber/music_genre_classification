@@ -15,6 +15,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from src.data.augmentation import MixupCfg, SpecAugmentCfg
 from src.data.dataset import make_dataloaders, make_mel_dataloaders
 from src.data.feature_extraction import (
     build_tabular_cache,
@@ -24,11 +25,12 @@ from src.data.feature_extraction import (
     save_mel_cache,
 )
 from src.data.preprocessing import build_metadata
-from src.data.split import load_split, make_group_splits, make_splits, save_split
+from src.data.split import load_split, make_group_splits, make_group_splits_from_filenames, make_splits, save_split
 from src.evaluation.confusion_matrix import plot_confusion_matrix
 from src.evaluation.evaluate import evaluate_model
-from src.models.model import create_model
-from src.models.trainer import EarlyStoppingCfg, load_checkpoint, train
+from src.evaluation.track_aggregation import aggregate_by_track, track_eval_report
+from src.models.model import MEL_MODEL_NAMES, create_model
+from src.models.trainer import EarlyStoppingCfg, MixupCfg, load_checkpoint, train
 from src.utils.device import get_device
 from src.utils.io import deep_merge, load_yaml, save_json
 from src.utils.logger import setup_logger
@@ -129,6 +131,38 @@ def load_config(args: argparse.Namespace) -> Dict[str, Any]:
     return cfg
 
 
+# ---------------------------------------------------------------------------
+# Augmentation config helpers
+# ---------------------------------------------------------------------------
+
+def _build_mixup_cfg(cfg: Dict[str, Any]) -> "MixupCfg | None":
+    """Read data.augmentation.mixup from config and return a MixupCfg (or None)."""
+    aug = cfg.get("data", {}).get("augmentation", {})
+    mx = aug.get("mixup", {})
+    if not mx.get("enabled", False):
+        return None
+    return MixupCfg(
+        enabled=True,
+        alpha=float(mx.get("alpha", 0.2)),
+        prob=float(mx.get("prob", 1.0)),
+    )
+
+
+def _build_spec_augment_cfg(cfg: Dict[str, Any]) -> "SpecAugmentCfg | None":
+    """Read data.augmentation.spec_augment from config and return a SpecAugmentCfg (or None)."""
+    aug = cfg.get("data", {}).get("augmentation", {})
+    sa = aug.get("spec_augment", {})
+    if not sa.get("enabled", False):
+        return None
+    return SpecAugmentCfg(
+        enabled=True,
+        freq_mask_param=int(sa.get("freq_mask_param", 20)),
+        time_mask_param=int(sa.get("time_mask_param", 20)),
+        n_freq_masks=int(sa.get("n_freq_masks", 2)),
+        n_time_masks=int(sa.get("n_time_masks", 2)),
+    )
+
+
 def stage_preprocess(cfg: Dict[str, Any], run_paths) -> None:
     raw_root = project_root() / cfg["paths"]["raw_root"]
     raw_genres = raw_root / "genres_original"
@@ -157,18 +191,21 @@ def stage_feature(cfg: Dict[str, Any], run_paths) -> None:
             logger.info(f"Loading existing split: {split_path}")
             split_df = load_split(split_path)
         else:
-            logger.info("Creating new split (stratified)")
-            split_res = make_splits(
+            logger.info(
+                "Creating new group-level split (track-disjoint, no leakage). "
+                "All segments of each 30-sec track will be assigned to the same split."
+            )
+            split_df = make_group_splits_from_filenames(
                 df,
+                filename_column=cfg["features"]["tabular_csv"]["filename_column"],
                 label_column=cfg["features"]["tabular_csv"]["label_column"],
                 test_size=float(split_cfg["test_size"]),
                 val_size=float(split_cfg["val_size"]),
                 random_state=int(split_cfg["random_state"]),
                 stratify=bool(split_cfg["stratify"]),
             )
-            split_df = split_res.split_df
             save_split(split_df, split_path)
-            logger.info(f"Saved split to: {split_path}")
+            logger.info(f"Saved group split to: {split_path}")
 
         cache_path = out_dir / feature_yaml["cache_name"]
         scaler_path = out_dir / feature_yaml["scaler_name"]
@@ -266,10 +303,10 @@ def stage_train(cfg: Dict[str, Any], run_paths) -> None:
             f"{model_name} requires features.kind=mel_from_audio. "
             "Set `features.kind` in your config or pass `--feature-kind mel_from_audio`."
         )
-    if kind == "mel_from_audio" and model_name not in {"cnn_mel", "lstm_mel"}:
+    if kind == "mel_from_audio" and model_name not in MEL_MODEL_NAMES:
         raise ValueError(
             f"{model_name} is not supported with features.kind=mel_from_audio. "
-            "Use `cnn_mel` or `lstm_mel` for mel_from_audio features."
+            f"Use one of: {sorted(MEL_MODEL_NAMES)} for mel_from_audio features."
         )
     from src.models.sklearn_models import SKLEARN_MODEL_NAMES
     if model_name in SKLEARN_MODEL_NAMES:
@@ -327,6 +364,7 @@ def stage_train(cfg: Dict[str, Any], run_paths) -> None:
             num_workers=int(cfg["project"]["num_workers"]),
             seed=int(cfg["project"]["seed"]),
             as_sequence=as_sequence,
+            spec_augment_cfg=_build_spec_augment_cfg(cfg),
         )
         mel_cfg = cfg["features"]["mel_from_audio"]
         model = create_model(
@@ -358,6 +396,7 @@ def stage_train(cfg: Dict[str, Any], run_paths) -> None:
         ),
         checkpoint_metric=str(cfg["train"]["checkpoint"]["metric"]),
         checkpoint_mode=str(cfg["train"]["checkpoint"]["mode"]),
+        mixup_cfg=_build_mixup_cfg(cfg),
     )
     logger.info(f"best_checkpoint={best_path}")
 
@@ -404,6 +443,7 @@ def stage_evaluate(cfg: Dict[str, Any], run_paths) -> None:
             num_workers=int(cfg["project"]["num_workers"]),
             seed=int(cfg["project"]["seed"]),
             as_sequence=as_sequence,
+            # No SpecAugment during evaluation
         )
     else:
         raise ValueError(f"Unknown features.kind: {kind}")
@@ -481,15 +521,37 @@ def stage_evaluate(cfg: Dict[str, Any], run_paths) -> None:
     logger.info(f"Saved confusion matrix: {cm_path}")
 
     mis_csv = run_paths.reports_dir / "misclassified.csv"
+    groups_test = None
     if hasattr(cache, "filenames_test"):
         build_misclassified_table(cache.filenames_test, preds.y_true, preds.y_pred, cache.classes, mis_csv)
         logger.info(f"Saved misclassified table: {mis_csv}")
     elif hasattr(cache, "groups_test"):
-        # For mel_from_audio cache: store track group id instead of filename.
-        build_misclassified_table(cache.groups_test, preds.y_true, preds.y_pred, cache.classes, mis_csv)
+        groups_test = cache.groups_test
+        build_misclassified_table(groups_test, preds.y_true, preds.y_pred, cache.classes, mis_csv)
         logger.info(f"Saved misclassified table (groups): {mis_csv}")
     else:
         logger.warning("Misclassified table skipped (no identifiers available).")
+
+    # ── Track-level aggregation (mel track only) ───────────────────────────
+    if groups_test is not None:
+        for agg_mode in ("majority_vote", "mean_proba"):
+            try:
+                tp = aggregate_by_track(
+                    groups=groups_test,
+                    y_true=preds.y_true,
+                    y_pred=preds.y_pred,
+                    y_proba=getattr(preds, "y_proba", None),
+                    mode=agg_mode,
+                )
+                track_report = track_eval_report(tp, class_names=cache.classes)
+                track_path = run_paths.reports_dir / f"track_level_{agg_mode}.md"
+                track_path.write_text(track_report, encoding="utf-8")
+                logger.info(
+                    f"Track-level ({agg_mode}): accuracy={float((tp.y_true == tp.y_pred).mean()):.4f} "
+                    f"tracks={len(tp.y_true)} -> {track_path}"
+                )
+            except Exception as e:
+                logger.warning(f"Track aggregation ({agg_mode}) skipped: {e}")
 
     if getattr(preds, "y_proba", None) is not None:
         try:

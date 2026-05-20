@@ -1,3 +1,6 @@
 2026-05-09 22:38:40 | INFO | train | device=cuda
 2026-05-09 22:38:40 | INFO | train | model=qda (sklearn) input_dim=58 classes=10
 2026-05-09 22:38:40 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_qda\checkpoints\model.joblib val_accuracy=0.7638 val_log_loss=2.0605454984925924
+2026-05-19 22:53:00 | INFO | train | device=mps
+2026-05-19 22:53:00 | INFO | train | model=qda (sklearn) input_dim=58 classes=10
+2026-05-19 22:53:00 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_qda/checkpoints/model.joblib val_accuracy=0.6088 val_log_loss=4.9427493435376375

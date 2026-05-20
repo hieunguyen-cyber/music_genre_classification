@@ -1,5 +1,5 @@
 {
   "model_name": "knn",
-  "val_accuracy": 0.8925,
-  "val_log_loss": 1.5152562353664822
+  "val_accuracy": 0.6275,
+  "val_log_loss": 8.63672594318913
 }

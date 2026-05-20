@@ -1,5 +1,5 @@
 {
   "model_name": "svm_rbf",
-  "val_accuracy": 0.91875,
-  "val_log_loss": 0.25787946408478485
+  "val_accuracy": 0.6275,
+  "val_log_loss": 1.2174026729739003
 }

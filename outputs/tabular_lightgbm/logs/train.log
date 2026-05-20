@@ -1,3 +1,6 @@
 2026-05-09 22:54:40 | INFO | train | device=cuda
 2026-05-09 22:54:40 | INFO | train | model=lightgbm (sklearn) input_dim=58 classes=10
 2026-05-09 22:54:53 | INFO | train | checkpoint=D:\ML\music_genre_classification\outputs\tabular_lightgbm\checkpoints\model.joblib val_accuracy=0.9300 val_log_loss=0.28938440836172746
+2026-05-19 23:01:25 | INFO | train | device=mps
+2026-05-19 23:01:25 | INFO | train | model=lightgbm (sklearn) input_dim=58 classes=10
+2026-05-19 23:01:53 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/checkpoints/model.joblib val_accuracy=0.6750 val_log_loss=1.701915346459322

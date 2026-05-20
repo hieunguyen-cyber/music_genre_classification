@@ -1,5 +1,5 @@
 {
   "model_name": "random_forest",
-  "val_accuracy": 0.88375,
-  "val_log_loss": 0.7124136948783817
+  "val_accuracy": 0.65,
+  "val_log_loss": 1.102060648146242
 }
