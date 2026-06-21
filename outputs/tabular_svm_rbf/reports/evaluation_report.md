@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_svm_rbf`
-- Timestamp: 2026-05-19T22:52:16
+- Timestamp: 2026-06-20T23:50:57
 - Device: `mps`
 
 ## Summary

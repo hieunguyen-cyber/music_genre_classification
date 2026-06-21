@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_lightgbm`
-- Timestamp: 2026-05-19T23:01:56
+- Timestamp: 2026-06-21T00:00:33
 - Device: `mps`
 
 ## Summary

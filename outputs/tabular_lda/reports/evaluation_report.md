@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_lda`
-- Timestamp: 2026-05-19T22:52:54
+- Timestamp: 2026-06-20T23:51:35
 - Device: `mps`
 
 ## Summary

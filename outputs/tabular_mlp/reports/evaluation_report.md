@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_mlp`
-- Timestamp: 2026-05-19T23:35:54
+- Timestamp: 2026-06-20T23:50:30
 - Device: `mps`
 
 ## Summary

@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_xgboost`
-- Timestamp: 2026-05-19T23:01:14
+- Timestamp: 2026-06-20T23:59:54
 - Device: `mps`
 
 ## Summary

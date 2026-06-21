@@ -4,3 +4,6 @@
 2026-05-19 22:53:09 | INFO | train | device=mps
 2026-05-19 22:53:09 | INFO | train | model=random_forest (sklearn) input_dim=58 classes=10
 2026-05-19 22:53:11 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_random_forest/checkpoints/model.joblib val_accuracy=0.6500 val_log_loss=1.102060648146242
+2026-06-20 23:51:49 | INFO | train | device=mps
+2026-06-20 23:51:49 | INFO | train | model=random_forest (sklearn) input_dim=58 classes=10
+2026-06-20 23:51:51 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_random_forest/checkpoints/model.joblib val_accuracy=0.6500 val_log_loss=1.102060648146242

@@ -4,3 +4,6 @@
 2026-05-19 22:52:51 | INFO | train | device=mps
 2026-05-19 22:52:51 | INFO | train | model=lda (sklearn) input_dim=58 classes=10
 2026-05-19 22:52:51 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_lda/checkpoints/model.joblib val_accuracy=0.6212 val_log_loss=1.2467492850672273
+2026-06-20 23:51:32 | INFO | train | device=mps
+2026-06-20 23:51:32 | INFO | train | model=lda (sklearn) input_dim=58 classes=10
+2026-06-20 23:51:32 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_lda/checkpoints/model.joblib val_accuracy=0.6212 val_log_loss=1.2467492850672273

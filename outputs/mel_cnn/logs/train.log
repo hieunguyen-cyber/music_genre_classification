@@ -10,3 +10,7 @@
 2026-05-19 23:36:05 | INFO | train | model=cnn_mel (torch, mel) classes=10
 2026-05-20 00:17:18 | INFO | train | best_checkpoint=/Users/hieunguyen/music_genre_classification/outputs/mel_cnn/checkpoints/best.pt
 2026-05-20 00:17:19 | INFO | train | Saved curves: /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/training_curves.png
+2026-06-21 00:02:04 | INFO | train | device=mps
+2026-06-21 00:02:06 | INFO | train | model=cnn_mel (torch, mel) classes=10
+2026-06-21 00:42:37 | INFO | train | best_checkpoint=/Users/hieunguyen/music_genre_classification/outputs/mel_cnn/checkpoints/best.pt
+2026-06-21 00:42:37 | INFO | train | Saved curves: /Users/hieunguyen/music_genre_classification/outputs/mel_cnn/figures/training_curves.png

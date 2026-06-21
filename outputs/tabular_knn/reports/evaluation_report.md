@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_knn`
-- Timestamp: 2026-05-19T22:52:00
+- Timestamp: 2026-06-20T23:50:39
 - Device: `mps`
 
 ## Summary

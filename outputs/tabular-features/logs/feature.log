@@ -8,3 +8,5 @@
 2026-05-19 22:51:55 | INFO | feature | Saved group split to: /Users/hieunguyen/music_genre_classification/data/splits/split_by_track_v2.csv
 2026-05-19 22:51:55 | INFO | feature | Building feature cache: /Users/hieunguyen/music_genre_classification/data/features/tabular_features_v2.npz
 2026-05-19 22:51:55 | INFO | feature | Done
+2026-06-20 23:16:15 | INFO | feature | Loading existing split: /Users/hieunguyen/music_genre_classification/data/splits/split_by_track_v2.csv
+2026-06-20 23:16:15 | INFO | feature | Feature cache exists: /Users/hieunguyen/music_genre_classification/data/features/tabular_features_v2.npz

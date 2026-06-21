@@ -12,6 +12,4 @@ Data/
 # Quy tắc cho phép Git theo dõi thư mục src/data
 !src/data/
 
-*.pt
-*.joblib
 outputs/**/checkpoints/

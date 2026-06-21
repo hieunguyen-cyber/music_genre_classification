@@ -8,3 +8,8 @@
 2026-05-19 22:52:27 | INFO | evaluate | Saved report: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/reports/evaluation_report.md
 2026-05-19 22:52:28 | INFO | evaluate | Saved confusion matrix: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/figures/confusion_matrix.png
 2026-05-19 22:52:28 | INFO | evaluate | Saved misclassified table: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/reports/misclassified.csv
+2026-06-20 23:51:07 | INFO | evaluate | device=mps
+2026-06-20 23:51:07 | INFO | evaluate | accuracy=0.6590 macro_f1=0.6503 weighted_f1=0.6503 roc_auc_ovr_macro=None
+2026-06-20 23:51:07 | INFO | evaluate | Saved report: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/reports/evaluation_report.md
+2026-06-20 23:51:08 | INFO | evaluate | Saved confusion matrix: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/figures/confusion_matrix.png
+2026-06-20 23:51:08 | INFO | evaluate | Saved misclassified table: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/reports/misclassified.csv

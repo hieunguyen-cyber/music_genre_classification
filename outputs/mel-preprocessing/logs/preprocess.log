@@ -1,3 +1,6 @@
 2026-05-09 22:55:10 | INFO | preprocess | raw_genres_dir=D:\ML\music_genre_classification\Data\genres_original
 2026-05-09 22:55:10 | INFO | preprocess | out_csv=D:\ML\music_genre_classification\data\processed\metadata.csv
 2026-05-09 22:55:21 | INFO | preprocess | metadata_rows=1000
+2026-06-21 00:00:38 | INFO | preprocess | raw_genres_dir=/Users/hieunguyen/music_genre_classification/Data/genres_original
+2026-06-21 00:00:38 | INFO | preprocess | out_csv=/Users/hieunguyen/music_genre_classification/data/processed/metadata.csv
+2026-06-21 00:00:39 | INFO | preprocess | metadata_rows=1000

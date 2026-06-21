@@ -10,3 +10,9 @@
 2026-05-19 23:00:56 | INFO | evaluate | Saved confusion matrix: /Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/figures/confusion_matrix.png
 2026-05-19 23:00:56 | INFO | evaluate | Saved misclassified table: /Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/reports/misclassified.csv
 2026-05-19 23:00:56 | INFO | evaluate | Saved ROC/PR curves
+2026-06-20 23:59:35 | INFO | evaluate | device=mps
+2026-06-20 23:59:35 | INFO | evaluate | accuracy=0.7440 macro_f1=0.7428 weighted_f1=0.7428 roc_auc_ovr_macro=0.9589244444444442
+2026-06-20 23:59:35 | INFO | evaluate | Saved report: /Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/reports/evaluation_report.md
+2026-06-20 23:59:36 | INFO | evaluate | Saved confusion matrix: /Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/figures/confusion_matrix.png
+2026-06-20 23:59:36 | INFO | evaluate | Saved misclassified table: /Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/reports/misclassified.csv
+2026-06-20 23:59:36 | INFO | evaluate | Saved ROC/PR curves

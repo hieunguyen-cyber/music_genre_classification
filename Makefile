@@ -1,4 +1,4 @@
-.PHONY: help preprocess feature train evaluate visualize full clean
+.PHONY: help preprocess feature train evaluate visualize full clean inference
 
 PY?=python
 RUN_NAME?=default
@@ -10,6 +10,7 @@ help:
 	@echo "  train       - train model -> outputs/$(RUN_NAME)/checkpoints/best.pt"
 	@echo "  evaluate    - evaluate model -> outputs/$(RUN_NAME)/reports/*"
 	@echo "  visualize   - generate plots -> outputs/$(RUN_NAME)/figures/*"
+	@echo "  inference   - start inference web UI (port 1234)"
 	@echo "  full        - run all stages"
 	@echo ""
 	@echo "Vars:"
@@ -32,6 +33,9 @@ visualize:
 
 full:
 	$(PY) src/main.py --stage full --run-name $(RUN_NAME)
+
+inference:
+	$(PY) inference/app.py
 
 clean:
 	rm -rf outputs/*

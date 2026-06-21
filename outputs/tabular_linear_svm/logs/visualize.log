@@ -4,3 +4,6 @@
 2026-05-19 22:52:30 | WARNING | visualize | Training history not found (run --stage train first)
 2026-05-19 22:52:30 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/figures/confusion_matrix.png
 2026-05-19 22:52:30 | INFO | visualize | Model visualizations complete
+2026-06-20 23:51:10 | WARNING | visualize | Training history not found (run --stage train first)
+2026-06-20 23:51:10 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/tabular_linear_svm/figures/confusion_matrix.png
+2026-06-20 23:51:10 | INFO | visualize | Model visualizations complete

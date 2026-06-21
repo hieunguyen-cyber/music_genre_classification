@@ -56,7 +56,7 @@
     }
   },
   "features": {
-    "kind": "mel_from_audio",
+    "kind": "tabular_csv",
     "tabular_csv": {
       "drop_columns": [
         "filename",

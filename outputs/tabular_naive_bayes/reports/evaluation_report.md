@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_naive_bayes`
-- Timestamp: 2026-05-19T22:52:45
+- Timestamp: 2026-06-20T23:51:26
 - Device: `mps`
 
 ## Summary

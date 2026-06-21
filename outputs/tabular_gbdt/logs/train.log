@@ -4,3 +4,6 @@
 2026-05-19 22:53:56 | INFO | train | device=mps
 2026-05-19 22:53:56 | INFO | train | model=gbdt (sklearn) input_dim=58 classes=10
 2026-05-19 23:00:51 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/checkpoints/model.joblib val_accuracy=0.6700 val_log_loss=0.9770162433984023
+2026-06-20 23:52:31 | INFO | train | device=mps
+2026-06-20 23:52:31 | INFO | train | model=gbdt (sklearn) input_dim=58 classes=10
+2026-06-20 23:59:32 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_gbdt/checkpoints/model.joblib val_accuracy=0.6700 val_log_loss=0.9770162433984023

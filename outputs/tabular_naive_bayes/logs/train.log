@@ -4,3 +4,6 @@
 2026-05-19 22:52:43 | INFO | train | device=mps
 2026-05-19 22:52:43 | INFO | train | model=naive_bayes (sklearn) input_dim=58 classes=10
 2026-05-19 22:52:43 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_naive_bayes/checkpoints/model.joblib val_accuracy=0.4850 val_log_loss=5.446822018047132
+2026-06-20 23:51:23 | INFO | train | device=mps
+2026-06-20 23:51:23 | INFO | train | model=naive_bayes (sklearn) input_dim=58 classes=10
+2026-06-20 23:51:23 | INFO | train | checkpoint=/Users/hieunguyen/music_genre_classification/outputs/tabular_naive_bayes/checkpoints/model.joblib val_accuracy=0.4850 val_log_loss=5.446822018047132

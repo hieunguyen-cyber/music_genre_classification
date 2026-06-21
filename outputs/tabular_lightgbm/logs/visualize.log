@@ -6,3 +6,7 @@
 2026-05-19 23:02:00 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/confusion_matrix.png
 2026-05-19 23:02:00 | INFO | visualize | ROC/PR curves: /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/roc_ovr.png, /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/pr_ovr.png
 2026-05-19 23:02:00 | INFO | visualize | Model visualizations complete
+2026-06-21 00:00:36 | WARNING | visualize | Training history not found (run --stage train first)
+2026-06-21 00:00:36 | INFO | visualize | Confusion matrix visualization: /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/confusion_matrix.png
+2026-06-21 00:00:36 | INFO | visualize | ROC/PR curves: /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/roc_ovr.png, /Users/hieunguyen/music_genre_classification/outputs/tabular_lightgbm/figures/pr_ovr.png
+2026-06-21 00:00:36 | INFO | visualize | Model visualizations complete

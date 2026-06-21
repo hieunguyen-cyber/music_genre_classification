@@ -1,7 +1,7 @@
 # Evaluation Report
 
 - Run: `tabular_logreg`
-- Timestamp: 2026-05-19T22:52:37
+- Timestamp: 2026-06-20T23:51:18
 - Device: `mps`
 
 ## Summary
