@@ -328,37 +328,43 @@ def segment_audio(y, sr, seg_sec=SEGMENT_SECONDS):
 
 def extract_tabular_features(audio_path):
     """Extract 58-dim feature vector(s) matching the training CSV."""
-    y, sr = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="librosa")
+        y, sr = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
     segs = segment_audio(y, sr)
     rows = []
     for seg in segs:
-        stft = np.abs(librosa.stft(seg, n_fft=N_FFT, hop_length=HOP_LENGTH))
-        row = {
-            "length": SEGMENT_SECONDS,
-            "chroma_stft_mean": np.mean(librosa.feature.chroma_stft(S=stft, sr=sr)),
-            "chroma_stft_var": np.var(librosa.feature.chroma_stft(S=stft, sr=sr)),
-            "rms_mean": np.mean(librosa.feature.rms(S=stft)),
-            "rms_var": np.var(librosa.feature.rms(S=stft)),
-            "spectral_centroid_mean": np.mean(librosa.feature.spectral_centroid(S=stft, sr=sr)),
-            "spectral_centroid_var": np.var(librosa.feature.spectral_centroid(S=stft, sr=sr)),
-            "spectral_bandwidth_mean": np.mean(librosa.feature.spectral_bandwidth(S=stft, sr=sr)),
-            "spectral_bandwidth_var": np.var(librosa.feature.spectral_bandwidth(S=stft, sr=sr)),
-            "rolloff_mean": np.mean(librosa.feature.spectral_rolloff(S=stft, sr=sr)),
-            "rolloff_var": np.var(librosa.feature.spectral_rolloff(S=stft, sr=sr)),
-            "zero_crossing_rate_mean": np.mean(librosa.feature.zero_crossing_rate(seg)),
-            "zero_crossing_rate_var": np.var(librosa.feature.zero_crossing_rate(seg)),
-        }
-        harmony, perceptr = librosa.effects.hpss(seg)
-        row["harmony_mean"] = np.mean(harmony)
-        row["harmony_var"] = np.var(harmony)
-        row["perceptr_mean"] = np.mean(perceptr)
-        row["perceptr_var"] = np.var(perceptr)
-        tempo_arr, _ = librosa.beat.beat_track(y=seg, sr=sr)
-        row["tempo"] = float(tempo_arr.item()) if tempo_arr is not None and tempo_arr.size > 0 else 120.0
-        mfcc = librosa.feature.mfcc(S=librosa.power_to_db(stft), sr=sr, n_mfcc=20)
-        for i in range(1, 21):
-            row[f"mfcc{i}_mean"] = np.mean(mfcc[i - 1])
-            row[f"mfcc{i}_var"] = np.var(mfcc[i - 1])
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=UserWarning, module="librosa")
+            stft = np.abs(librosa.stft(seg, n_fft=N_FFT, hop_length=HOP_LENGTH))
+            row = {
+                "length": SEGMENT_SECONDS,
+                "chroma_stft_mean": np.mean(librosa.feature.chroma_stft(S=stft, sr=sr)),
+                "chroma_stft_var": np.var(librosa.feature.chroma_stft(S=stft, sr=sr)),
+                "rms_mean": np.mean(librosa.feature.rms(S=stft)),
+                "rms_var": np.var(librosa.feature.rms(S=stft)),
+                "spectral_centroid_mean": np.mean(librosa.feature.spectral_centroid(S=stft, sr=sr)),
+                "spectral_centroid_var": np.var(librosa.feature.spectral_centroid(S=stft, sr=sr)),
+                "spectral_bandwidth_mean": np.mean(librosa.feature.spectral_bandwidth(S=stft, sr=sr)),
+                "spectral_bandwidth_var": np.var(librosa.feature.spectral_bandwidth(S=stft, sr=sr)),
+                "rolloff_mean": np.mean(librosa.feature.spectral_rolloff(S=stft, sr=sr)),
+                "rolloff_var": np.var(librosa.feature.spectral_rolloff(S=stft, sr=sr)),
+                "zero_crossing_rate_mean": np.mean(librosa.feature.zero_crossing_rate(seg)),
+                "zero_crossing_rate_var": np.var(librosa.feature.zero_crossing_rate(seg)),
+            }
+            harmony, perceptr = librosa.effects.hpss(seg)
+            row["harmony_mean"] = np.mean(harmony)
+            row["harmony_var"] = np.var(harmony)
+            row["perceptr_mean"] = np.mean(perceptr)
+            row["perceptr_var"] = np.var(perceptr)
+            tempo_val, _ = librosa.beat.beat_track(y=seg, sr=sr)
+            if isinstance(tempo_val, (np.ndarray,)):
+                tempo_val = tempo_val.item() if tempo_val.size > 0 else 120.0
+            row["tempo"] = float(tempo_val) if tempo_val is not None else 120.0
+            mfcc = librosa.feature.mfcc(S=librosa.power_to_db(stft), sr=sr, n_mfcc=20)
+            for i in range(1, 21):
+                row[f"mfcc{i}_mean"] = np.mean(mfcc[i - 1])
+                row[f"mfcc{i}_var"] = np.var(mfcc[i - 1])
         rows.append(row)
     if not rows:
         raise ValueError("Audio too short for any 3-second segment")
@@ -367,7 +373,9 @@ def extract_tabular_features(audio_path):
 
 def extract_mel_features(audio_path):
     """Extract mel spectrograms for CNN/LSTM/CRNN models."""
-    y, sr = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning, module="librosa")
+        y, sr = librosa.load(audio_path, sr=SAMPLE_RATE, mono=True)
     segs = segment_audio(y, sr)
     mels = []
     for seg in segs:
@@ -578,6 +586,8 @@ def predict():
         return jsonify({"success": True, "results": results, "conclusion": conclusion})
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
     finally:

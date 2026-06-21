@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>document</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose'
+    });
+    window.addEventListener('load', function() {
+      var converted = new Set();
+
+      document.querySelectorAll('pre').forEach(function(pre) {
+        var code = pre.querySelector('code');
+        var preHasMermaid = pre.className && pre.className.indexOf('mermaid') !== -1;
+        var codeHasMermaid =
+          code &&
+          (code.className || '').match(/(?:^|\s)(?:mermaid|language-mermaid)(?:\s|$)/);
+
+        if (preHasMermaid || codeHasMermaid) {
+          var div = document.createElement('div');
+          div.className = 'mermaid';
+          div.textContent = code ? code.textContent : pre.textContent;
+          if (pre.parentNode) {
+            if (code) {
+              converted.add(code);
+            }
+            pre.parentNode.replaceChild(div, pre);
+          }
+        }
+      });
+
+      // Handle rare cases where mermaid markup exists without a <pre> wrapper
+      document.querySelectorAll('code').forEach(function(code) {
+        var hasMermaid = (code.className || '').indexOf('mermaid') !== -1 || (code.className || '').indexOf('language-mermaid') !== -1;
+        if (!hasMermaid || converted.has(code)) {
+          return;
+        }
+        var wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = code.textContent;
+        if (code.parentNode) {
+          code.parentNode.replaceChild(wrapper, code);
+          converted.add(wrapper);
+        }
+      });
+
+      setTimeout(function() {
+        mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+      }, 100);
+    });
+  </script>
+
+  <style>
+  body {
+      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background-color: #fafafa;
+      margin: 0 !important;
+      padding: 20px !important;
+      font-size: 14px;
+  }
+
+  img, figure img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+  }
+  figure {
+      margin: 16px 0;
+      text-align: center;
+  }
+  table {
+      border-collapse: collapse;
+      min-width: 60%;
+      max-width: 100%;
+      margin: 20px 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  table tr th {
+      background-color: #143452;
+      color: white;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 500;
+  }
+
+  .table-http th,
+  .table-http td,
+  table th,
+  table td {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+  }
+
+  .tr-break {
+      background-color: #2d79b717 !important;
+  }
+
+  .tr-break td {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+  }
+
+  table tr td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ecf0f1;
+  }
+
+  table tr:last-child td {
+      border-bottom: none;
+  }
+
+  table tr:nth-child(even) {
+      background-color: #f8f9fa;
+  }
+
+  .highlight {
+      background-color: #fff3cd !important;
+  }
+
+  a {
+      font-size: 14px;
+  }
+
+  code {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      background: #fff8e4;
+      color: #c99a0d;
+      font-size: 13px;
+  }
+
+  pre code {
+      background-color: transparent;
+  }
+
+  pre {
+      background-color: #000;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+  }
+
+  pre code.language-php,
+  pre code.language-sql,
+  pre code.language-javascript,
+  pre code.language-bash,
+  pre code.language-shell {
+    background-color: #282c34 !important;
+    color: #abb2bf;
+  }
+
+  /* Syntax Highlighting */
+  code span.kw { color: #c678dd; font-weight: bold; } /* Keyword */
+  code span.dt { color: #e5c07b; } /* Datatype */
+  code span.dv { color: #d19a66; } /* Decimal Value */
+  code span.bn { color: #d19a66; } /* Base N */
+  code span.fl { color: #d19a66; } /* Float */
+  code span.ch { color: #98c379; } /* Char */
+  code span.st { color: #98c379; } /* String */
+  code span.co { color: #5c6370; font-style: italic; } /* Comment */
+  code span.ot { color: #e06c75; } /* Other */
+  code span.al { color: #e06c75; font-weight: bold; } /* Alert */
+  code span.fu { color: #61afef; } /* Function */
+  code span.er { color: #e06c75; font-weight: bold; } /* Error */
+  code span.wa { color: #e06c75; font-style: italic; } /* Warning */
+  code span.cn { color: #d19a66; } /* Constant */
+  code span.sc { color: #e5c07b; } /* Special Char */
+  code span.vs { color: #98c379; } /* Verbatim String */
+  code span.ss { color: #98c379; } /* Special String */
+  code span.im { color: #c678dd; } /* Import */
+  code span.va { color: #e06c75; } /* Variable */
+  code span.cf { color: #c678dd; } /* Control Flow */
+  code span.op { color: #56b6c2; } /* Operator */
+  code span.bu { color: #e5c07b; } /* BuiltIn */
+  code span.ex { color: #d19a66; } /* Extension */
+  code span.pp { color: #e5c07b; } /* Preprocessor */
+  code span.at { color: #d19a66; } /* Attribute */
+  code span.do { color: #5c6370; font-style: italic; } /* Documentation */
+  code span.an { color: #5c6370; font-style: italic; } /* Annotation */
+  code span.cv { color: #5c6370; font-style: italic; } /* Comment Var */
+  code span.in { color: #5c6370; font-style: italic; } /* Information */
+
+  ul, ol {
+      margin: 15px 0;
+      padding-left: 30px;
+  }
+
+  li {
+      margin-bottom: 8px;
+  }
+
+  blockquote {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #856404;
+  }
+
+  pre code.language-json {
+    background-color: #0d1117 !important;
+    color: #58a6ff !important;
+    display: block;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: -15px;
+  }
+
+  .table-http code {
+      font-size: 12px;
+  }
+
+  .table-http th:nth-child(1),.table-http td:nth-child(1) { width: 8%; }  /* HTTP Method */
+  .table-http th:nth-child(2),.table-http td:nth-child(2) { width: 15%; } /* URL */
+  .table-http th:nth-child(3),.table-http td:nth-child(3) { width: 19%; } /* Mô tả */
+  .table-http th:nth-child(4),.table-http td:nth-child(4) { width: 43%; } /* RewriteRule */
+  .table-http th:nth-child(5),.table-http td:nth-child(5) { width: 15%; } /* Ví dụ */
+
+  pre, pre.sourceCode {
+      background-color: #c0c4c73b;
+  }
+
+  .sourceCode {
+      overflow: auto;
+  }
+
+  /* Pandoc highlight overrides */
+  pre.sourceCode {
+      background: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 6px;
+  }
+  .sourceCode code {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+      padding: unset !important;
+  }
+  .sourceCode .kw { color: #2a8ad4; font-weight: 700; }    /* keywords */
+  .sourceCode .cf { color: #2a8ad4; font-weight: 700; }    /* control flow */
+  .sourceCode .dt { color: #070707; }                      /* data types */
+  .sourceCode .fu { color: #8b5cf6; }                     /* functions */
+  .sourceCode .op { color: #2a8ad4; }                     /* operators */
+  .sourceCode .st { color: #0aa370; }                     /* strings */
+  .sourceCode .dv,                                     /* decimal values */
+  .sourceCode .bn { color: #c18401; }                     /* numbers */
+  .sourceCode .fl { color: #c18401; }                     /* floats */
+  .sourceCode .ch { color: #0aa370; }                     /* chars */
+  .sourceCode .co { color: #6a737d; font-style: italic; } /* comments */
+  .sourceCode .va { color: #444; }                        /* variables */
+  .sourceCode .cn { color: #c18401; font-weight: 700; }   /* constants */
+  .sourceCode .al { color: #d73a49; font-weight: 700; }   /* alerts */
+  .sourceCode .an { color: #d73a49; font-weight: 700; }   /* annotations */
+  .sourceCode .at { color: #005cc5; }                     /* attributes */
+  .sourceCode .im { color: #005cc5; }                     /* imports */
+
+  #TOC {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #TOC > ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #TOC ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  #TOC li {
+    margin: 8px 0;
+  }
+
+  #TOC a {
+    text-decoration: none;
+    color: #0066cc;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  #TOC a:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+
+  #TOC > ul > li > a {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #TOC ul ul a {
+    font-size: 0.95em;
+    color: #555;
+  }
+
+  hr {
+      background: #cacaca;
+  }
+
+  .w-50 {
+      width: 50%;
+  }
+
+  .w-100 {
+      width: 100%;
+  }
+
+  .max-w-100 {
+      max-width: 100% !important;
+  }
+
+  .shadow-xs {
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  a {
+      font-size: 14px;
+  }
+
+  code {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      background: #fff8e4;
+      color: #c99a0d;
+      font-size: 13px;
+  }
+
+  pre code {
+      background-color: transparent;
+  }
+
+  pre {
+      background-color: #000;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+  }
+
+  pre.sourceCode {
+      border-left: 4px solid #3498db;
+  }
+
+  pre code.language-php,
+  pre code.language-sql,
+  pre code.language-javascript,
+  pre code.language-bash,
+  pre code.language-shell {
+    background-color: #282c34 !important;
+    color: #abb2bf;
+  }
+
+  /* Syntax Highlighting */
+  code span.kw { color: #c678dd; font-weight: bold; } /* Keyword */
+  code span.dt { color: #e5c07b; } /* Datatype */
+  code span.dv { color: #d19a66; } /* Decimal Value */
+  code span.bn { color: #d19a66; } /* Base N */
+  code span.fl { color: #d19a66; } /* Float */
+  code span.ch { color: #98c379; } /* Char */
+  code span.st { color: #98c379; } /* String */
+  code span.co { color: #5c6370; font-style: italic; } /* Comment */
+  code span.ot { color: #e06c75; } /* Other */
+  code span.al { color: #e06c75; font-weight: bold; } /* Alert */
+  code span.fu { color: #61afef; } /* Function */
+  code span.er { color: #e06c75; font-weight: bold; } /* Error */
+  code span.wa { color: #e06c75; font-style: italic; } /* Warning */
+  code span.cn { color: #d19a66; } /* Constant */
+  code span.sc { color: #e5c07b; } /* Special Char */
+  code span.vs { color: #98c379; } /* Verbatim String */
+  code span.ss { color: #98c379; } /* Special String */
+  code span.im { color: #c678dd; } /* Import */
+  code span.va { color: #e06c75; } /* Variable */
+  code span.cf { color: #c678dd; } /* Control Flow */
+  code span.op { color: #56b6c2; } /* Operator */
+  code span.bu { color: #e5c07b; } /* BuiltIn */
+  code span.ex { color: #d19a66; } /* Extension */
+  code span.pp { color: #e5c07b; } /* Preprocessor */
+  code span.at { color: #d19a66; } /* Attribute */
+  code span.do { color: #5c6370; font-style: italic; } /* Documentation */
+  code span.an { color: #5c6370; font-style: italic; } /* Annotation */
+  code span.cv { color: #5c6370; font-style: italic; } /* Comment Var */
+  code span.in { color: #5c6370; font-style: italic; } /* Information */
+
+  ul, ol {
+      margin: 15px 0;
+      padding-left: 30px;
+  }
+
+  li {
+      margin-bottom: 8px;
+  }
+
+  blockquote {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #856404;
+  }
+
+  pre code.language-json {
+    background-color: #0d1117 !important;
+    color: #58a6ff !important;
+    display: block;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: -15px;
+  }
+
+  .table-http code {
+      font-size: 12px;
+  }
+
+  .table-http th:nth-child(1),.table-http td:nth-child(1) { width: 8%; }  /* HTTP Method */
+  .table-http th:nth-child(2),.table-http td:nth-child(2) { width: 15%; } /* URL */
+  .table-http th:nth-child(3),.table-http td:nth-child(3) { width: 19%; } /* Mô tả */
+  .table-http th:nth-child(4),.table-http td:nth-child(4) { width: 43%; } /* RewriteRule */
+  .table-http th:nth-child(5),.table-http td:nth-child(5) { width: 15%; } /* Ví dụ */
+
+  pre, pre.sourceCode {
+      background-color: #c0c4c73b;
+  }
+
+  .sourceCode {
+      overflow: auto;
+  }
+
+  /* Pandoc highlight overrides */
+  pre.sourceCode {
+      background: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+  }
+  .sourceCode code {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+  }
+  .sourceCode .kw { color: #2a8ad4; font-weight: 700; }    /* keywords */
+  .sourceCode .cf { color: #2a8ad4; font-weight: 700; }    /* control flow */
+  .sourceCode .dt { color: #070707; }                      /* data types */
+  .sourceCode .fu { color: #8b5cf6; }                     /* functions */
+  .sourceCode .op { color: #2a8ad4; }                     /* operators */
+  .sourceCode .st { color: #0aa370; }                     /* strings */
+  .sourceCode .dv,                                     /* decimal values */
+  .sourceCode .bn { color: #c18401; }                     /* numbers */
+  .sourceCode .fl { color: #c18401; }                     /* floats */
+  .sourceCode .ch { color: #0aa370; }                     /* chars */
+  .sourceCode .co { color: #6a737d; font-style: italic; } /* comments */
+  .sourceCode .va { color: #444; }                        /* variables */
+  .sourceCode .cn { color: #c18401; font-weight: 700; }   /* constants */
+  .sourceCode .al { color: #d73a49; font-weight: 700; }   /* alerts */
+  .sourceCode .an { color: #d73a49; font-weight: 700; }   /* annotations */
+  .sourceCode .at { color: #005cc5; }                     /* attributes */
+  .sourceCode .im { color: #005cc5; }                     /* imports */
+
+  #TOC {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #TOC > ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #TOC ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  #TOC li {
+    margin: 8px 0;
+  }
+
+  #TOC a {
+    text-decoration: none;
+    color: #0066cc;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  #TOC a:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+
+  #TOC > ul > li > a {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #TOC ul ul a {
+    font-size: 0.95em;
+    color: #555;
+  }
+
+  hr {
+      background: #cacaca;
+  }
+
+  .w-50 {
+      width: 50%;
+  }
+
+  .w-100 {
+      width: 100%;
+  }
+
+  .max-w-100 {
+      max-width: 100% !important;
+  }
+
+  .shadow-xs {
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  </style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#music-genre-classification"
+id="toc-music-genre-classification">Music Genre Classification</a>
+<ul>
+<li><a
+href="#a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models"
+id="toc-a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models">A
+Modular Research Pipeline on GTZAN with Tabular Features and End-to-End
+Mel Spectrogram Models</a></li>
+</ul></li>
+<li><a href="#abstract" id="toc-abstract">Abstract</a></li>
+<li><a href="#introduction" id="toc-introduction">1.
+Introduction</a></li>
+<li><a href="#problem-analysis" id="toc-problem-analysis">2. Problem
+Analysis</a></li>
+<li><a href="#dataset-description" id="toc-dataset-description">3.
+Dataset Description</a>
+<ul>
+<li><a href="#repository-dataset-layout"
+id="toc-repository-dataset-layout">3.1 Repository dataset
+layout</a></li>
+<li><a href="#audio-metadata-audit" id="toc-audio-metadata-audit">3.2
+Audio metadata audit</a></li>
+<li><a href="#tabular-dataset-feature-schema-and-dimensionality"
+id="toc-tabular-dataset-feature-schema-and-dimensionality">3.3 Tabular
+dataset: feature schema and dimensionality</a></li>
+<li><a href="#trainvalidationtest-splits-as-shipped-in-this-repo"
+id="toc-trainvalidationtest-splits-as-shipped-in-this-repo">3.4
+Train/validation/test splits (as shipped in this repo)</a>
+<ul>
+<li><a href="#tabular-split-segment-level-leaky-by-track"
+id="toc-tabular-split-segment-level-leaky-by-track">3.4.1 Tabular split
+(segment-level, leaky by track)</a></li>
+<li><a href="#tabular-split-segment-level-track-disjoint"
+id="toc-tabular-split-segment-level-track-disjoint">3.4.1 Tabular split
+(segment-level, track-disjoint)</a></li>
+<li><a href="#mel-split-segment-level-track-disjoint-by-construction"
+id="toc-mel-split-segment-level-track-disjoint-by-construction">3.4.2
+Mel split (segment-level, <em>track-disjoint by
+construction</em>)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#feature-extraction-analysis-with-visual-evidence"
+id="toc-feature-extraction-analysis-with-visual-evidence">4. Feature
+Extraction Analysis (with visual evidence)</a>
+<ul>
+<li><a href="#waveform-time-domain-amplitude"
+id="toc-waveform-time-domain-amplitude">4.1 Waveform (time-domain
+amplitude)</a></li>
+<li><a href="#stft-spectrogram-log-frequency-db"
+id="toc-stft-spectrogram-log-frequency-db">4.2 STFT spectrogram
+(log-frequency, dB)</a></li>
+<li><a href="#mel-spectrogram-db-the-end-to-end-representation"
+id="toc-mel-spectrogram-db-the-end-to-end-representation">4.3 Mel
+spectrogram (dB) — the end-to-end representation</a></li>
+<li><a href="#mfcc-mel-frequency-cepstral-coefficients"
+id="toc-mfcc-mel-frequency-cepstral-coefficients">4.4 MFCC
+(Mel-Frequency Cepstral Coefficients)</a></li>
+<li><a href="#chromagram-pitch-class-energy"
+id="toc-chromagram-pitch-class-energy">4.5 Chromagram (pitch class
+energy)</a></li>
+<li><a href="#spectral-contrast-peakvalley-structure-across-subbands"
+id="toc-spectral-contrast-peakvalley-structure-across-subbands">4.6
+Spectral contrast (peak–valley structure across subbands)</a></li>
+<li><a href="#tempogram-rhythmic-periodicity"
+id="toc-tempogram-rhythmic-periodicity">4.7 Tempogram (rhythmic
+periodicity)</a></li>
+<li><a href="#hpss-harmonicpercussive-source-separation"
+id="toc-hpss-harmonicpercussive-source-separation">4.8 HPSS
+(harmonic/percussive source separation)</a></li>
+<li><a href="#tabular-feature-space-diagnostics-correlation-embeddings"
+id="toc-tabular-feature-space-diagnostics-correlation-embeddings">4.9
+Tabular feature space diagnostics (correlation + embeddings)</a></li>
+</ul></li>
+<li><a href="#model-architecture-analysis"
+id="toc-model-architecture-analysis">5. Model Architecture Analysis</a>
+<ul>
+<li><a href="#classical-ml-baselines-tabular-scikit-learn"
+id="toc-classical-ml-baselines-tabular-scikit-learn">5.1 Classical ML
+baselines (tabular, scikit-learn)</a></li>
+<li><a href="#mlp-for-tabular-features-pytorch"
+id="toc-mlp-for-tabular-features-pytorch">5.2 MLP for tabular features
+(PyTorch)</a></li>
+<li><a href="#cnn-on-mel-spectrogram-pytorch"
+id="toc-cnn-on-mel-spectrogram-pytorch">5.3 CNN on mel spectrogram
+(PyTorch)</a></li>
+<li><a href="#lstm-on-mel-sequences-pytorch"
+id="toc-lstm-on-mel-sequences-pytorch">5.4 LSTM on mel sequences
+(PyTorch)</a></li>
+</ul></li>
+<li><a href="#training-configuration" id="toc-training-configuration">6.
+Training Configuration</a>
+<ul>
+<li><a href="#global-settings" id="toc-global-settings">6.1 Global
+settings</a></li>
+<li><a href="#tabular-training-torch-mlp"
+id="toc-tabular-training-torch-mlp">6.2 Tabular training (torch
+MLP)</a></li>
+<li><a href="#mel-feature-extraction-end-to-end-track"
+id="toc-mel-feature-extraction-end-to-end-track">6.3 Mel feature
+extraction (end-to-end track)</a></li>
+<li><a
+href="#data-augmentation-strategies-configured-in-data.augmentation"
+id="toc-data-augmentation-strategies-configured-in-data.augmentation">6.4
+Data augmentation strategies (configured in
+<code>data.augmentation</code>)</a>
+<ul>
+<li><a href="#genre-overlap-mixup-data.augmentation.mixup"
+id="toc-genre-overlap-mixup-data.augmentation.mixup">Genre Overlap →
+Mixup (<code>data.augmentation.mixup</code>)</a></li>
+<li><a href="#domain-shift-specaugment-data.augmentation.spec_augment"
+id="toc-domain-shift-specaugment-data.augmentation.spec_augment">Domain
+Shift → SpecAugment
+(<code>data.augmentation.spec_augment</code>)</a></li>
+<li><a href="#data-leakage-fixed-at-split-level-no-augmentation-needed"
+id="toc-data-leakage-fixed-at-split-level-no-augmentation-needed">Data
+Leakage → Fixed at split level (no augmentation needed)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#experimental-results" id="toc-experimental-results">7.
+Experimental Results</a>
+<ul>
+<li><a href="#cross-model-summary-from-evaluation-reports"
+id="toc-cross-model-summary-from-evaluation-reports">7.1 Cross-model
+summary (from evaluation reports)</a></li>
+<li><a href="#end-to-end-mel-models-cnn-vs.-lstm"
+id="toc-end-to-end-mel-models-cnn-vs.-lstm">7.2 End-to-end mel models:
+CNN vs. LSTM</a>
+<ul>
+<li><a href="#training-curves" id="toc-training-curves">7.2.1 Training
+curves</a></li>
+<li><a href="#confusion-matrices-and-ranking-curves"
+id="toc-confusion-matrices-and-ranking-curves">7.2.2 Confusion matrices
+and ranking curves</a></li>
+<li><a href="#class-wise-performance-highlights-from-evaluation-reports"
+id="toc-class-wise-performance-highlights-from-evaluation-reports">7.2.3
+Class-wise performance highlights (from evaluation reports)</a></li>
+</ul></li>
+<li><a href="#tabular-models-with-leakage-caveat"
+id="toc-tabular-models-with-leakage-caveat">7.3 Tabular models (with
+leakage caveat)</a>
+<ul>
+<li><a href="#lightgbm-best-tabular-run"
+id="toc-lightgbm-best-tabular-run">7.3.1 LightGBM (best tabular
+run)</a></li>
+<li><a href="#svm-rbf-and-xgboost-competitive-tabular-runs"
+id="toc-svm-rbf-and-xgboost-competitive-tabular-runs">7.3.2 SVM-RBF and
+XGBoost (competitive tabular runs)</a></li>
+<li><a href="#mlp-tabular-neural-baseline"
+id="toc-mlp-tabular-neural-baseline">7.3.3 MLP (tabular, neural
+baseline)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#comparative-analysis" id="toc-comparative-analysis">8.
+Comparative Analysis</a>
+<ul>
+<li><a href="#performance-vs.-protocol-correctness"
+id="toc-performance-vs.-protocol-correctness">8.1 Performance
+vs. protocol correctness</a></li>
+<li><a
+href="#efficiency-and-complexity-trade-offs-as-observed-from-logs"
+id="toc-efficiency-and-complexity-trade-offs-as-observed-from-logs">8.2
+Efficiency and complexity trade-offs (as observed from logs)</a></li>
+</ul></li>
+<li><a href="#discussion" id="toc-discussion">9. Discussion</a>
+<ul>
+<li><a href="#strengths-of-the-project"
+id="toc-strengths-of-the-project">9.1 Strengths of the project</a></li>
+<li><a href="#remaining-limitations-and-risks"
+id="toc-remaining-limitations-and-risks">9.2 Remaining limitations and
+risks</a>
+<ul>
+<li><a href="#a-short-context-ambiguity-for-mel-models"
+id="toc-a-short-context-ambiguity-for-mel-models">(A) Short-context
+ambiguity for mel models</a></li>
+<li><a href="#b-dataset-size-and-domain-constraints"
+id="toc-b-dataset-size-and-domain-constraints">(B) Dataset size and
+domain constraints</a></li>
+<li><a href="#c-augmentation-not-yet-wired-into-training-loop"
+id="toc-c-augmentation-not-yet-wired-into-training-loop">(C)
+Augmentation not yet wired into training loop</a></li>
+</ul></li>
+<li><a href="#future-improvements-actionable"
+id="toc-future-improvements-actionable">9.3 Future improvements
+(actionable)</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion">10. Conclusion</a></li>
+<li><a href="#references" id="toc-references">11. References</a></li>
+</ul>
+</nav>
+<h1 id="music-genre-classification">Music Genre Classification</h1>
+<h2
+id="a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models">A
+Modular Research Pipeline on GTZAN with Tabular Features and End-to-End
+Mel Spectrogram Models</h2>
+<hr />
+<h1 id="abstract">Abstract</h1>
+<p>This project implements a modular, reproducible pipeline for
+<strong>music genre classification</strong> on a GTZAN mirror stored
+under <code>Data/</code>. Two modeling tracks are supported: (i)
+<strong>tabular learning</strong> on pre-extracted 3-second segment
+features from <code>Data/features_3_sec.csv</code> (58-dimensional input
+after dropping identifier columns), and (ii) <strong>end-to-end neural
+learning</strong> from raw audio by extracting <strong>mel
+spectrogram</strong> segments (3 seconds, 128 mel bins) and training
+deep models (CNN/LSTM). The repository includes stage-wise caching,
+logging, checkpointing, evaluation reports, and extensive visualizations
+(audio waveforms, STFT/mel/MFCC/chroma/spectral
+contrast/tempograms/HPSS, plus embeddings and correlation analysis).</p>
+<p>A critical audit of the original tabular split
+(<code>Data/splits/split_v1.csv</code>) revealed severe
+<strong>track-level leakage</strong>: <strong>966/1000 original
+tracks</strong> had segments appearing in more than one split
+(train/val/test), inflating reported accuracy. This has been
+<strong>corrected</strong>: both tracks now use a <strong>group-level
+split</strong> (<code>make_group_splits_from_filenames</code>) that
+guarantees all segments of a given 30-second track fall into exactly one
+split. The corrected tabular split is saved as
+<code>Data/splits/split_by_track_v2.csv</code>. The mel track had
+already used track-disjoint group splits and required no change.
+Additionally, two new data augmentation strategies have been added to
+address genre overlap (<code>Mixup</code>) and domain shift
+(<code>SpecAugment</code>), with configuration under
+<code>data.augmentation</code> in <code>configs/config.yaml</code>.
+Results under the corrected protocol are pending re-run.</p>
+<hr />
+<h1 id="introduction">1. Introduction</h1>
+<p><strong>Music Genre Classification (MGC)</strong> aims to assign a
+genre label (e.g., blues, classical, hiphop) to an audio recording. It
+is a canonical task in <strong>Music Information Retrieval
+(MIR)</strong>, often used to study audio representation learning,
+signal processing features (STFT, Mel, MFCC), and supervised
+classification.</p>
+<p><strong>Why it matters.</strong> Genre recognition supports
+recommendation systems, music cataloging, playlist generation, and
+metadata enrichment. Beyond genre, similar pipelines extend naturally to
+mood, instrument, artist classification, and tagging.</p>
+<p><strong>Challenges.</strong> - <strong>Inter-class overlap:</strong>
+many genres share instrumentation or rhythmic patterns (e.g., rock
+vs. metal). - <strong>Intra-class variability:</strong> genre categories
+are broad; production style and recording quality vary. -
+<strong>Temporal structure:</strong> music is non-stationary; short
+segments may not capture global song identity. - <strong>Evaluation
+pitfalls:</strong> segmenting tracks and splitting segments naively
+introduces <strong>data leakage</strong> when segments from the same
+track appear in train and test.</p>
+<p>This repository explicitly focuses on building a <strong>stage-based
+research pipeline</strong> with caching, reproducibility, visualization,
+and a “model zoo” spanning classical ML and neural methods.</p>
+<hr />
+<h1 id="problem-analysis">2. Problem Analysis</h1>
+<p>MGC is a multi-class classification problem with label space size
+<strong>C = 10</strong> (confirmed by
+<code>Data/features/label_map.json</code>):
+<code>blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock</code>.</p>
+<p>Musically, genres often differ along multiple axes: - <strong>Timbre
+/ instrumentation:</strong> MFCC-like spectral envelope patterns often
+separate classical vs. metal/rock. - <strong>Rhythm / tempo /
+percussiveness:</strong> hiphop/disco often show strong rhythmic
+periodicity; classical may be less percussive. - <strong>Harmonic
+structure:</strong> chroma patterns can be more structured for
+tonal/harmonic genres; less stable for percussive-heavy segments. -
+<strong>Spectral brightness:</strong> centroid/rolloff relate to
+high-frequency content; distorted guitars/hi-hats shift spectral energy
+upward.</p>
+<p>These factors are partially captured by the project’s two feature
+paradigms: - <strong>Tabular summaries</strong> (per-segment statistical
+aggregates: mean/variance over 3 seconds). - <strong>Time–frequency
+images/sequences</strong> (mel spectrogram frames over time).</p>
+<hr />
+<h1 id="dataset-description">3. Dataset Description</h1>
+<h2 id="repository-dataset-layout">3.1 Repository dataset layout</h2>
+<p>The repository includes a GTZAN mirror under <code>Data/</code> (see
+<code>README.md</code>): - <code>Data/genres_original/</code>: raw audio
+<code>.wav</code> files organized by genre. -
+<code>Data/features_3_sec.csv</code>: tabular features for ~3-second
+segments (row-wise samples). - <code>Data/features_30_sec.csv</code>:
+tabular features for 30-second tracks (track-wise samples). -
+<code>Data/images_original/</code>: spectrogram images
+(mirror-dependent). - <code>Data/processed/metadata.csv</code>: metadata
+generated by the pipeline <code>preprocess</code> stage. -
+<code>Data/splits/*</code>: split definitions used by the pipeline.</p>
+<h2 id="audio-metadata-audit">3.2 Audio metadata audit</h2>
+<p>From <code>Data/processed/metadata.csv</code> (generated by
+<code>src/data/preprocessing.py</code>): - Total raw audio files
+scanned: <strong>1000</strong> - Readable/OK: <strong>999</strong> -
+Unreadable/corrupted: <strong>1</strong>
+(<code>.../jazz/jazz.00054.wav</code>, marked unreadable) - Sample rate
+distribution (OK files): <strong>22050 Hz for all 999 tracks</strong> -
+Duration statistics (OK files): mean ≈ <strong>30.02 s</strong> with
+small variance (min ≈ 29.93 s, max ≈ 30.65 s)</p>
+<p><strong>Figure 1.</strong> Raw audio duration distribution
+(metadata).</p>
+<figure>
+<img
+src="outputs/test-visualize-features/figures/raw_duration_distribution.png"
+alt="Figure 1: Audio duration distribution (sec) from Data/processed/metadata.csv." />
+<figcaption aria-hidden="true">Figure 1: Audio duration distribution
+(sec) from <code>Data/processed/metadata.csv</code>.</figcaption>
+</figure>
+<p><strong>Figure 2.</strong> Raw audio sample rate distribution.</p>
+<figure>
+<img
+src="outputs/test-visualize-features/figures/raw_sample_rate_distribution.png"
+alt="Figure 2: Sample rate distribution (Hz) from Data/processed/metadata.csv." />
+<figcaption aria-hidden="true">Figure 2: Sample rate distribution (Hz)
+from <code>Data/processed/metadata.csv</code>.</figcaption>
+</figure>
+<h2 id="tabular-dataset-feature-schema-and-dimensionality">3.3 Tabular
+dataset: feature schema and dimensionality</h2>
+<p><code>Data/features_3_sec.csv</code> contains 60 columns, including
+identifiers and labels: - Identifier columns: <code>filename</code>,
+<code>length</code> - Label column: <code>label</code> - Feature
+columns: 57 engineered audio features, including: -
+<code>chroma_stft_{mean,var}</code> - <code>rms_{mean,var}</code> -
+<code>spectral_centroid_{mean,var}</code>,
+<code>spectral_bandwidth_{mean,var}</code> -
+<code>rolloff_{mean,var}</code> -
+<code>zero_crossing_rate_{mean,var}</code> -
+<code>harmony_{mean,var}</code>, <code>perceptr_{mean,var}</code>
+(percussive component statistics) - <code>tempo</code> -
+<code>mfcc1..mfcc20_{mean,var}</code></p>
+<p>The pipeline’s tabular cache builder
+(<code>src/data/feature_extraction.py</code>) drops
+<code>filename</code> and <code>label</code>, leaving <strong>58 input
+dimensions</strong> (57 audio features + <code>length</code>).</p>
+<h2 id="trainvalidationtest-splits-as-shipped-in-this-repo">3.4
+Train/validation/test splits (as shipped in this repo)</h2>
+<h3 id="tabular-split-segment-level-leaky-by-track">3.4.1 Tabular split
+(segment-level, leaky by track)</h3>
+<p>The provided split file for tabular features is
+<code>Data/splits/split_v1.csv</code> with: - train:
+<strong>7192</strong> segments - val: <strong>800</strong> segments -
+test: <strong>1998</strong> segments - total: <strong>9990</strong>
+segments</p>
+<p>Class distribution per split (derived by joining
+<code>split_v1.csv</code> with <code>features_3_sec.csv</code> by row
+index):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">label</th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TOTAL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">719</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">719</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tabular-split-segment-level-track-disjoint">3.4.1 Tabular split
+(segment-level, track-disjoint)</h3>
+<p><strong>Split correctness (v2, fixed).</strong> Starting from
+<code>feature.yaml</code> version <code>split_by_track_v2.csv</code>,
+the tabular pipeline uses
+<code>src/data/split.py::make_group_splits_from_filenames</code>. This
+function: 1. Extracts the track group ID from each filename:
+<code>blues.00000.0.wav</code> → group <code>blues.00000</code>. 2.
+Performs a <strong>stratified group-level split</strong> (via
+<code>make_group_splits</code>), so all segments of a track go to the
+same split. 3. Persists the result to
+<code>Data/splits/split_by_track_v2.csv</code> (row-indexed, compatible
+with <code>build_tabular_cache</code>).</p>
+<p>Result of the v2 group split (seed=42, test=0.2, val=0.1):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">label</th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TOTAL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">727</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">729</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">hiphop</td>
+<td style="text-align: right;">688</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">jazz</td>
+<td style="text-align: right;">740</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">metal</td>
+<td style="text-align: right;">710</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">pop</td>
+<td style="text-align: right;">760</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">reggae</td>
+<td style="text-align: right;">680</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">rock</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TOTAL</strong></td>
+<td style="text-align: right;"><strong>7190</strong></td>
+<td style="text-align: right;"><strong>800</strong></td>
+<td style="text-align: right;"><strong>2000</strong></td>
+<td style="text-align: right;"><strong>9990</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Zero track overlap confirmed</strong>: 0 of 1000 tracks
+appear in more than one split (verified programmatically).</p>
+<h3 id="mel-split-segment-level-track-disjoint-by-construction">3.4.2
+Mel split (segment-level, <em>track-disjoint by construction</em>)</h3>
+<p>The mel pipeline extracts 3-second segments directly from raw audio
+and assigns a <strong>group ID per original 30-second track</strong>
+(e.g., <code>blues.00000</code>). The split is performed by group
+(<code>src/data/split.py::make_group_splits</code>), and the produced
+cache <code>Data/features/mel_features_v1.npz</code> has: - train:
+<strong>7183</strong> segments - val: <strong>798</strong> segments -
+test: <strong>2000</strong> segments - total: <strong>9981</strong>
+segments</p>
+<p>The <code>groups_train/val/test</code> sets have <strong>zero
+overlap</strong> (track-disjoint). Test set is perfectly balanced at 200
+segments per class.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TOTAL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">680</td>
+<td style="text-align: right;">118</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">727</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">709</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">hiphop</td>
+<td style="text-align: right;">708</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">jazz</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">990</td>
+</tr>
+<tr>
+<td style="text-align: left;">metal</td>
+<td style="text-align: right;">700</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">pop</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">reggae</td>
+<td style="text-align: right;">700</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">rock</td>
+<td style="text-align: right;">739</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">TOTAL</td>
+<td style="text-align: right;">7183</td>
+<td style="text-align: right;">798</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">9981</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="feature-extraction-analysis-with-visual-evidence">4. Feature
+Extraction Analysis (with visual evidence)</h1>
+<p>This project supports two complementary notions of “features”: 1.
+<strong>Tabular engineered features</strong> from
+<code>features_3_sec.csv</code> (statistical summaries over a 3s
+window). 2. <strong>Time–frequency representations</strong> computed
+on-demand from raw audio (STFT, mel, MFCC, chroma, etc.) for analysis
+and for end-to-end learning.</p>
+<p>The <code>visualize</code> / <code>visualize-features</code> stages
+generate extensive figures under: -
+<code>outputs/visualize-features-tabular/figures/</code> and
+<code>outputs/visualize-features-mel/figures/</code> -
+<code>outputs/test-visualize-features/figures/</code></p>
+<p>Below, each feature is described mathematically and interpreted using
+actual generated plots.</p>
+<h2 id="waveform-time-domain-amplitude">4.1 Waveform (time-domain
+amplitude)</h2>
+<p><strong>Meaning.</strong> The waveform is the raw audio signal
+$x[n]$. While not directly discriminative by itself, it reveals: -
+amplitude dynamics (compression vs. dynamic range), - silence/structure,
+- transient density (percussive activity).</p>
+<p><strong>Figure 3–6.</strong> Example waveforms across genres
+(3-second windows).</p>
+<p><img
+src="outputs/test-visualize-features/figures/waveform_blues_blues.00084.png"
+alt="Figure 3: Waveform example (blues)." /> <img
+src="outputs/test-visualize-features/figures/waveform_classical_classical.00099.png"
+alt="Figure 4: Waveform example (classical)." /> <img
+src="outputs/test-visualize-features/figures/waveform_hiphop_hiphop.00026.png"
+alt="Figure 5: Waveform example (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/waveform_metal_metal.00088.png"
+alt="Figure 6: Waveform example (metal)." /></p>
+<p><strong>Interpretation.</strong> Percussive-heavy segments typically
+show frequent high-amplitude transients; classical often displays larger
+macro-dynamics (crescendo/decrescendo) with less dense transient
+activity. These patterns motivate rhythm- and energy-based features
+(RMS, tempogram, percussive components).</p>
+<h2 id="stft-spectrogram-log-frequency-db">4.2 STFT spectrogram
+(log-frequency, dB)</h2>
+<p><strong>Meaning.</strong> The Short-Time Fourier Transform (STFT)
+reveals energy over time and frequency: $X(m, k) = _{n=0}^{N-1}
+x[n+mH]w[n]e^{-j 2kn/N}, S(m,k)=|X(m,k)|$ The plots use
+<code>src/visualization/spectrogram.py::plot_stft</code> with default
+<code>n_fft=2048</code>, <code>hop_length=512</code>.</p>
+<p><strong>What it captures.</strong> - <strong>Low-frequency
+structure</strong> (bass lines, kick drum), - <strong>high-frequency
+content</strong> (hi-hats, distortion, brightness), - transient
+vs. harmonic texture (vertical vs. horizontal patterns).</p>
+<p><strong>Figure 7–10.</strong> STFT examples across genres.</p>
+<p><img
+src="outputs/test-visualize-features/figures/stft_blues_blues.00084.png"
+alt="Figure 7: STFT spectrogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/stft_classical_classical.00099.png"
+alt="Figure 8: STFT spectrogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/stft_hiphop_hiphop.00026.png"
+alt="Figure 9: STFT spectrogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/stft_metal_metal.00088.png"
+alt="Figure 10: STFT spectrogram (metal)." /></p>
+<p><strong>Interpretation.</strong> Metal tends to exhibit dense
+broadband energy (distorted guitars, cymbals), while classical often
+shows clearer harmonic bands and more separation between instruments.
+Hiphop can show strong low-frequency energy plus transient percussion
+patterns. These observations connect to engineered spectral features
+(centroid, bandwidth, rolloff) and to mel-spectrogram learning.</p>
+<h2 id="mel-spectrogram-db-the-end-to-end-representation">4.3 Mel
+spectrogram (dB) — the end-to-end representation</h2>
+<p><strong>Meaning.</strong> The mel spectrogram projects a power
+spectrogram through a mel filterbank and then applies log compression:
+$m = 2595<em>{10}(1 + f/700), S</em>{mel} = M S,
+S_{dB}=10<em>{10}(S</em>{mel}+)$ In this pipeline: -
+<code>features.kind=mel_from_audio</code> extracts mel using
+<code>librosa.feature.melspectrogram</code> and
+<code>power_to_db</code>. - Configuration is in
+<code>configs/config.yaml</code>: - <code>sample_rate=22050</code>,
+<code>segment_seconds=3.0</code>, - <code>n_mels=128</code>,
+<code>n_fft=2048</code>, <code>hop_length=512</code>, -
+<code>fmin=20</code>, <code>fmax=8000</code>.</p>
+<p><strong>Why useful.</strong> Mel spectrograms preserve time–frequency
+structure and align frequency resolution with human perception, making
+them a strong input for CNN/LSTM.</p>
+<p><strong>Figure 11–14.</strong> Mel spectrogram examples.</p>
+<p><img
+src="outputs/test-visualize-features/figures/mel_blues_blues.00084.png"
+alt="Figure 11: Mel spectrogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/mel_classical_classical.00099.png"
+alt="Figure 12: Mel spectrogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/mel_hiphop_hiphop.00026.png"
+alt="Figure 13: Mel spectrogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/mel_metal_metal.00088.png"
+alt="Figure 14: Mel spectrogram (metal)." /></p>
+<p><strong>Interpretation.</strong> Relative energy distribution across
+mel bands (low vs. high) and temporal modulation patterns differentiate
+genres. For example, sustained harmonic textures appear as continuous
+horizontal structures; percussive events appear as vertical bursts.</p>
+<h2 id="mfcc-mel-frequency-cepstral-coefficients">4.4 MFCC
+(Mel-Frequency Cepstral Coefficients)</h2>
+<p><strong>Meaning.</strong> MFCCs summarize the spectral envelope
+(timbre) via: 1) mel spectrogram $$ log, 2) Discrete Cosine Transform
+(DCT). MFCCs are widely used for speech/music timbre characterization
+and appear as the dominant engineered subfamily in
+<code>features_3_sec.csv</code>
+(<code>mfcc1..mfcc20_mean/var</code>).</p>
+<p><strong>Figure 15–18.</strong> MFCC heatmaps across genres.</p>
+<p><img
+src="outputs/test-visualize-features/figures/mfcc_blues_blues.00084.png"
+alt="Figure 15: MFCC (blues)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_classical_classical.00099.png"
+alt="Figure 16: MFCC (classical)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_hiphop_hiphop.00026.png"
+alt="Figure 17: MFCC (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_metal_metal.00088.png"
+alt="Figure 18: MFCC (metal)." /></p>
+<p><strong>Interpretation.</strong> MFCCs compress spectral detail but
+preserve coarse timbre. Metal/rock timbres often exhibit dense
+high-frequency presence; classical timbres may show clearer harmonic
+structure and lower noise-like components. The tabular models heavily
+rely on MFCC means/variances (40 dimensions out of 58 inputs including
+<code>length</code>), which partly explains strong separability under
+leaky splitting.</p>
+<h2 id="chromagram-pitch-class-energy">4.5 Chromagram (pitch class
+energy)</h2>
+<p><strong>Meaning.</strong> A chromagram maps energy to 12 pitch
+classes (C…B), discarding octave. It reflects harmonic progression and
+tonality.</p>
+<p><strong>Figure 19–22.</strong> Chromagrams across genres.</p>
+<p><img
+src="outputs/test-visualize-features/figures/chroma_blues_blues.00084.png"
+alt="Figure 19: Chromagram (blues)." /> <img
+src="outputs/test-visualize-features/figures/chroma_classical_classical.00099.png"
+alt="Figure 20: Chromagram (classical)." /> <img
+src="outputs/test-visualize-features/figures/chroma_hiphop_hiphop.00026.png"
+alt="Figure 21: Chromagram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/chroma_jazz_jazz.00021.png"
+alt="Figure 22: Chromagram (jazz)." /></p>
+<p><strong>Interpretation.</strong> Genres with richer harmonic movement
+(jazz/classical) often display stronger and more structured chroma
+activation patterns; highly percussive segments can yield weaker or
+noisier chroma structure.</p>
+<h2 id="spectral-contrast-peakvalley-structure-across-subbands">4.6
+Spectral contrast (peak–valley structure across subbands)</h2>
+<p><strong>Meaning.</strong> Spectral contrast measures energy
+differences between spectral peaks and valleys across frequency
+subbands. It is sensitive to instrumentation and timbral “texture”.</p>
+<p><strong>Figure 23–26.</strong> Spectral contrast examples.</p>
+<p><img
+src="outputs/test-visualize-features/figures/contrast_blues_blues.00084.png"
+alt="Figure 23: Spectral contrast (blues)." /> <img
+src="outputs/test-visualize-features/figures/contrast_classical_classical.00099.png"
+alt="Figure 24: Spectral contrast (classical)." /> <img
+src="outputs/test-visualize-features/figures/contrast_hiphop_hiphop.00026.png"
+alt="Figure 25: Spectral contrast (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/contrast_metal_metal.00088.png"
+alt="Figure 26: Spectral contrast (metal)." /></p>
+<p><strong>Interpretation.</strong> Dense, compressed mixes often reduce
+contrast in some bands; sparse instrumentations can produce sharper
+peak–valley differences. This relates to genre-dependent production
+styles.</p>
+<h2 id="tempogram-rhythmic-periodicity">4.7 Tempogram (rhythmic
+periodicity)</h2>
+<p><strong>Meaning.</strong> The tempogram is computed from onset
+strength over time and captures rhythmic periodicities (tempo-related
+structure).</p>
+<p><strong>Figure 27–30.</strong> Tempograms across genres.</p>
+<p><img
+src="outputs/test-visualize-features/figures/tempogram_blues_blues.00084.png"
+alt="Figure 27: Tempogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_classical_classical.00027.png"
+alt="Figure 28: Tempogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_hiphop_hiphop.00026.png"
+alt="Figure 29: Tempogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_reggae_reggae.00046.png"
+alt="Figure 30: Tempogram (reggae)." /></p>
+<p><strong>Interpretation.</strong> Disco/hiphop typically show stronger
+periodic rhythmic patterns over short windows, whereas classical can be
+more variable. These properties motivate inclusion of <code>tempo</code>
+in the tabular feature set.</p>
+<h2 id="hpss-harmonicpercussive-source-separation">4.8 HPSS
+(harmonic/percussive source separation)</h2>
+<p><strong>Meaning.</strong> HPSS decomposes the STFT into harmonic
+(sustained) and percussive (transient) components. The tabular feature
+CSV includes <code>harmony_*</code> and <code>perceptr_*</code>
+statistics, and the project provides HPSS visualizations.</p>
+<p><strong>Figure 31–34.</strong> HPSS visualizations across genres.</p>
+<p><img
+src="outputs/test-visualize-features/figures/hpss_blues_blues.00084.png"
+alt="Figure 31: HPSS (blues)." /> <img
+src="outputs/test-visualize-features/figures/hpss_classical_classical.00099.png"
+alt="Figure 32: HPSS (classical)." /> <img
+src="outputs/test-visualize-features/figures/hpss_hiphop_hiphop.00026.png"
+alt="Figure 33: HPSS (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/hpss_metal_metal.00088.png"
+alt="Figure 34: HPSS (metal)." /></p>
+<p><strong>Interpretation.</strong> Classical/jazz segments often
+contain strong harmonic structure; hiphop/disco frequently show
+pronounced percussive energy and transient patterns. The
+harmonic/percussive balance is a meaningful discriminant for genre
+texture.</p>
+<h2 id="tabular-feature-space-diagnostics-correlation-embeddings">4.9
+Tabular feature space diagnostics (correlation + embeddings)</h2>
+<p>The tabular feature cache is standardized (z-score) on the training
+split and then visualized via correlation heatmaps and 2D
+embeddings.</p>
+<p><strong>Figure 35.</strong> Feature correlation heatmap (subset of
+first 40 features).</p>
+<figure>
+<img
+src="outputs/visualize-features-tabular/figures/feature_correlation.png"
+alt="Figure 35: Feature correlation heatmap for tabular inputs." />
+<figcaption aria-hidden="true">Figure 35: Feature correlation heatmap
+for tabular inputs.</figcaption>
+</figure>
+<p><strong>Figure 36–38.</strong> Embeddings of tabular features.</p>
+<p><img
+src="outputs/visualize-features-tabular/figures/embedding_pca.png"
+alt="Figure 36: PCA embedding (tabular)." /> <img
+src="outputs/visualize-features-tabular/figures/embedding_tsne.png"
+alt="Figure 37: t-SNE embedding (tabular)." /> <img
+src="outputs/visualize-features-tabular/figures/embedding_umap.png"
+alt="Figure 38: UMAP embedding (tabular)." /></p>
+<p><strong>Interpretation.</strong> Clear clustering in these embeddings
+can indicate separability of classes in the engineered feature space.
+However, because the tabular split is not track-disjoint, apparent
+separation may partially reflect track-specific signatures leaking
+across splits.</p>
+<hr />
+<h1 id="model-architecture-analysis">5. Model Architecture Analysis</h1>
+<p>The repository includes a “model zoo” spanning classical ML
+(scikit-learn) and neural models (PyTorch). Model definitions and
+configuration live in: - <code>src/models/</code> (implementations) -
+<code>configs/model.yaml</code> (hyperparameters)</p>
+<h2 id="classical-ml-baselines-tabular-scikit-learn">5.1 Classical ML
+baselines (tabular, scikit-learn)</h2>
+<p>Implemented via <code>src/models/sklearn_models.py</code> with
+supported names:
+<code>knn, svm_rbf, linear_svm, logreg, naive_bayes, lda, qda, random_forest, extra_trees, ada_boost, gbdt, xgboost, lightgbm</code>.</p>
+<p><strong>Rationale.</strong> These methods are strong and efficient
+for low-dimensional tabular data. Ensemble tree methods (ExtraTrees,
+RandomForest, GBDT, XGBoost, LightGBM) can capture non-linear feature
+interactions without extensive preprocessing beyond standardization.</p>
+<p><strong>Notable implementation details.</strong> -
+<code>svm_rbf</code> uses <code>SVC(probability=True)</code> to enable
+ROC/PR curves (computationally heavier but informative). -
+<code>linear_svm</code> uses <code>LinearSVC</code>, which does
+<strong>not</strong> produce probability estimates; therefore ROC-AUC
+and PR curves may be unavailable for that run.</p>
+<h2 id="mlp-for-tabular-features-pytorch">5.2 MLP for tabular features
+(PyTorch)</h2>
+<p>Defined in <code>src/models/model.py::MLP</code>: - Input: 58D vector
+- Architecture:
+<code>Dropout -&gt; (Linear + ReLU + Dropout) × 5 -&gt; Linear(n_classes)</code>
+- Hidden sizes: <code>[512, 256, 128, 64, 32]</code>, dropout
+<code>0.2</code> (from <code>configs/model.yaml</code>)</p>
+<p><strong>Strengths/weaknesses.</strong> - Flexible non-linear function
+approximator. - Requires careful regularization and sufficient data; can
+overfit under leakage or small sample regimes.</p>
+<h2 id="cnn-on-mel-spectrogram-pytorch">5.3 CNN on mel spectrogram
+(PyTorch)</h2>
+<p>Defined in <code>src/models/cnn.py::CNNMel</code>: - Input: mel
+tensor shape <code>(B, 1, n_mels, time)</code> - Blocks:
+<code>Conv2d -&gt; BatchNorm -&gt; ReLU -&gt; MaxPool2d -&gt; Dropout</code>
+(repeated 3 times) - Final:
+<code>AdaptiveAvgPool2d((1,1)) -&gt; Linear -&gt; logits</code> -
+Channels: <code>[32, 64, 128]</code>, dropout <code>0.3</code></p>
+<p><strong>Rationale.</strong> Convolution captures local time–frequency
+patterns such as rhythmic transients, harmonic stacks, and spectral
+envelopes.</p>
+<h2 id="lstm-on-mel-sequences-pytorch">5.4 LSTM on mel sequences
+(PyTorch)</h2>
+<p>Defined in <code>src/models/lstm.py::LSTMMel</code>: - Input:
+sequence shape <code>(B, time, n_mels)</code> (mel image reshaped to a
+time series) - 2-layer bidirectional LSTM with hidden size 128 and
+dropout 0.2 - Head:
+<code>LayerNorm -&gt; Dropout -&gt; Linear(n_classes)</code></p>
+<p><strong>Rationale.</strong> LSTM models temporal dependencies across
+frames (e.g., evolving rhythm/harmony).</p>
+<p><strong>Trade-off.</strong> LSTM can be more sensitive to
+optimization and may underperform a CNN for spectrogram-like inputs when
+spatial locality in frequency is important.</p>
+<hr />
+<h1 id="training-configuration">6. Training Configuration</h1>
+<p>Configuration is centralized in <code>configs/config.yaml</code> and
+<code>configs/train.yaml</code>.</p>
+<h2 id="global-settings">6.1 Global settings</h2>
+<ul>
+<li>Seed: <code>42</code></li>
+<li>Device: auto-detect (<code>cuda &gt; mps &gt; cpu</code>) with
+overrides supported (<code>--device</code>).</li>
+<li>DataLoader workers: <code>2</code></li>
+</ul>
+<h2 id="tabular-training-torch-mlp">6.2 Tabular training (torch
+MLP)</h2>
+<ul>
+<li>Epochs: <code>120</code></li>
+<li>Batch size: <code>256</code> (train), <code>512</code> (eval)</li>
+<li>Optimizer: Adam (<code>configs/train.yaml</code>)</li>
+<li>Learning rate: <code>1.46e-4</code></li>
+<li>Weight decay: <code>1.0e-4</code></li>
+<li>Scheduler: ReduceLROnPlateau with factor <code>0.5</code>, patience
+<code>5</code>, min LR <code>1e-6</code></li>
+<li>Early stopping: enabled, patience <code>15</code>, monitor
+<code>val_loss</code>, mode <code>min</code></li>
+</ul>
+<h2 id="mel-feature-extraction-end-to-end-track">6.3 Mel feature
+extraction (end-to-end track)</h2>
+<ul>
+<li>Sampling: <code>22050 Hz</code>, mono</li>
+<li>Segment length: <code>3.0 s</code></li>
+<li>STFT: <code>n_fft=2048</code>, <code>hop_length=512</code></li>
+<li>Mel bands: <code>128</code>, <code>fmin=20</code>,
+<code>fmax=8000</code></li>
+</ul>
+<h2
+id="data-augmentation-strategies-configured-in-data.augmentation">6.4
+Data augmentation strategies (configured in
+<code>data.augmentation</code>)</h2>
+<p>Three challenges motivated the following augmentations, all
+implemented in <code>src/data/augmentation.py</code>:</p>
+<h3 id="genre-overlap-mixup-data.augmentation.mixup">Genre Overlap →
+Mixup (<code>data.augmentation.mixup</code>)</h3>
+<p>Mixup interpolates training sample pairs to expose models to
+synthetic boundary examples: $$x_{} = x_i + (1-) x_j, y_{} = y_i + (1-)
+y_j, (, )$$ This regularises the model to predict smooth transitions
+between genre distributions, rather than committing to sharp decision
+boundaries. Effective for genres sharing instrumentation (rock/metal,
+blues/country).</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td>Enable for MLP/CNN/LSTM training</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td><code>0.2</code></td>
+<td>Controls interpolation strength; higher = more mixing</td>
+</tr>
+<tr>
+<td><code>prob</code></td>
+<td><code>1.0</code></td>
+<td>Fraction of batches to apply</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-shift-specaugment-data.augmentation.spec_augment">Domain
+Shift → SpecAugment (<code>data.augmentation.spec_augment</code>)</h3>
+<p>SpecAugment (Park et al., 2019) masks contiguous frequency bands and
+time frames of the mel spectrogram: - <strong>Frequency
+masking</strong>: zeroes out $f$ consecutive mel bins, simulating
+microphone roll-off or band-limited environments. - <strong>Time
+masking</strong>: zeroes out $t$ consecutive time frames, simulating
+recording dropouts or noise bursts.</p>
+<p>This forces the model to rely on the remaining intact signal rather
+than memorising specific frequency/time signatures of the training
+domain.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td>Only applicable for <code>mel_from_audio</code></td>
+</tr>
+<tr>
+<td><code>freq_mask_param</code></td>
+<td><code>20</code></td>
+<td>Max mel bins to mask</td>
+</tr>
+<tr>
+<td><code>time_mask_param</code></td>
+<td><code>20</code></td>
+<td>Max time frames to mask</td>
+</tr>
+<tr>
+<td><code>n_freq_masks</code></td>
+<td><code>2</code></td>
+<td>Number of frequency masks</td>
+</tr>
+<tr>
+<td><code>n_time_masks</code></td>
+<td><code>2</code></td>
+<td>Number of time masks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-leakage-fixed-at-split-level-no-augmentation-needed">Data
+Leakage → Fixed at split level (no augmentation needed)</h3>
+<p>Track-level leakage is <strong>structurally eliminated</strong> by
+the group-level split (<code>make_group_splits_from_filenames</code>).
+No augmentation can substitute for a correct split.</p>
+<hr />
+<h1 id="experimental-results">7. Experimental Results</h1>
+<p>All experimental artifacts referenced here are stored under
+<code>outputs/</code> in per-run directories with: - logs:
+<code>outputs/&lt;run&gt;/logs/*.log</code> - figures:
+<code>outputs/&lt;run&gt;/figures/*.png</code> - reports:
+<code>outputs/&lt;run&gt;/reports/*</code></p>
+<h2 id="cross-model-summary-from-evaluation-reports">7.1 Cross-model
+summary (from evaluation reports)</h2>
+<p>The table below aggregates metrics from
+<code>outputs/*/reports/evaluation_report.md</code> and approximate
+training time from the last session in
+<code>outputs/*/logs/train.log</code>.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 26%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Run</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Macro-F1</th>
+<th style="text-align: right;">ROC-AUC (OvR, macro)</th>
+<th style="text-align: right;">Train time (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">tabular_lightgbm</td>
+<td style="text-align: right;">0.9129</td>
+<td style="text-align: right;">0.9127</td>
+<td style="text-align: right;">0.9955</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_svm_rbf</td>
+<td style="text-align: right;">0.9069</td>
+<td style="text-align: right;">0.9068</td>
+<td style="text-align: right;">0.9946</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_xgboost</td>
+<td style="text-align: right;">0.9044</td>
+<td style="text-align: right;">0.9042</td>
+<td style="text-align: right;">0.9946</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_extra_trees</td>
+<td style="text-align: right;">0.8904</td>
+<td style="text-align: right;">0.8900</td>
+<td style="text-align: right;">0.9902</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_knn</td>
+<td style="text-align: right;">0.8744</td>
+<td style="text-align: right;">0.8740</td>
+<td style="text-align: right;">0.9720</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_random_forest</td>
+<td style="text-align: right;">0.8694</td>
+<td style="text-align: right;">0.8687</td>
+<td style="text-align: right;">0.9887</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_gbdt</td>
+<td style="text-align: right;">0.8544</td>
+<td style="text-align: right;">0.8549</td>
+<td style="text-align: right;">0.9886</td>
+<td style="text-align: right;">814</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_mlp</td>
+<td style="text-align: right;">0.8078</td>
+<td style="text-align: right;">0.8064</td>
+<td style="text-align: right;">0.9777</td>
+<td style="text-align: right;">2092</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_qda</td>
+<td style="text-align: right;">0.7487</td>
+<td style="text-align: right;">0.7486</td>
+<td style="text-align: right;">0.9633</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_logreg</td>
+<td style="text-align: right;">0.7152</td>
+<td style="text-align: right;">0.7129</td>
+<td style="text-align: right;">0.9565</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_linear_svm</td>
+<td style="text-align: right;">0.6977</td>
+<td style="text-align: right;">0.6919</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_lda</td>
+<td style="text-align: right;">0.6627</td>
+<td style="text-align: right;">0.6611</td>
+<td style="text-align: right;">0.9403</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">mel_cnn</td>
+<td style="text-align: right;">0.6310</td>
+<td style="text-align: right;">0.6211</td>
+<td style="text-align: right;">0.9211</td>
+<td style="text-align: right;">1602</td>
+</tr>
+<tr>
+<td style="text-align: left;">mel_lstm</td>
+<td style="text-align: right;">0.5195</td>
+<td style="text-align: right;">0.5168</td>
+<td style="text-align: right;">0.8782</td>
+<td style="text-align: right;">1185</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_naive_bayes</td>
+<td style="text-align: right;">0.4990</td>
+<td style="text-align: right;">0.4795</td>
+<td style="text-align: right;">0.8807</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_ada_boost</td>
+<td style="text-align: right;">0.4299</td>
+<td style="text-align: right;">0.4155</td>
+<td style="text-align: right;">0.8409</td>
+<td style="text-align: right;">26</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important note (validity).</strong> The tabular runs above
+are evaluated on a segment split with <strong>track leakage</strong>
+(Section 3.4.1). The mel runs are evaluated on a
+<strong>track-disjoint</strong> split and should be regarded as a more
+faithful estimate of generalization to unseen tracks.</p>
+<h2 id="end-to-end-mel-models-cnn-vs.-lstm">7.2 End-to-end mel models:
+CNN vs. LSTM</h2>
+<h3 id="training-curves">7.2.1 Training curves</h3>
+<p><strong>Figure 39.</strong> CNN training curves
+(<code>outputs/mel_cnn/figures/training_curves.png</code>).</p>
+<figure>
+<img src="outputs/mel_cnn/figures/training_curves.png"
+alt="Figure 39: Training curves for mel CNN." />
+<figcaption aria-hidden="true">Figure 39: Training curves for mel
+CNN.</figcaption>
+</figure>
+<p><strong>Figure 40.</strong> LSTM training curves
+(<code>outputs/mel_lstm/figures/training_curves.png</code>).</p>
+<figure>
+<img src="outputs/mel_lstm/figures/training_curves.png"
+alt="Figure 40: Training curves for mel LSTM." />
+<figcaption aria-hidden="true">Figure 40: Training curves for mel
+LSTM.</figcaption>
+</figure>
+<h3 id="confusion-matrices-and-ranking-curves">7.2.2 Confusion matrices
+and ranking curves</h3>
+<p><strong>Figure 41–43.</strong> CNN evaluation plots.</p>
+<p><img src="outputs/mel_cnn/figures/confusion_matrix.png"
+alt="Figure 41: Confusion matrix (mel CNN, normalized)." /> <img
+src="outputs/mel_cnn/figures/roc_ovr.png"
+alt="Figure 42: ROC curves (OvR) for mel CNN." /> <img
+src="outputs/mel_cnn/figures/pr_ovr.png"
+alt="Figure 43: Precision–Recall curves (OvR) for mel CNN." /></p>
+<p><strong>Figure 44–46.</strong> LSTM evaluation plots.</p>
+<p><img src="outputs/mel_lstm/figures/confusion_matrix.png"
+alt="Figure 44: Confusion matrix (mel LSTM, normalized)." /> <img
+src="outputs/mel_lstm/figures/roc_ovr.png"
+alt="Figure 45: ROC curves (OvR) for mel LSTM." /> <img
+src="outputs/mel_lstm/figures/pr_ovr.png"
+alt="Figure 46: Precision–Recall curves (OvR) for mel LSTM." /></p>
+<h3 id="class-wise-performance-highlights-from-evaluation-reports">7.2.3
+Class-wise performance highlights (from evaluation reports)</h3>
+<p>For <code>mel_cnn</code>, the lowest F1 classes are: - rock (F1 ≈
+0.4377), country (≈ 0.4741), pop (≈ 0.4935).</p>
+<p>For <code>mel_lstm</code>, overall accuracy is lower (0.5195),
+consistent with the architectural trade-off: treating mel as a 1D time
+sequence can discard useful local frequency neighborhoods that CNNs
+exploit.</p>
+<p><strong>Observed error patterns (from
+<code>outputs/mel_cnn/reports/misclassified.csv</code>, first 200
+errors).</strong> The most frequent confusions include: - country →
+classical / rock, - blues → country / disco, indicating that short
+3-second segments can be ambiguous and that some genre cues require
+longer temporal context.</p>
+<h2 id="tabular-models-with-leakage-caveat">7.3 Tabular models (with
+leakage caveat)</h2>
+<p>Despite the leaky split, the tabular experiments still reveal which
+model families best fit the engineered feature space.</p>
+<h3 id="lightgbm-best-tabular-run">7.3.1 LightGBM (best tabular
+run)</h3>
+<p><strong>Figure 47–49.</strong> LightGBM evaluation plots.</p>
+<p><img src="outputs/tabular_lightgbm/figures/confusion_matrix.png"
+alt="Figure 47: Confusion matrix (tabular LightGBM, normalized)." />
+<img src="outputs/tabular_lightgbm/figures/roc_ovr.png"
+alt="Figure 48: ROC curves (OvR) for tabular LightGBM." /> <img
+src="outputs/tabular_lightgbm/figures/pr_ovr.png"
+alt="Figure 49: Precision–Recall curves (OvR) for tabular LightGBM." /></p>
+<p><strong>Class-wise extremes (from
+<code>outputs/tabular_lightgbm/reports/evaluation_report.md</code>).</strong>
+- Strongest: classical (F1 ≈ 0.9630), metal (≈ 0.9602) - Weakest:
+country (≈ 0.8722), rock (≈ 0.8855)</p>
+<p><strong>Observed error patterns (from
+<code>outputs/tabular_lightgbm/reports/misclassified.csv</code>, first
+200 errors).</strong> Common confusions include: - country → blues, -
+pop → disco / hiphop, - jazz → classical, suggesting overlap between
+harmonic/timbre signatures for short segments.</p>
+<h3 id="svm-rbf-and-xgboost-competitive-tabular-runs">7.3.2 SVM-RBF and
+XGBoost (competitive tabular runs)</h3>
+<p><strong>Figure 50–52.</strong> SVM-RBF evaluation plots.</p>
+<p><img src="outputs/tabular_svm_rbf/figures/confusion_matrix.png"
+alt="Figure 50: Confusion matrix (tabular SVM-RBF)." /> <img
+src="outputs/tabular_svm_rbf/figures/roc_ovr.png"
+alt="Figure 51: ROC curves (OvR) for tabular SVM-RBF." /> <img
+src="outputs/tabular_svm_rbf/figures/pr_ovr.png"
+alt="Figure 52: Precision–Recall curves (OvR) for tabular SVM-RBF." /></p>
+<p><strong>Figure 53–55.</strong> XGBoost evaluation plots.</p>
+<p><img src="outputs/tabular_xgboost/figures/confusion_matrix.png"
+alt="Figure 53: Confusion matrix (tabular XGBoost)." /> <img
+src="outputs/tabular_xgboost/figures/roc_ovr.png"
+alt="Figure 54: ROC curves (OvR) for tabular XGBoost." /> <img
+src="outputs/tabular_xgboost/figures/pr_ovr.png"
+alt="Figure 55: Precision–Recall curves (OvR) for tabular XGBoost." /></p>
+<h3 id="mlp-tabular-neural-baseline">7.3.3 MLP (tabular, neural
+baseline)</h3>
+<p><strong>Figure 56–58.</strong> Tabular MLP plots.</p>
+<p><img src="outputs/tabular_mlp/figures/training_curves.png"
+alt="Figure 56: Training curves (tabular MLP)." /> <img
+src="outputs/tabular_mlp/figures/confusion_matrix.png"
+alt="Figure 57: Confusion matrix (tabular MLP)." /> <img
+src="outputs/tabular_mlp/figures/roc_ovr.png"
+alt="Figure 58: ROC curves (OvR) for tabular MLP." /></p>
+<hr />
+<h1 id="comparative-analysis">8. Comparative Analysis</h1>
+<h2 id="performance-vs.-protocol-correctness">8.1 Performance
+vs. protocol correctness</h2>
+<p><strong>Tabular track (v2 split, corrected):</strong> both tracks now
+use track-disjoint group splits. Previous results under the leaky
+<code>split_v1.csv</code> are invalidated; re-run is needed to obtain
+valid tabular estimates. - <strong>Mel track (group split):</strong>
+evaluated under a track-disjoint protocol (CNN 0.6310, LSTM 0.5195 under
+the original run). These figures remain valid under the corrected
+protocol since no change was made to the mel split.</p>
+<p><strong>Current state.</strong> As of this version, both tracks share
+the same evaluation protocol. Tabular results are pending re-run with
+<code>features.kind=tabular_csv</code> after deleting the v1 cache
+(<code>Data/features/tabular_features_v1.npz</code>).</p>
+<h2 id="efficiency-and-complexity-trade-offs-as-observed-from-logs">8.2
+Efficiency and complexity trade-offs (as observed from logs)</h2>
+<ul>
+<li>Tree ensembles (ExtraTrees/RandomForest) train in seconds and
+perform strongly under the leaky protocol.</li>
+<li>Boosted methods (GBDT) can be significantly slower (hundreds of
+seconds) but remain competitive.</li>
+<li>Torch MLP and mel CNN/LSTM require minutes of training (per
+<code>train.log</code> timestamps), reflecting higher computational
+cost.</li>
+</ul>
+<hr />
+<h1 id="discussion">9. Discussion</h1>
+<h2 id="strengths-of-the-project">9.1 Strengths of the project</h2>
+<ul>
+<li><strong>Modular pipeline:</strong> staged execution
+(<code>preprocess</code>, <code>feature</code>, <code>train</code>,
+<code>evaluate</code>, <code>visualize</code>) with structured
+outputs.</li>
+<li><strong>Reproducibility:</strong> seed control, cached features,
+split files, and <code>config_snapshot.json</code> per run.</li>
+<li><strong>Comprehensive visualization:</strong> waveform,
+STFT/mel/MFCC/chroma/contrast/tempogram/HPSS, plus embeddings and
+correlation analysis.</li>
+<li><strong>Model zoo:</strong> broad baseline coverage for tabular
+learning, plus CNN/LSTM for mel.</li>
+<li><strong>Correct evaluation protocol (v2):</strong> both tabular and
+mel tracks now use track-disjoint group splits, eliminating data
+leakage.</li>
+<li><strong>Augmentation suite:</strong> Mixup (genre overlap),
+SpecAugment (domain shift), and waveform-level augmentations (noise,
+time-stretch, pitch-shift) are all implemented and configurable.</li>
+</ul>
+<h2 id="remaining-limitations-and-risks">9.2 Remaining limitations and
+risks</h2>
+<h3 id="a-short-context-ambiguity-for-mel-models">(A) Short-context
+ambiguity for mel models</h3>
+<p>Mel models operate on 3-second segments. Many genre cues are global
+(song-level arrangement) rather than local (short snippet). Confusions
+such as country ↔︎ rock/classical in <code>mel_cnn</code> align with this
+limitation.</p>
+<h3 id="b-dataset-size-and-domain-constraints">(B) Dataset size and
+domain constraints</h3>
+<p>GTZAN is relatively small and can be sensitive to recording artifacts
+and duplication issues across mirrors. The pipeline correctly includes
+metadata checks and corruption handling (one unreadable file
+detected).</p>
+<h3 id="c-augmentation-not-yet-wired-into-training-loop">(C)
+Augmentation not yet wired into training loop</h3>
+<p>Mixup (<code>src/data/augmentation.py::mixup_batch</code>) and
+SpecAugment (<code>apply_spec_augment</code>) are implemented and
+unit-tested, but are not yet integrated into the PyTorch training loop
+in <code>src/models/trainer.py</code>. This is the next engineering step
+before running ablations.</p>
+<h2 id="future-improvements-actionable">9.3 Future improvements
+(actionable)</h2>
+<ol type="1">
+<li><strong>Wire Mixup into MLP/CNN/LSTM training loops</strong> — call
+<code>mixup_batch</code> per batch inside
+<code>src/models/trainer.py</code> when
+<code>cfg.data.augmentation.mixup.enabled=true</code>.</li>
+<li><strong>Wire SpecAugment into MelDataset</strong> — apply
+<code>apply_spec_augment</code> in <code>MelDataset.__getitem__</code>
+during training only.</li>
+<li><strong>Track-level evaluation aggregation</strong> — aggregate
+segment predictions per track (majority vote or mean probability) to
+report song-level accuracy alongside segment-level accuracy.</li>
+<li><strong>Stronger mel architectures</strong> — consider CRNNs (CNN
+front-end + recurrent temporal modeling) or attention-based pooling over
+time.</li>
+<li><strong>Re-run all tabular experiments</strong> with the v2 group
+split to obtain valid baseline numbers for comparison against mel
+models.</li>
+</ol>
+<hr />
+<h1 id="conclusion">10. Conclusion</h1>
+<p>This repository provides a well-engineered, methodologically sound
+research pipeline for GTZAN music genre classification, integrating
+feature caching, logging, checkpointing, and rich visualization. The
+critical track-level data leakage that previously affected the tabular
+evaluation protocol has been <strong>eliminated</strong>: both tabular
+and mel tracks now use track-disjoint group splits, ensuring that no
+segment from a training track appears in the validation or test set. Two
+augmentation strategies — Mixup (for genre overlap) and SpecAugment (for
+domain shift) — have been implemented and are ready for experimental
+integration. The next priorities are wiring augmentation into the
+training loop, re-running tabular experiments under the corrected
+protocol, and implementing track-level prediction aggregation for a
+fairer real-world evaluation.</p>
+<hr />
+<h1 id="references">11. References</h1>
+<ol type="1">
+<li>G. Tzanetakis and P. Cook, “Musical genre classification of audio
+signals,” <em>IEEE Transactions on Speech and Audio Processing</em>,
+2002. (GTZAN)</li>
+<li>B. McFee et al., “librosa: Audio and music signal analysis in
+Python,” <em>Proceedings of the 14th Python in Science Conference</em>,
+2015.</li>
+<li>F. Pedregosa et al., “Scikit-learn: Machine Learning in Python,”
+<em>Journal of Machine Learning Research</em>, 2011.</li>
+<li>A. Paszke et al., “PyTorch: An Imperative Style, High-Performance
+Deep Learning Library,” <em>NeurIPS</em>, 2019.</li>
+<li>T. Chen and C. Guestrin, “XGBoost: A Scalable Tree Boosting System,”
+<em>KDD</em>, 2016.</li>
+<li>G. Ke et al., “LightGBM: A Highly Efficient Gradient Boosting
+Decision Tree,” <em>NeurIPS</em>, 2017.</li>
+<li>H. Zhang et al., “mixup: Beyond Empirical Risk Minimization,”
+<em>ICLR</em>, 2018.</li>
+<li>D. S. Park et al., “SpecAugment: A Simple Data Augmentation Method
+for Automatic Speech Recognition,” <em>Interspeech</em>, 2019.</li>
+</ol>
+</body>
+</html>

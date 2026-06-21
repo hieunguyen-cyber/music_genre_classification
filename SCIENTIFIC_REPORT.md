@@ -1,9 +1,5 @@
 # Music Genre Classification
-## A Modular Research Pipeline on GTZAN with Tabular Features and End-to-End Mel Spectrogram Models
-
-**Authors:** _[Your Name]_  
-**Organization:** _[University / Lab / Company]_  
-**Date:** 2026-05-18  
+## A Modular Research Pipeline on GTZAN with Tabular Features and End-to-End Mel Spectrogram Models 
 
 ---
 
