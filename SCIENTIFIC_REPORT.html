@@ -58,7 +58,7 @@
 
   <style>
   body {
-      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
       line-height: 1.5;
       color: #333;
       background-color: #fafafa;
@@ -552,203 +552,84 @@
   </style>
 </head>
 <body>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#music-genre-classification"
-id="toc-music-genre-classification">Music Genre Classification</a>
-<ul>
-<li><a
-href="#a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models"
-id="toc-a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models">A
-Modular Research Pipeline on GTZAN with Tabular Features and End-to-End
-Mel Spectrogram Models</a></li>
-</ul></li>
-<li><a href="#abstract" id="toc-abstract">Abstract</a></li>
-<li><a href="#introduction" id="toc-introduction">1.
-Introduction</a></li>
-<li><a href="#problem-analysis" id="toc-problem-analysis">2. Problem
-Analysis</a></li>
-<li><a href="#dataset-description" id="toc-dataset-description">3.
-Dataset Description</a>
-<ul>
-<li><a href="#repository-dataset-layout"
-id="toc-repository-dataset-layout">3.1 Repository dataset
-layout</a></li>
-<li><a href="#audio-metadata-audit" id="toc-audio-metadata-audit">3.2
-Audio metadata audit</a></li>
-<li><a href="#tabular-dataset-feature-schema-and-dimensionality"
-id="toc-tabular-dataset-feature-schema-and-dimensionality">3.3 Tabular
-dataset: feature schema and dimensionality</a></li>
-<li><a href="#trainvalidationtest-splits-as-shipped-in-this-repo"
-id="toc-trainvalidationtest-splits-as-shipped-in-this-repo">3.4
-Train/validation/test splits (as shipped in this repo)</a>
-<ul>
-<li><a href="#tabular-split-segment-level-leaky-by-track"
-id="toc-tabular-split-segment-level-leaky-by-track">3.4.1 Tabular split
-(segment-level, leaky by track)</a></li>
-<li><a href="#tabular-split-segment-level-track-disjoint"
-id="toc-tabular-split-segment-level-track-disjoint">3.4.1 Tabular split
-(segment-level, track-disjoint)</a></li>
-<li><a href="#mel-split-segment-level-track-disjoint-by-construction"
-id="toc-mel-split-segment-level-track-disjoint-by-construction">3.4.2
-Mel split (segment-level, <em>track-disjoint by
-construction</em>)</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#feature-extraction-analysis-with-visual-evidence"
-id="toc-feature-extraction-analysis-with-visual-evidence">4. Feature
-Extraction Analysis (with visual evidence)</a>
-<ul>
-<li><a href="#waveform-time-domain-amplitude"
-id="toc-waveform-time-domain-amplitude">4.1 Waveform (time-domain
-amplitude)</a></li>
-<li><a href="#stft-spectrogram-log-frequency-db"
-id="toc-stft-spectrogram-log-frequency-db">4.2 STFT spectrogram
-(log-frequency, dB)</a></li>
-<li><a href="#mel-spectrogram-db-the-end-to-end-representation"
-id="toc-mel-spectrogram-db-the-end-to-end-representation">4.3 Mel
-spectrogram (dB) — the end-to-end representation</a></li>
-<li><a href="#mfcc-mel-frequency-cepstral-coefficients"
-id="toc-mfcc-mel-frequency-cepstral-coefficients">4.4 MFCC
-(Mel-Frequency Cepstral Coefficients)</a></li>
-<li><a href="#chromagram-pitch-class-energy"
-id="toc-chromagram-pitch-class-energy">4.5 Chromagram (pitch class
-energy)</a></li>
-<li><a href="#spectral-contrast-peakvalley-structure-across-subbands"
-id="toc-spectral-contrast-peakvalley-structure-across-subbands">4.6
-Spectral contrast (peak–valley structure across subbands)</a></li>
-<li><a href="#tempogram-rhythmic-periodicity"
-id="toc-tempogram-rhythmic-periodicity">4.7 Tempogram (rhythmic
-periodicity)</a></li>
-<li><a href="#hpss-harmonicpercussive-source-separation"
-id="toc-hpss-harmonicpercussive-source-separation">4.8 HPSS
-(harmonic/percussive source separation)</a></li>
-<li><a href="#tabular-feature-space-diagnostics-correlation-embeddings"
-id="toc-tabular-feature-space-diagnostics-correlation-embeddings">4.9
-Tabular feature space diagnostics (correlation + embeddings)</a></li>
-</ul></li>
-<li><a href="#model-architecture-analysis"
-id="toc-model-architecture-analysis">5. Model Architecture Analysis</a>
-<ul>
-<li><a href="#classical-ml-baselines-tabular-scikit-learn"
-id="toc-classical-ml-baselines-tabular-scikit-learn">5.1 Classical ML
-baselines (tabular, scikit-learn)</a></li>
-<li><a href="#mlp-for-tabular-features-pytorch"
-id="toc-mlp-for-tabular-features-pytorch">5.2 MLP for tabular features
-(PyTorch)</a></li>
-<li><a href="#cnn-on-mel-spectrogram-pytorch"
-id="toc-cnn-on-mel-spectrogram-pytorch">5.3 CNN on mel spectrogram
-(PyTorch)</a></li>
-<li><a href="#lstm-on-mel-sequences-pytorch"
-id="toc-lstm-on-mel-sequences-pytorch">5.4 LSTM on mel sequences
-(PyTorch)</a></li>
-</ul></li>
-<li><a href="#training-configuration" id="toc-training-configuration">6.
-Training Configuration</a>
-<ul>
-<li><a href="#global-settings" id="toc-global-settings">6.1 Global
-settings</a></li>
-<li><a href="#tabular-training-torch-mlp"
-id="toc-tabular-training-torch-mlp">6.2 Tabular training (torch
-MLP)</a></li>
-<li><a href="#mel-feature-extraction-end-to-end-track"
-id="toc-mel-feature-extraction-end-to-end-track">6.3 Mel feature
-extraction (end-to-end track)</a></li>
-<li><a
-href="#data-augmentation-strategies-configured-in-data.augmentation"
-id="toc-data-augmentation-strategies-configured-in-data.augmentation">6.4
-Data augmentation strategies (configured in
-<code>data.augmentation</code>)</a>
-<ul>
-<li><a href="#genre-overlap-mixup-data.augmentation.mixup"
-id="toc-genre-overlap-mixup-data.augmentation.mixup">Genre Overlap →
-Mixup (<code>data.augmentation.mixup</code>)</a></li>
-<li><a href="#domain-shift-specaugment-data.augmentation.spec_augment"
-id="toc-domain-shift-specaugment-data.augmentation.spec_augment">Domain
-Shift → SpecAugment
-(<code>data.augmentation.spec_augment</code>)</a></li>
-<li><a href="#data-leakage-fixed-at-split-level-no-augmentation-needed"
-id="toc-data-leakage-fixed-at-split-level-no-augmentation-needed">Data
-Leakage → Fixed at split level (no augmentation needed)</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#experimental-results" id="toc-experimental-results">7.
-Experimental Results</a>
-<ul>
-<li><a href="#cross-model-summary-from-evaluation-reports"
-id="toc-cross-model-summary-from-evaluation-reports">7.1 Cross-model
-summary (from evaluation reports)</a></li>
-<li><a href="#end-to-end-mel-models-cnn-vs.-lstm"
-id="toc-end-to-end-mel-models-cnn-vs.-lstm">7.2 End-to-end mel models:
-CNN vs. LSTM</a>
-<ul>
-<li><a href="#training-curves" id="toc-training-curves">7.2.1 Training
-curves</a></li>
-<li><a href="#confusion-matrices-and-ranking-curves"
-id="toc-confusion-matrices-and-ranking-curves">7.2.2 Confusion matrices
-and ranking curves</a></li>
-<li><a href="#class-wise-performance-highlights-from-evaluation-reports"
-id="toc-class-wise-performance-highlights-from-evaluation-reports">7.2.3
-Class-wise performance highlights (from evaluation reports)</a></li>
-</ul></li>
-<li><a href="#tabular-models-with-leakage-caveat"
-id="toc-tabular-models-with-leakage-caveat">7.3 Tabular models (with
-leakage caveat)</a>
-<ul>
-<li><a href="#lightgbm-best-tabular-run"
-id="toc-lightgbm-best-tabular-run">7.3.1 LightGBM (best tabular
-run)</a></li>
-<li><a href="#svm-rbf-and-xgboost-competitive-tabular-runs"
-id="toc-svm-rbf-and-xgboost-competitive-tabular-runs">7.3.2 SVM-RBF and
-XGBoost (competitive tabular runs)</a></li>
-<li><a href="#mlp-tabular-neural-baseline"
-id="toc-mlp-tabular-neural-baseline">7.3.3 MLP (tabular, neural
-baseline)</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#comparative-analysis" id="toc-comparative-analysis">8.
-Comparative Analysis</a>
-<ul>
-<li><a href="#performance-vs.-protocol-correctness"
-id="toc-performance-vs.-protocol-correctness">8.1 Performance
-vs. protocol correctness</a></li>
-<li><a
-href="#efficiency-and-complexity-trade-offs-as-observed-from-logs"
-id="toc-efficiency-and-complexity-trade-offs-as-observed-from-logs">8.2
-Efficiency and complexity trade-offs (as observed from logs)</a></li>
-</ul></li>
-<li><a href="#discussion" id="toc-discussion">9. Discussion</a>
-<ul>
-<li><a href="#strengths-of-the-project"
-id="toc-strengths-of-the-project">9.1 Strengths of the project</a></li>
-<li><a href="#remaining-limitations-and-risks"
-id="toc-remaining-limitations-and-risks">9.2 Remaining limitations and
-risks</a>
-<ul>
-<li><a href="#a-short-context-ambiguity-for-mel-models"
-id="toc-a-short-context-ambiguity-for-mel-models">(A) Short-context
-ambiguity for mel models</a></li>
-<li><a href="#b-dataset-size-and-domain-constraints"
-id="toc-b-dataset-size-and-domain-constraints">(B) Dataset size and
-domain constraints</a></li>
-<li><a href="#c-augmentation-not-yet-wired-into-training-loop"
-id="toc-c-augmentation-not-yet-wired-into-training-loop">(C)
-Augmentation not yet wired into training loop</a></li>
-</ul></li>
-<li><a href="#future-improvements-actionable"
-id="toc-future-improvements-actionable">9.3 Future improvements
-(actionable)</a></li>
-</ul></li>
-<li><a href="#conclusion" id="toc-conclusion">10. Conclusion</a></li>
-<li><a href="#references" id="toc-references">11. References</a></li>
-</ul>
-</nav>
+
 <h1 id="music-genre-classification">Music Genre Classification</h1>
 <h2
 id="a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models">A
 Modular Research Pipeline on GTZAN with Tabular Features and End-to-End
 Mel Spectrogram Models</h2>
+
+<h3 style="text-align:left; font-weight:400; color:#555; margin-top:20px;">GROUP 5</h3>
+<div style="text-align:left; font-size:15px; color:#666; line-height:1.8; margin-bottom:24px;">
+<strong>Nguyen Trung Hieu</strong> - 202416689<br>
+Tran Dang Minh - 202416720<br>
+Vu Ha Anh Duc - 202416675<br>
+Dinh Gia Bao - 202416666<br>
+Trinh Hai Phong - 202416732
+</div>
+
 <hr />
+
+<h1 id="motivation">Problem Motivation</h1>
+
+<p>If viewed through the lens of <strong>Theory of Jobs-to-be-Done (JTBD)</strong> or <strong>product discovery</strong>, platforms like Spotify and Apple Music have already solved the genre classification problem reasonably well for mainstream music. However, to frame this as a research problem serving an <strong>underserved market</strong>, we must identify user groups for whom current genre classification is either insufficient or too costly.</p>
+
+<p>Below are several concrete problems with clear "customer" pain points.</p>
+
+<h2>1. Independent Content Creators (Independent musicians)</h2>
+
+<p><strong>Target users:</strong> Indie musicians, producers, self-publishing artists.</p>
+<p><strong>Pain point:</strong> When uploading to Spotify, Apple Music, SoundCloud, etc., they must manually select genre, subgenre, mood, and style — but often don't know what to choose. Wrong choices reduce recommendation quality and decrease song discoverability. For example, a Lo-fi + Jazz + Hip-hop hybrid track is difficult for newcomers to categorize correctly.</p>
+<p><strong>Product:</strong> Upload song → AI analyzes → Suggests genre, subgenre, mood, tags → One-click publish.</p>
+
+<h2>2. Large Audio Archive Owners</h2>
+
+<p><strong>Target users:</strong> TV stations, radio stations, music libraries, media companies.</p>
+<p><strong>Pain point:</strong> They have 500,000 to 5 million audio files — no one can manually tag them all. Editors need to search for specific tracks (e.g., "Rock, high tempo, male vocal, 2000s") but the archive lacks metadata.</p>
+<p><strong>Solution:</strong> AI auto-tagging. This is an extremely real-world use case.</p>
+
+<h2>3. Game / Video Production Companies</h2>
+
+<p><strong>Target users:</strong> Unity Asset Store, Epidemic Sound, Artlist, Motion Array.</p>
+<p><strong>Pain point:</strong> Editors need to find specific music (e.g., "Epic Rock" or "Fantasy Celtic"). Poor metadata makes discovery impossible. Genre classifiers reduce manual tagging costs.</p>
+
+<h2>4. Cultural Heritage Preservation</h2>
+
+<p><strong>Target users:</strong> Music institutes, national broadcasters, national archives.</p>
+<p><strong>Pain point:</strong> They have 100,000+ folk songs with unknown genre, region, or style. AI-assisted classification enables cataloging and digitization at scale. Many countries are actively working on this.</p>
+
+<h2>5. Music Education</h2>
+
+<p><strong>Target users:</strong> Students, instructors.</p>
+<p><strong>Pain point:</strong> Upload a song → AI explains "This is Jazz because of swing rhythm, walking bass, and improvisation." Not just classification but also explanation.</p>
+
+<h2>6. DJs and Producers</h2>
+
+<p><strong>Target users:</strong> DJs, music producers.</p>
+<p><strong>Pain point:</strong> They have 30TB of samples but can't remember what they have. AI auto-classifies by genre, mood, and instrument, saving hundreds of hours.</p>
+
+<h2>7. Music Copyright Enforcement</h2>
+
+<p><strong>Target users:</strong> Content ID systems, copyright agencies.</p>
+<p><strong>Pain point:</strong> When a song is uploaded to YouTube, the system needs to estimate genre for routing and copyright checking. Genre is a key input feature.</p>
+
+<h2>8. Regional Music Platforms</h2>
+
+<p><strong>Target users:</strong> Local music streaming services, cultural preservation organizations.</p>
+<p><strong>Pain point:</strong> Spotify excels at Pop, Rock, Hip-hop. But traditional Vietnamese genres like Cải lương, Quan họ, Ca trù, Đờn ca tài tử, Hát Xoan, Chầu văn are poorly handled. Models are weak for these genres, making search, classification, and recommendation nearly impossible. This is a <strong>truly underserved market</strong>.</p>
+
+<h2>Research Positioning</h2>
+
+<p>For the <strong>Problem Motivation</strong> section of a research paper, avoid framing it as "Spotify needs genre classification" — reviewers will note it's already solved. Instead, position the work as follows:</p>
+
+<blockquote style="background:#f0f4ff; border-left:4px solid #4a90d9; padding:16px 20px; margin:16px 0; border-radius:4px; color:#333;">
+<strong>Existing music platforms primarily optimize genre recognition for mainstream commercial music. However, many emerging domains—including independent music publishing, digital cultural archives, and regional music platforms—still rely on manual metadata annotation due to the scarcity of labeled data and the poor generalization of existing genre classifiers to long-tail or hybrid genres. This creates a significant bottleneck for content organization, retrieval, and recommendation.</strong>
+</blockquote>
+
+<p>This framing establishes a clear <strong>gap</strong>: not the general problem of "music genre classification," but rather <strong>automatic classification in long-tail, hybrid-genre, or low-resource domains</strong> where existing solutions fall short of real-world needs. This positioning is more compelling from both a product and research perspective.</p>
+
+<hr />
+
 <h1 id="abstract">Abstract</h1>
 <p>This project implements a modular, reproducible pipeline for
 <strong>music genre classification</strong> on a GTZAN mirror stored

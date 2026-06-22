@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="vi" xml:lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Báo cáo Phân loại Thể loại Nhạc</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose'
+    });
+    window.addEventListener('load', function() {
+      var converted = new Set();
+
+      document.querySelectorAll('pre').forEach(function(pre) {
+        var code = pre.querySelector('code');
+        var preHasMermaid = pre.className && pre.className.indexOf('mermaid') !== -1;
+        var codeHasMermaid =
+          code &&
+          (code.className || '').match(/(?:^|\s)(?:mermaid|language-mermaid)(?:\s|$)/);
+
+        if (preHasMermaid || codeHasMermaid) {
+          var div = document.createElement('div');
+          div.className = 'mermaid';
+          div.textContent = code ? code.textContent : pre.textContent;
+          if (pre.parentNode) {
+            if (code) {
+              converted.add(code);
+            }
+            pre.parentNode.replaceChild(div, pre);
+          }
+        }
+      });
+
+      // Handle rare cases where mermaid markup exists without a <pre> wrapper
+      document.querySelectorAll('code').forEach(function(code) {
+        var hasMermaid = (code.className || '').indexOf('mermaid') !== -1 || (code.className || '').indexOf('language-mermaid') !== -1;
+        if (!hasMermaid || converted.has(code)) {
+          return;
+        }
+        var wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        wrapper.textContent = code.textContent;
+        if (code.parentNode) {
+          code.parentNode.replaceChild(wrapper, code);
+          converted.add(wrapper);
+        }
+      });
+
+      setTimeout(function() {
+        mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+      }, 100);
+    });
+  </script>
+
+  <style>
+  body {
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background-color: #fafafa;
+      margin: 0 !important;
+      padding: 20px !important;
+      font-size: 14px;
+  }
+
+  img, figure img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+  }
+  figure {
+      margin: 16px 0;
+      text-align: center;
+  }
+  table {
+      border-collapse: collapse;
+      min-width: 60%;
+      max-width: 100%;
+      margin: 20px 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  table tr th {
+      background-color: #143452;
+      color: white;
+      padding: 12px 15px;
+      text-align: left;
+      font-weight: 500;
+  }
+
+  .table-http th,
+  .table-http td,
+  table th,
+  table td {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+  }
+
+  .tr-break {
+      background-color: #2d79b717 !important;
+  }
+
+  .tr-break td {
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+  }
+
+  table tr td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ecf0f1;
+  }
+
+  table tr:last-child td {
+      border-bottom: none;
+  }
+
+  table tr:nth-child(even) {
+      background-color: #f8f9fa;
+  }
+
+  .highlight {
+      background-color: #fff3cd !important;
+  }
+
+  a {
+      font-size: 14px;
+  }
+
+  code {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      background: #fff8e4;
+      color: #c99a0d;
+      font-size: 13px;
+  }
+
+  pre code {
+      background-color: transparent;
+  }
+
+  pre {
+      background-color: #000;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+  }
+
+  pre code.language-php,
+  pre code.language-sql,
+  pre code.language-javascript,
+  pre code.language-bash,
+  pre code.language-shell {
+    background-color: #282c34 !important;
+    color: #abb2bf;
+  }
+
+  /* Syntax Highlighting */
+  code span.kw { color: #c678dd; font-weight: bold; } /* Keyword */
+  code span.dt { color: #e5c07b; } /* Datatype */
+  code span.dv { color: #d19a66; } /* Decimal Value */
+  code span.bn { color: #d19a66; } /* Base N */
+  code span.fl { color: #d19a66; } /* Float */
+  code span.ch { color: #98c379; } /* Char */
+  code span.st { color: #98c379; } /* String */
+  code span.co { color: #5c6370; font-style: italic; } /* Comment */
+  code span.ot { color: #e06c75; } /* Other */
+  code span.al { color: #e06c75; font-weight: bold; } /* Alert */
+  code span.fu { color: #61afef; } /* Function */
+  code span.er { color: #e06c75; font-weight: bold; } /* Error */
+  code span.wa { color: #e06c75; font-style: italic; } /* Warning */
+  code span.cn { color: #d19a66; } /* Constant */
+  code span.sc { color: #e5c07b; } /* Special Char */
+  code span.vs { color: #98c379; } /* Verbatim String */
+  code span.ss { color: #98c379; } /* Special String */
+  code span.im { color: #c678dd; } /* Import */
+  code span.va { color: #e06c75; } /* Variable */
+  code span.cf { color: #c678dd; } /* Control Flow */
+  code span.op { color: #56b6c2; } /* Operator */
+  code span.bu { color: #e5c07b; } /* BuiltIn */
+  code span.ex { color: #d19a66; } /* Extension */
+  code span.pp { color: #e5c07b; } /* Preprocessor */
+  code span.at { color: #d19a66; } /* Attribute */
+  code span.do { color: #5c6370; font-style: italic; } /* Documentation */
+  code span.an { color: #5c6370; font-style: italic; } /* Annotation */
+  code span.cv { color: #5c6370; font-style: italic; } /* Comment Var */
+  code span.in { color: #5c6370; font-style: italic; } /* Information */
+
+  ul, ol {
+      margin: 15px 0;
+      padding-left: 30px;
+  }
+
+  li {
+      margin-bottom: 8px;
+  }
+
+  blockquote {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #856404;
+  }
+
+  pre code.language-json {
+    background-color: #0d1117 !important;
+    color: #58a6ff !important;
+    display: block;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: -15px;
+  }
+
+  .table-http code {
+      font-size: 12px;
+  }
+
+  .table-http th:nth-child(1),.table-http td:nth-child(1) { width: 8%; }  /* HTTP Method */
+  .table-http th:nth-child(2),.table-http td:nth-child(2) { width: 15%; } /* URL */
+  .table-http th:nth-child(3),.table-http td:nth-child(3) { width: 19%; } /* Mô tả */
+  .table-http th:nth-child(4),.table-http td:nth-child(4) { width: 43%; } /* RewriteRule */
+  .table-http th:nth-child(5),.table-http td:nth-child(5) { width: 15%; } /* Ví dụ */
+
+  pre, pre.sourceCode {
+      background-color: #c0c4c73b;
+  }
+
+  .sourceCode {
+      overflow: auto;
+  }
+
+  /* Pandoc highlight overrides */
+  pre.sourceCode {
+      background: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 6px;
+  }
+  .sourceCode code {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+      padding: unset !important;
+  }
+  .sourceCode .kw { color: #2a8ad4; font-weight: 700; }    /* keywords */
+  .sourceCode .cf { color: #2a8ad4; font-weight: 700; }    /* control flow */
+  .sourceCode .dt { color: #070707; }                      /* data types */
+  .sourceCode .fu { color: #8b5cf6; }                     /* functions */
+  .sourceCode .op { color: #2a8ad4; }                     /* operators */
+  .sourceCode .st { color: #0aa370; }                     /* strings */
+  .sourceCode .dv,                                     /* decimal values */
+  .sourceCode .bn { color: #c18401; }                     /* numbers */
+  .sourceCode .fl { color: #c18401; }                     /* floats */
+  .sourceCode .ch { color: #0aa370; }                     /* chars */
+  .sourceCode .co { color: #6a737d; font-style: italic; } /* comments */
+  .sourceCode .va { color: #444; }                        /* variables */
+  .sourceCode .cn { color: #c18401; font-weight: 700; }   /* constants */
+  .sourceCode .al { color: #d73a49; font-weight: 700; }   /* alerts */
+  .sourceCode .an { color: #d73a49; font-weight: 700; }   /* annotations */
+  .sourceCode .at { color: #005cc5; }                     /* attributes */
+  .sourceCode .im { color: #005cc5; }                     /* imports */
+
+  #TOC {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #TOC > ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #TOC ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  #TOC li {
+    margin: 8px 0;
+  }
+
+  #TOC a {
+    text-decoration: none;
+    color: #0066cc;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  #TOC a:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+
+  #TOC > ul > li > a {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #TOC ul ul a {
+    font-size: 0.95em;
+    color: #555;
+  }
+
+  hr {
+      background: #cacaca;
+  }
+
+  .w-50 {
+      width: 50%;
+  }
+
+  .w-100 {
+      width: 100%;
+  }
+
+  .max-w-100 {
+      max-width: 100% !important;
+  }
+
+  .shadow-xs {
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  a {
+      font-size: 14px;
+  }
+
+  code {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      background: #fff8e4;
+      color: #c99a0d;
+      font-size: 13px;
+  }
+
+  pre code {
+      background-color: transparent;
+  }
+
+  pre {
+      background-color: #000;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+  }
+
+  pre.sourceCode {
+      border-left: 4px solid #3498db;
+  }
+
+  pre code.language-php,
+  pre code.language-sql,
+  pre code.language-javascript,
+  pre code.language-bash,
+  pre code.language-shell {
+    background-color: #282c34 !important;
+    color: #abb2bf;
+  }
+
+  /* Syntax Highlighting */
+  code span.kw { color: #c678dd; font-weight: bold; } /* Keyword */
+  code span.dt { color: #e5c07b; } /* Datatype */
+  code span.dv { color: #d19a66; } /* Decimal Value */
+  code span.bn { color: #d19a66; } /* Base N */
+  code span.fl { color: #d19a66; } /* Float */
+  code span.ch { color: #98c379; } /* Char */
+  code span.st { color: #98c379; } /* String */
+  code span.co { color: #5c6370; font-style: italic; } /* Comment */
+  code span.ot { color: #e06c75; } /* Other */
+  code span.al { color: #e06c75; font-weight: bold; } /* Alert */
+  code span.fu { color: #61afef; } /* Function */
+  code span.er { color: #e06c75; font-weight: bold; } /* Error */
+  code span.wa { color: #e06c75; font-style: italic; } /* Warning */
+  code span.cn { color: #d19a66; } /* Constant */
+  code span.sc { color: #e5c07b; } /* Special Char */
+  code span.vs { color: #98c379; } /* Verbatim String */
+  code span.ss { color: #98c379; } /* Special String */
+  code span.im { color: #c678dd; } /* Import */
+  code span.va { color: #e06c75; } /* Variable */
+  code span.cf { color: #c678dd; } /* Control Flow */
+  code span.op { color: #56b6c2; } /* Operator */
+  code span.bu { color: #e5c07b; } /* BuiltIn */
+  code span.ex { color: #d19a66; } /* Extension */
+  code span.pp { color: #e5c07b; } /* Preprocessor */
+  code span.at { color: #d19a66; } /* Attribute */
+  code span.do { color: #5c6370; font-style: italic; } /* Documentation */
+  code span.an { color: #5c6370; font-style: italic; } /* Annotation */
+  code span.cv { color: #5c6370; font-style: italic; } /* Comment Var */
+  code span.in { color: #5c6370; font-style: italic; } /* Information */
+
+  ul, ol {
+      margin: 15px 0;
+      padding-left: 30px;
+  }
+
+  li {
+      margin-bottom: 8px;
+  }
+
+  blockquote {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #856404;
+  }
+
+  pre code.language-json {
+    background-color: #0d1117 !important;
+    color: #58a6ff !important;
+    display: block;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: -15px;
+  }
+
+  .table-http code {
+      font-size: 12px;
+  }
+
+  .table-http th:nth-child(1),.table-http td:nth-child(1) { width: 8%; }  /* HTTP Method */
+  .table-http th:nth-child(2),.table-http td:nth-child(2) { width: 15%; } /* URL */
+  .table-http th:nth-child(3),.table-http td:nth-child(3) { width: 19%; } /* Mô tả */
+  .table-http th:nth-child(4),.table-http td:nth-child(4) { width: 43%; } /* RewriteRule */
+  .table-http th:nth-child(5),.table-http td:nth-child(5) { width: 15%; } /* Ví dụ */
+
+  pre, pre.sourceCode {
+      background-color: #c0c4c73b;
+  }
+
+  .sourceCode {
+      overflow: auto;
+  }
+
+  /* Pandoc highlight overrides */
+  pre.sourceCode {
+      background: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      padding: 16px;
+      border-radius: 6px;
+      border-left: 4px solid #3498db;
+  }
+  .sourceCode code {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+  }
+  .sourceCode .kw { color: #2a8ad4; font-weight: 700; }    /* keywords */
+  .sourceCode .cf { color: #2a8ad4; font-weight: 700; }    /* control flow */
+  .sourceCode .dt { color: #070707; }                      /* data types */
+  .sourceCode .fu { color: #8b5cf6; }                     /* functions */
+  .sourceCode .op { color: #2a8ad4; }                     /* operators */
+  .sourceCode .st { color: #0aa370; }                     /* strings */
+  .sourceCode .dv,                                     /* decimal values */
+  .sourceCode .bn { color: #c18401; }                     /* numbers */
+  .sourceCode .fl { color: #c18401; }                     /* floats */
+  .sourceCode .ch { color: #0aa370; }                     /* chars */
+  .sourceCode .co { color: #6a737d; font-style: italic; } /* comments */
+  .sourceCode .va { color: #444; }                        /* variables */
+  .sourceCode .cn { color: #c18401; font-weight: 700; }   /* constants */
+  .sourceCode .al { color: #d73a49; font-weight: 700; }   /* alerts */
+  .sourceCode .an { color: #d73a49; font-weight: 700; }   /* annotations */
+  .sourceCode .at { color: #005cc5; }                     /* attributes */
+  .sourceCode .im { color: #005cc5; }                     /* imports */
+
+  #TOC {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #TOC > ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #TOC ul {
+    list-style: none;
+    padding-left: 20px;
+  }
+
+  #TOC li {
+    margin: 8px 0;
+  }
+
+  #TOC a {
+    text-decoration: none;
+    color: #0066cc;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  #TOC a:hover {
+    color: #004499;
+    text-decoration: underline;
+  }
+
+  #TOC > ul > li > a {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #TOC ul ul a {
+    font-size: 0.95em;
+    color: #555;
+  }
+
+  hr {
+      background: #cacaca;
+  }
+
+  .w-50 {
+      width: 50%;
+  }
+
+  .w-100 {
+      width: 100%;
+  }
+
+  .max-w-100 {
+      max-width: 100% !important;
+  }
+
+  .shadow-xs {
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  </style>
+</head>
+<body>
+
+<h1 id="music-genre-classification">Phân loại Thể loại Nhạc</h1>
+<h2
+id="a-modular-research-pipeline-on-gtzan-with-tabular-features-and-end-to-end-mel-spectrogram-models">Đường
+ống Nghiên cứu Mô-đun trên GTZAN với Đặc trưng Dạng bảng và Mô hình Mel
+Spectrogram Từ đầu đến cuối</h2>
+
+<div style="text-align:left; font-size:15px; color:#666; line-height:1.8; margin-bottom:24px;">
+<strong>Nguyen Trung Hieu</strong> - 202416689
+</div>
+
+<hr />
+
+<h1 id="motivation">Động lực Bài toán</h1>
+
+<p>Nếu nhìn qua lăng kính <strong>Lý thuyết Công việc cần Làm (JTBD)</strong> hay <strong>khám phá sản phẩm</strong>, các nền tảng như Spotify và Apple Music đã giải quyết bài toán phân loại thể loại khá tốt cho nhạc chính thống. Tuy nhiên, để định hình đây là một vấn đề nghiên cứu phục vụ <strong>thị trường chưa được phục vụ tốt</strong>, chúng ta cần xác định các nhóm người dùng mà việc phân loại thể loại hiện tại là không đủ hoặc quá đắt đỏ.</p>
+
+<p>Dưới đây là một số vấn đề cụ thể với những điểm đau rõ ràng từ góc nhìn "khách hàng".</p>
+
+<h2>1. Người sáng tạo Nội dung Độc lập (Nhạc sĩ độc lập)</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Nhạc sĩ indie, nhà sản xuất, nghệ sĩ tự phát hành.</p>
+<p><strong>Điểm đau:</strong> Khi tải lên Spotify, Apple Music, SoundCloud, v.v., họ phải tự chọn thể loại, thể loại con, tâm trạng và phong cách — nhưng thường không biết nên chọn gì. Lựa chọn sai làm giảm chất lượng gợi ý và giảm khả năng khám phá bài hát. Ví dụ, một bài hát lai Lo-fi + Jazz + Hip-hop rất khó để người mới phân loại chính xác.</p>
+<p><strong>Sản phẩm:</strong> Tải bài hát lên → AI phân tích → Gợi ý thể loại, thể loại con, tâm trạng, thẻ → Xuất bản một chạm.</p>
+
+<h2>2. Chủ sở hữu Kho lưu trữ Âm thanh Lớn</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Đài truyền hình, đài phát thanh, thư viện nhạc, công ty truyền thông.</p>
+<p><strong>Điểm đau:</strong> Họ có từ 500.000 đến 5 triệu tệp âm thanh — không ai có thể gắn thẻ thủ công hết. Biên tập viên cần tìm kiếm các bản nhạc cụ thể (ví dụ: "Rock, nhịp độ cao, giọng nam, thập niên 2000") nhưng kho lưu trữ thiếu siêu dữ liệu.</p>
+<p><strong>Giải pháp:</strong> Gắn thẻ tự động bằng AI. Đây là một trường hợp sử dụng cực kỳ thực tế.</p>
+
+<h2>3. Công ty Sản xuất Game / Video</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Unity Asset Store, Epidemic Sound, Artlist, Motion Array.</p>
+<p><strong>Điểm đau:</strong> Biên tập viên cần tìm nhạc cụ thể (ví dụ: "Epic Rock" hay "Fantasy Celtic"). Siêu dữ liệu kém khiến việc tìm kiếm không khả thi. Bộ phân loại thể loại giảm chi phí gắn thẻ thủ công.</p>
+
+<h2>4. Bảo tồn Di sản Văn hóa</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Viện âm nhạc, đài truyền hình quốc gia, cơ quan lưu trữ quốc gia.</p>
+<p><strong>Điểm đau:</strong> Họ có hơn 100.000 bài hát dân gian không rõ thể loại, khu vực hay phong cách. Phân loại hỗ trợ AI giúp biên mục và số hóa ở quy mô lớn. Nhiều quốc gia đang tích cực nghiên cứu vấn đề này.</p>
+
+<h2>5. Giáo dục Âm nhạc</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Sinh viên, giảng viên.</p>
+<p><strong>Điểm đau:</strong> Tải bài hát lên → AI giải thích "Đây là Jazz vì nhịp swing, âm trầm đi bộ và ngẫu hứng." Không chỉ phân loại mà còn giải thích.</p>
+
+<h2>6. DJ và Nhà sản xuất</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> DJ, nhà sản xuất âm nhạc.</p>
+<p><strong>Điểm đau:</strong> Họ có 30TB mẫu âm thanh nhưng không thể nhớ mình có gì. AI tự động phân loại theo thể loại, tâm trạng và nhạc cụ, tiết kiệm hàng trăm giờ.</p>
+
+<h2>7. Thực thi Bản quyền Âm nhạc</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Hệ thống Content ID, cơ quan bản quyền.</p>
+<p><strong>Điểm đau:</strong> Khi một bài hát được tải lên YouTube, hệ thống cần ước tính thể loại để định tuyến và kiểm tra bản quyền. Thể loại là một đặc trưng đầu vào quan trọng.</p>
+
+<h2>8. Nền tảng Nhạc Khu vực</h2>
+
+<p><strong>Người dùng mục tiêu:</strong> Dịch vụ phát nhạc địa phương, tổ chức bảo tồn văn hóa.</p>
+<p><strong>Điểm đau:</strong> Spotify rất giỏi với Pop, Rock, Hip-hop. Nhưng các thể loại truyền thống Việt Nam như Cải lương, Quan họ, Ca trù, Đờn ca tài tử, Hát Xoan, Chầu văn lại bị xử lý kém. Các mô hình yếu đối với những thể loại này, khiến việc tìm kiếm, phân loại và gợi ý gần như không thể. Đây là một <strong>thị trường thực sự chưa được phục vụ tốt</strong>.</p>
+
+<h2>Định vị Nghiên cứu</h2>
+
+<p>Đối với phần <strong>Động lực Bài toán</strong> của một bài báo nghiên cứu, tránh lập luận theo kiểu "Spotify cần phân loại thể loại" — người đánh giá sẽ nhận xét rằng vấn đề này đã được giải quyết. Thay vào đó, hãy định vị công trình như sau:</p>
+
+<blockquote style="background:#f0f4ff; border-left:4px solid #4a90d9; padding:16px 20px; margin:16px 0; border-radius:4px; color:#333;">
+<strong>Các nền tảng âm nhạc hiện tại chủ yếu tối ưu hóa nhận dạng thể loại cho nhạc thương mại chính thống. Tuy nhiên, nhiều lĩnh vực mới nổi—bao gồm xuất bản nhạc độc lập, kho lưu trữ văn hóa số và nền tảng nhạc khu vực—vẫn phụ thuộc vào việc chú thích siêu dữ liệu thủ công do sự khan hiếm dữ liệu có gắn nhãn và khả năng tổng quát hóa kém của các bộ phân loại thể loại hiện có đối với các thể loại lai hoặc thể loại đuôi dài. Điều này tạo ra một nút thắt đáng kể cho việc tổ chức, truy xuất và gợi ý nội dung.</strong>
+</blockquote>
+
+<p>Cách định khung này xác lập một <strong>khoảng trống</strong> rõ ràng: không phải là vấn đề chung về "phân loại thể loại nhạc," mà là <strong>phân loại tự động trong các lĩnh vực đuôi dài, thể loại lai hoặc tài nguyên thấp</strong> nơi các giải pháp hiện tại không đáp ứng được nhu cầu thực tế. Cách định vị này hấp dẫn hơn từ cả góc nhìn sản phẩm lẫn nghiên cứu.</p>
+
+<hr />
+
+<h1 id="abstract">Tóm tắt</h1>
+<p>Dự án này triển khai một đường ống mô-đun, có thể tái lập cho
+<strong>phân loại thể loại nhạc</strong> trên bản sao GTZAN được lưu trữ
+tại <code>Data/</code>. Hai hướng tiếp cận mô hình được hỗ trợ: (i)
+<strong>học dạng bảng</strong> trên các đặc trưng đoạn 3 giây đã được trích
+xuất từ <code>Data/features_3_sec.csv</code> (đầu vào 58 chiều
+sau khi loại bỏ các cột định danh), và (ii) <strong>học nơ-ron từ đầu đến
+cuối</strong> từ âm thanh thô bằng cách trích xuất các đoạn
+<strong>mel spectrogram</strong> (3 giây, 128 mel bins) và huấn luyện
+các mô hình sâu (CNN/LSTM). Kho lưu trữ bao gồm lưu đệm theo từng giai đoạn,
+ghi log, lưu điểm kiểm tra, báo cáo đánh giá và nhiều biểu đồ trực quan
+(dạng sóng âm thanh, STFT/mel/MFCC/chroma/spectral
+contrast/tempogram/HPSS, cùng với các biểu đồ nhúng và phân tích tương quan).</p>
+<p>Một cuộc kiểm tra quan trọng trên phân chia dạng bảng gốc
+(<code>Data/splits/split_v1.csv</code>) đã phát hiện
+<strong>rò rỉ cấp độ bản nhạc</strong> nghiêm trọng: <strong>966/1000 bản
+nhạc gốc</strong> có các đoạn xuất hiện trong hơn một tập
+(huấn luyện/kiểm định/kiểm tra), làm tăng độ chính xác báo cáo giả tạo.
+Điều này đã được <strong>khắc phục</strong>: cả hai hướng tiếp cận hiện đều sử dụng
+phân chia <strong>cấp nhóm</strong>
+(<code>make_group_splits_from_filenames</code>) đảm bảo
+tất cả các đoạn của một bản nhạc 30 giây chỉ thuộc về một tập
+duy nhất. Phân chia dạng bảng đã sửa được lưu tại
+<code>Data/splits/split_by_track_v2.csv</code>. Hướng tiếp cận mel
+đã sử dụng phân chia nhóm tách biệt cấp bản nhạc từ trước và không cần thay đổi.
+Ngoài ra, hai chiến lược tăng cường dữ liệu mới đã được thêm vào
+để xử lý chồng lấn thể loại (<code>Mixup</code>) và dịch chuyển miền
+(<code>SpecAugment</code>), với cấu hình nằm dưới
+<code>data.augmentation</code> trong <code>configs/config.yaml</code>.
+Kết quả theo giao thức đã sửa đang chờ chạy lại.</p>
+<hr />
+<h1 id="introduction">1. Giới thiệu</h1>
+<p><strong>Phân loại Thể loại Nhạc (MGC)</strong> nhằm gán một
+nhãn thể loại (ví dụ: blues, classical, hiphop) cho một bản ghi âm.
+Đây là một bài toán kinh điển trong <strong>Truy xuất Thông tin Âm nhạc
+(MIR)</strong>, thường được sử dụng để nghiên cứu học biểu diễn âm thanh,
+các đặc trưng xử lý tín hiệu (STFT, Mel, MFCC) và phân loại có giám sát.</p>
+<p><strong>Tại sao nó quan trọng.</strong> Nhận dạng thể loại hỗ trợ
+hệ thống gợi ý, biên mục nhạc, tạo danh sách phát và làm giàu
+siêu dữ liệu. Ngoài thể loại, các đường ống tương tự cũng mở rộng một cách tự nhiên sang
+phân loại tâm trạng, nhạc cụ, nghệ sĩ và gắn thẻ.</p>
+<p><strong>Thách thức.</strong> - <strong>Chồng lấn giữa các lớp:</strong>
+nhiều thể loại chia sẻ nhạc cụ hoặc mẫu nhịp điệu (ví dụ: rock
+vs. metal). - <strong>Biến thiên trong cùng lớp:</strong> các danh mục thể loại
+rất rộng; phong cách sản xuất và chất lượng ghi âm rất khác nhau. -
+<strong>Cấu trúc thời gian:</strong> âm nhạc không dừng; các đoạn
+ngắn có thể không nắm bắt được bản sắc tổng thể của bài hát. -
+<strong>Cạm bẫy đánh giá:</strong> việc phân đoạn bản nhạc và chia tách các đoạn một cách
+ngây thơ tạo ra <strong>rò rỉ dữ liệu</strong> khi các đoạn từ cùng một
+bản nhạc xuất hiện trong cả tập huấn luyện và kiểm tra.</p>
+<p>Kho lưu trữ này tập trung rõ ràng vào việc xây dựng một <strong>đường ống nghiên cứu
+theo từng giai đoạn</strong> với lưu đệm, khả năng tái lập, trực quan hóa
+và một "vườn mô hình" bao gồm các phương pháp ML cổ điển và nơ-ron.</p>
+<hr />
+<h1 id="problem-analysis">2. Phân tích Bài toán</h1>
+<p>MGC là một bài toán phân loại đa lớp với không gian nhãn
+<strong>C = 10</strong> (được xác nhận bởi
+<code>Data/features/label_map.json</code>):
+<code>blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock</code>.</p>
+<p>Về mặt âm nhạc, các thể loại thường khác nhau dọc theo nhiều trục: - <strong>Âm sắc /
+nhạc cụ:</strong> các mẫu đường bao phổ dạng MFCC thường
+phân tách classical khỏi metal/rock. - <strong>Nhịp độ / nhịp điệu /
+tính gõ:</strong> hiphop/disco thường có tính tuần hoàn nhịp điệu
+mạnh; classical có thể ít tính gõ hơn. - <strong>Cấu trúc
+hòa âm:</strong> các mẫu chroma có thể có cấu trúc rõ ràng hơn đối với
+các thể loại có tính tonal/hòa âm; kém ổn định hơn đối với các đoạn giàu tính gõ. -
+<strong>Độ sáng phổ:</strong> centroid/rolloff liên quan đến
+nội dung tần số cao; tiếng guitar méo/hi-hat làm dịch chuyển năng lượng phổ
+lên cao.</p>
+<p>Các yếu tố này được nắm bắt một phần bởi hai mô hình đặc trưng của dự án: -
+<strong>Tổng hợp dạng bảng</strong> (tổng hợp thống kê theo đoạn:
+trung bình/phương sai trên 3 giây). - <strong>Ảnh/chuỗi
+thời gian–tần số</strong> (các khung mel spectrogram theo thời gian).</p>
+<hr />
+<h1 id="dataset-description">3. Mô tả Bộ dữ liệu</h1>
+<h2 id="repository-dataset-layout">3.1 Cấu trúc bộ dữ liệu trong kho lưu trữ</h2>
+<p>Kho lưu trữ bao gồm một bản sao GTZAN trong <code>Data/</code> (xem
+<code>README.md</code>): - <code>Data/genres_original/</code>: các tệp âm thanh gốc
+<code>.wav</code> được tổ chức theo thể loại. -
+<code>Data/features_3_sec.csv</code>: các đặc trưng dạng bảng cho các đoạn
+~3 giây (mẫu theo hàng). - <code>Data/features_30_sec.csv</code>:
+các đặc trưng dạng bảng cho các bản nhạc 30 giây (mẫu theo bản nhạc). -
+<code>Data/images_original/</code>: ảnh spectrogram
+(phụ thuộc vào bản sao). - <code>Data/processed/metadata.csv</code>: siêu dữ liệu
+được tạo ra bởi giai đoạn <code>preprocess</code> của đường ống. -
+<code>Data/splits/*</code>: các định nghĩa phân chia được sử dụng bởi đường ống.</p>
+<h2 id="audio-metadata-audit">3.2 Kiểm tra siêu dữ liệu âm thanh</h2>
+<p>Từ <code>Data/processed/metadata.csv</code> (được tạo bởi
+<code>src/data/preprocessing.py</code>): - Tổng số tệp âm thanh gốc
+đã quét: <strong>1000</strong> - Đọc được/OK: <strong>999</strong> -
+Không đọc được/hỏng: <strong>1</strong>
+(<code>.../jazz/jazz.00054.wav</code>, được đánh dấu không đọc được) - Phân bố
+tần số lấy mẫu (tệp OK): <strong>22050 Hz cho tất cả 999 bản nhạc</strong> -
+Thống kê thời lượng (tệp OK): trung bình ≈ <strong>30.02 s</strong> với
+phương sai nhỏ (tối thiểu ≈ 29.93 s, tối đa ≈ 30.65 s)</p>
+<p><strong>Hình 1.</strong> Phân bố thời lượng âm thanh gốc
+(siêu dữ liệu).</p>
+<figure>
+<img
+src="outputs/test-visualize-features/figures/raw_duration_distribution.png"
+alt="Hình 1: Phân bố thời lượng âm thanh (giây) từ Data/processed/metadata.csv." />
+<figcaption aria-hidden="true">Hình 1: Phân bố thời lượng âm thanh
+(giây) từ <code>Data/processed/metadata.csv</code>.</figcaption>
+</figure>
+<p><strong>Hình 2.</strong> Phân bố tần số lấy mẫu âm thanh gốc.</p>
+<figure>
+<img
+src="outputs/test-visualize-features/figures/raw_sample_rate_distribution.png"
+alt="Hình 2: Phân bố tần số lấy mẫu (Hz) từ Data/processed/metadata.csv." />
+<figcaption aria-hidden="true">Hình 2: Phân bố tần số lấy mẫu (Hz)
+từ <code>Data/processed/metadata.csv</code>.</figcaption>
+</figure>
+<h2 id="tabular-dataset-feature-schema-and-dimensionality">3.3 Bộ dữ liệu
+dạng bảng: lược đồ đặc trưng và số chiều</h2>
+<p><code>Data/features_3_sec.csv</code> chứa 60 cột, bao gồm
+các cột định danh và nhãn: - Cột định danh: <code>filename</code>,
+<code>length</code> - Cột nhãn: <code>label</code> - Cột
+đặc trưng: 57 đặc trưng âm thanh được thiết kế, bao gồm: -
+<code>chroma_stft_{mean,var}</code> - <code>rms_{mean,var}</code> -
+<code>spectral_centroid_{mean,var}</code>,
+<code>spectral_bandwidth_{mean,var}</code> -
+<code>rolloff_{mean,var}</code> -
+<code>zero_crossing_rate_{mean,var}</code> -
+<code>harmony_{mean,var}</code>, <code>perceptr_{mean,var}</code>
+(thống kê thành phần gõ) - <code>tempo</code> -
+<code>mfcc1..mfcc20_{mean,var}</code></p>
+<p>Bộ xây dựng đệm dạng bảng của đường ống
+(<code>src/data/feature_extraction.py</code>) loại bỏ
+<code>filename</code> và <code>label</code>, để lại <strong>58 chiều đầu
+vào</strong> (57 đặc trưng âm thanh + <code>length</code>).</p>
+<h2 id="trainvalidationtest-splits-as-shipped-in-this-repo">3.4
+Phân chia huấn luyện/kiểm định/kiểm tra (như được cung cấp trong repo này)</h2>
+<h3 id="tabular-split-segment-level-leaky-by-track">3.4.1 Phân chia dạng bảng
+(cấp đoạn, rò rỉ theo bản nhạc)</h3>
+<p>Tệp phân chia được cung cấp cho đặc trưng dạng bảng là
+<code>Data/splits/split_v1.csv</code> với: - train:
+<strong>7192</strong> đoạn - val: <strong>800</strong> đoạn -
+test: <strong>1998</strong> đoạn - tổng: <strong>9990</strong>
+đoạn</p>
+<p>Phân bố lớp theo từng tập (thu được bằng cách kết nối
+<code>split_v1.csv</code> với <code>features_3_sec.csv</code> theo chỉ số
+hàng):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">label</th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TỔNG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">719</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">719</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tabular-split-segment-level-track-disjoint">3.4.1 Phân chia dạng bảng
+(cấp đoạn, tách biệt theo bản nhạc)</h3>
+<p><strong>Tính đúng đắn của phân chia (v2, đã sửa).</strong> Bắt đầu từ
+phiên bản <code>feature.yaml</code> <code>split_by_track_v2.csv</code>,
+đường ống dạng bảng sử dụng
+<code>src/data/split.py::make_group_splits_from_filenames</code>. Hàm
+này: 1. Trích xuất ID nhóm bản nhạc từ mỗi tên tệp:
+<code>blues.00000.0.wav</code> → nhóm <code>blues.00000</code>. 2.
+Thực hiện <strong>phân chia cấp nhóm có phân tầng</strong> (qua
+<code>make_group_splits</code>), sao cho tất cả các đoạn của một bản nhạc được đưa vào
+cùng một tập. 3. Lưu kết quả vào
+<code>Data/splits/split_by_track_v2.csv</code> (theo chỉ số hàng, tương thích
+với <code>build_tabular_cache</code>).</p>
+<p>Kết quả của phân chia nhóm v2 (seed=42, test=0.2, val=0.1):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">label</th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TỔNG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">727</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">729</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">hiphop</td>
+<td style="text-align: right;">688</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">jazz</td>
+<td style="text-align: right;">740</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">metal</td>
+<td style="text-align: right;">710</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">pop</td>
+<td style="text-align: right;">760</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">reggae</td>
+<td style="text-align: right;">680</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">rock</td>
+<td style="text-align: right;">718</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TỔNG</strong></td>
+<td style="text-align: right;"><strong>7190</strong></td>
+<td style="text-align: right;"><strong>800</strong></td>
+<td style="text-align: right;"><strong>2000</strong></td>
+<td style="text-align: right;"><strong>9990</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Đã xác nhận không có chồng lấn bản nhạc</strong>: 0 trong số 1000 bản nhạc
+xuất hiện trong hơn một tập (đã được kiểm tra bằng chương trình).</p>
+<h3 id="mel-split-segment-level-track-disjoint-by-construction">3.4.2
+Phân chia mel (cấp đoạn, <em>tách biệt bản nhạc theo thiết kế</em>)</h3>
+<p>Đường ống mel trích xuất các đoạn 3 giây trực tiếp từ âm thanh thô
+và gán một <strong>ID nhóm cho mỗi bản nhạc 30 giây gốc</strong>
+(ví dụ: <code>blues.00000</code>). Việc phân chia được thực hiện theo nhóm
+(<code>src/data/split.py::make_group_splits</code>), và bộ đệm
+được tạo ra <code>Data/features/mel_features_v1.npz</code> có: - train:
+<strong>7183</strong> đoạn - val: <strong>798</strong> đoạn -
+test: <strong>2000</strong> đoạn - tổng: <strong>9981</strong>
+đoạn</p>
+<p>Các tập <code>groups_train/val/test</code> có <strong>không có chồng
+lấn</strong> (tách biệt bản nhạc). Tập kiểm tra được cân bằng hoàn hảo với 200
+đoạn cho mỗi lớp.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: right;">train</th>
+<th style="text-align: right;">val</th>
+<th style="text-align: right;">test</th>
+<th style="text-align: right;">TỔNG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">blues</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">classical</td>
+<td style="text-align: right;">680</td>
+<td style="text-align: right;">118</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">country</td>
+<td style="text-align: right;">727</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr>
+<td style="text-align: left;">disco</td>
+<td style="text-align: right;">709</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">hiphop</td>
+<td style="text-align: right;">708</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr>
+<td style="text-align: left;">jazz</td>
+<td style="text-align: right;">720</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">990</td>
+</tr>
+<tr>
+<td style="text-align: left;">metal</td>
+<td style="text-align: right;">700</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">pop</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">reggae</td>
+<td style="text-align: right;">700</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">1000</td>
+</tr>
+<tr>
+<td style="text-align: left;">rock</td>
+<td style="text-align: right;">739</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">999</td>
+</tr>
+<tr>
+<td style="text-align: left;">TỔNG</td>
+<td style="text-align: right;">7183</td>
+<td style="text-align: right;">798</td>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">9981</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="feature-extraction-analysis-with-visual-evidence">4. Phân tích
+Trích xuất Đặc trưng (có minh họa trực quan)</h1>
+<p>Dự án này hỗ trợ hai khái niệm bổ sung về "đặc trưng": 1.
+<strong>Đặc trưng dạng bảng được thiết kế</strong> từ
+<code>features_3_sec.csv</code> (tổng hợp thống kê trên cửa sổ 3 giây).
+2. <strong>Biểu diễn thời gian–tần số</strong> được tính
+theo yêu cầu từ âm thanh thô (STFT, mel, MFCC, chroma, v.v.) để phân tích
+và cho học từ đầu đến cuối.</p>
+<p>Các giai đoạn <code>visualize</code> / <code>visualize-features</code>
+tạo ra nhiều biểu đồ dưới: -
+<code>outputs/visualize-features-tabular/figures/</code> và
+<code>outputs/visualize-features-mel/figures/</code> -
+<code>outputs/test-visualize-features/figures/</code></p>
+<p>Dưới đây, mỗi đặc trưng được mô tả bằng toán học và diễn giải sử dụng
+các biểu đồ thực tế đã tạo ra.</p>
+<h2 id="waveform-time-domain-amplitude">4.1 Dạng sóng (biên độ miền thời gian)</h2>
+<p><strong>Ý nghĩa.</strong> Dạng sóng là tín hiệu âm thanh thô
+$x[n]$. Mặc dù không trực tiếp phân biệt được, nó cho thấy: -
+động thái biên độ (nén so với dải động), - khoảng lặng/cấu trúc,
+- mật độ nhất thời (hoạt động gõ).</p>
+<p><strong>Hình 3–6.</strong> Ví dụ dạng sóng qua các thể loại
+(cửa sổ 3 giây).</p>
+<p><img
+src="outputs/test-visualize-features/figures/waveform_blues_blues.00084.png"
+alt="Hình 3: Ví dụ dạng sóng (blues)." /> <img
+src="outputs/test-visualize-features/figures/waveform_classical_classical.00099.png"
+alt="Hình 4: Ví dụ dạng sóng (classical)." /> <img
+src="outputs/test-visualize-features/figures/waveform_hiphop_hiphop.00026.png"
+alt="Hình 5: Ví dụ dạng sóng (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/waveform_metal_metal.00088.png"
+alt="Hình 6: Ví dụ dạng sóng (metal)." /></p>
+<p><strong>Diễn giải.</strong> Các đoạn giàu tính gõ thường
+có nhiều nhất thời biên độ cao; classical thường có biên độ vĩ mô
+lớn hơn (cường độ tăng/giảm) với hoạt động nhất thời ít dày đặc hơn.
+Các mẫu này thúc đẩy các đặc trưng dựa trên nhịp điệu và năng lượng
+(RMS, tempogram, thành phần gõ).</p>
+<h2 id="stft-spectrogram-log-frequency-db">4.2 STFT spectrogram
+(tần số log, dB)</h2>
+<p><strong>Ý nghĩa.</strong> Biến đổi Fourier Thời gian Ngắn (STFT)
+cho thấy năng lượng theo thời gian và tần số: $X(m, k) = _{n=0}^{N-1}
+x[n+mH]w[n]e^{-j 2kn/N}, S(m,k)=|X(m,k)|$ Các biểu đồ sử dụng
+<code>src/visualization/spectrogram.py::plot_stft</code> với các tham số mặc định
+<code>n_fft=2048</code>, <code>hop_length=512</code>.</p>
+<p><strong>Nó nắm bắt được gì.</strong> - <strong>Cấu trúc tần số
+thấp</strong> (dòng bass, kick drum), - <strong>nội dung tần số
+cao</strong> (hi-hat, méo tiếng, độ sáng), - kết cấu nhất thời
+so với hòa âm (mẫu dọc so với mẫu ngang).</p>
+<p><strong>Hình 7–10.</strong> Ví dụ STFT qua các thể loại.</p>
+<p><img
+src="outputs/test-visualize-features/figures/stft_blues_blues.00084.png"
+alt="Hình 7: STFT spectrogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/stft_classical_classical.00099.png"
+alt="Hình 8: STFT spectrogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/stft_hiphop_hiphop.00026.png"
+alt="Hình 9: STFT spectrogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/stft_metal_metal.00088.png"
+alt="Hình 10: STFT spectrogram (metal)." /></p>
+<p><strong>Diễn giải.</strong> Metal có xu hướng thể hiện năng lượng
+băng rộng dày đặc (guitar méo, chũm chọe), trong khi classical thường
+có các dải hòa âm rõ ràng hơn và sự tách biệt lớn hơn giữa các nhạc cụ.
+Hiphop có thể có năng lượng tần số thấp mạnh cộng với các mẫu gõ nhất thời.
+Những quan sát này liên kết với các đặc trưng phổ được thiết kế
+(centroid, bandwidth, rolloff) và với việc học mel-spectrogram.</p>
+<h2 id="mel-spectrogram-db-the-end-to-end-representation">4.3 Mel
+spectrogram (dB) — biểu diễn từ đầu đến cuối</h2>
+<p><strong>Ý nghĩa.</strong> Mel spectrogram chiếu một phổ công suất
+qua một bộ lọc mel và sau đó áp dụng nén log:
+$m = 2595_{10}(1 + f/700), S_{mel} = M S,
+S_{dB}=10_{10}(S_{mel}+)$ Trong đường ống này: -
+<code>features.kind=mel_from_audio</code> trích xuất mel sử dụng
+<code>librosa.feature.melspectrogram</code> và
+<code>power_to_db</code>. - Cấu hình nằm trong
+<code>configs/config.yaml</code>: - <code>sample_rate=22050</code>,
+<code>segment_seconds=3.0</code>, - <code>n_mels=128</code>,
+<code>n_fft=2048</code>, <code>hop_length=512</code>, -
+<code>fmin=20</code>, <code>fmax=8000</code>.</p>
+<p><strong>Tại sao hữu ích.</strong> Mel spectrogram bảo toàn cấu trúc thời gian–tần số
+và căn chỉnh độ phân giải tần số với nhận thức của con người, khiến
+chúng trở thành đầu vào mạnh mẽ cho CNN/LSTM.</p>
+<p><strong>Hình 11–14.</strong> Ví dụ mel spectrogram.</p>
+<p><img
+src="outputs/test-visualize-features/figures/mel_blues_blues.00084.png"
+alt="Hình 11: Mel spectrogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/mel_classical_classical.00099.png"
+alt="Hình 12: Mel spectrogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/mel_hiphop_hiphop.00026.png"
+alt="Hình 13: Mel spectrogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/mel_metal_metal.00088.png"
+alt="Hình 14: Mel spectrogram (metal)." /></p>
+<p><strong>Diễn giải.</strong> Phân bố năng lượng tương đối qua
+các băng mel (thấp so với cao) và các mẫu biến điệu thời gian phân biệt
+các thể loại. Ví dụ, kết cấu hòa âm duy trì xuất hiện dưới dạng các cấu trúc
+ngang liên tục; các sự kiện gõ xuất hiện dưới dạng các chùm dọc.</p>
+<h2 id="mfcc-mel-frequency-cepstral-coefficients">4.4 MFCC
+(Mel-Frequency Cepstral Coefficients)</h2>
+<p><strong>Ý nghĩa.</strong> MFCC tóm tắt đường bao phổ
+(âm sắc) qua: 1) mel spectrogram $$ log, 2) Biến đổi Cosine Rời rạc
+(DCT). MFCC được sử dụng rộng rãi để mô tả âm sắc trong lời nói/nhạc
+và xuất hiện như họ đặc trưng được thiết kế chiếm ưu thế trong
+<code>features_3_sec.csv</code>
+(<code>mfcc1..mfcc20_mean/var</code>).</p>
+<p><strong>Hình 15–18.</strong> Bản đồ nhiệt MFCC qua các thể loại.</p>
+<p><img
+src="outputs/test-visualize-features/figures/mfcc_blues_blues.00084.png"
+alt="Hình 15: MFCC (blues)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_classical_classical.00099.png"
+alt="Hình 16: MFCC (classical)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_hiphop_hiphop.00026.png"
+alt="Hình 17: MFCC (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/mfcc_metal_metal.00088.png"
+alt="Hình 18: MFCC (metal)." /></p>
+<p><strong>Diễn giải.</strong> MFCC nén chi tiết phổ nhưng
+bảo toàn âm sắc thô. Âm sắc Metal/rock thường có sự hiện diện tần số
+cao dày đặc; âm sắc classical có thể có cấu trúc hòa âm rõ ràng hơn
+và ít thành phần giống nhiễu hơn. Các mô hình dạng bảng phụ thuộc nhiều
+vào trung bình/phương sai MFCC (40 chiều trong số 58 đầu vào bao gồm
+<code>length</code>), điều này giải thích một phần khả năng phân tách mạnh dưới
+phân chia rò rỉ.</p>
+<h2 id="chromagram-pitch-class-energy">4.5 Chromagram (năng lượng lớp cao độ)</h2>
+<p><strong>Ý nghĩa.</strong> Chromagram ánh xạ năng lượng thành 12 lớp
+cao độ (C…B), bỏ qua quãng tám. Nó phản ánh tiến trình hòa âm và
+tính tonal.</p>
+<p><strong>Hình 19–22.</strong> Chromagram qua các thể loại.</p>
+<p><img
+src="outputs/test-visualize-features/figures/chroma_blues_blues.00084.png"
+alt="Hình 19: Chromagram (blues)." /> <img
+src="outputs/test-visualize-features/figures/chroma_classical_classical.00099.png"
+alt="Hình 20: Chromagram (classical)." /> <img
+src="outputs/test-visualize-features/figures/chroma_hiphop_hiphop.00026.png"
+alt="Hình 21: Chromagram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/chroma_jazz_jazz.00021.png"
+alt="Hình 22: Chromagram (jazz)." /></p>
+<p><strong>Diễn giải.</strong> Các thể loại có chuyển động hòa âm phong phú hơn
+(jazz/classical) thường hiển thị các mẫu kích hoạt chroma mạnh hơn và
+có cấu trúc rõ ràng hơn; các đoạn giàu tính gõ có thể tạo ra cấu trúc
+chroma yếu hơn hoặc nhiễu hơn.</p>
+<h2 id="spectral-contrast-peakvalley-structure-across-subbands">4.6
+Spectral contrast (cấu trúc đỉnh–thung lũng qua các băng con)</h2>
+<p><strong>Ý nghĩa.</strong> Spectral contrast đo lường sự khác biệt
+năng lượng giữa các đỉnh và thung lũng phổ qua các băng con
+tần số. Nó nhạy cảm với nhạc cụ và "kết cấu" âm sắc.</p>
+<p><strong>Hình 23–26.</strong> Ví dụ spectral contrast.</p>
+<p><img
+src="outputs/test-visualize-features/figures/contrast_blues_blues.00084.png"
+alt="Hình 23: Spectral contrast (blues)." /> <img
+src="outputs/test-visualize-features/figures/contrast_classical_classical.00099.png"
+alt="Hình 24: Spectral contrast (classical)." /> <img
+src="outputs/test-visualize-features/figures/contrast_hiphop_hiphop.00026.png"
+alt="Hình 25: Spectral contrast (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/contrast_metal_metal.00088.png"
+alt="Hình 26: Spectral contrast (metal)." /></p>
+<p><strong>Diễn giải.</strong> Các bản phối dày đặc, bị nén thường làm giảm
+contrast ở một số băng; các phối khí thưa thớt có thể tạo ra sự khác biệt
+đỉnh–thung lũng rõ hơn. Điều này liên quan đến phong cách sản xuất phụ thuộc thể loại.</p>
+<h2 id="tempogram-rhythmic-periodicity">4.7 Tempogram (tính tuần hoàn nhịp điệu)</h2>
+<p><strong>Ý nghĩa.</strong> Tempogram được tính từ cường độ khởi đầu
+theo thời gian và nắm bắt các chu kỳ nhịp điệu (cấu trúc liên quan đến nhịp độ).</p>
+<p><strong>Hình 27–30.</strong> Tempogram qua các thể loại.</p>
+<p><img
+src="outputs/test-visualize-features/figures/tempogram_blues_blues.00084.png"
+alt="Hình 27: Tempogram (blues)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_classical_classical.00027.png"
+alt="Hình 28: Tempogram (classical)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_hiphop_hiphop.00026.png"
+alt="Hình 29: Tempogram (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/tempogram_reggae_reggae.00046.png"
+alt="Hình 30: Tempogram (reggae)." /></p>
+<p><strong>Diễn giải.</strong> Disco/hiphop thường có các mẫu nhịp điệu
+tuần hoàn mạnh hơn trên các cửa sổ ngắn, trong khi classical có thể biến
+thiên nhiều hơn. Các thuộc tính này thúc đẩy việc đưa <code>tempo</code>
+vào tập đặc trưng dạng bảng.</p>
+<h2 id="hpss-harmonicpercussive-source-separation">4.8 HPSS
+(tách nguồn hòa âm/gõ)</h2>
+<p><strong>Ý nghĩa.</strong> HPSS phân tách STFT thành các thành phần hòa âm
+(duy trì) và gõ (nhất thời). Tệp CSV đặc trưng dạng bảng
+bao gồm các thống kê <code>harmony_*</code> và <code>perceptr_*</code>,
+và dự án cung cấp các biểu đồ HPSS.</p>
+<p><strong>Hình 31–34.</strong> Biểu đồ HPSS qua các thể loại.</p>
+<p><img
+src="outputs/test-visualize-features/figures/hpss_blues_blues.00084.png"
+alt="Hình 31: HPSS (blues)." /> <img
+src="outputs/test-visualize-features/figures/hpss_classical_classical.00099.png"
+alt="Hình 32: HPSS (classical)." /> <img
+src="outputs/test-visualize-features/figures/hpss_hiphop_hiphop.00026.png"
+alt="Hình 33: HPSS (hiphop)." /> <img
+src="outputs/test-visualize-features/figures/hpss_metal_metal.00088.png"
+alt="Hình 34: HPSS (metal)." /></p>
+<p><strong>Diễn giải.</strong> Các đoạn classical/jazz thường
+chứa cấu trúc hòa âm mạnh; hiphop/disco thường có năng lượng gõ
+rõ rệt và các mẫu nhất thời. Sự cân bằng hòa âm/gõ là một yếu tố
+phân biệt có ý nghĩa cho kết cấu thể loại.</p>
+<h2 id="tabular-feature-space-diagnostics-correlation-embeddings">4.9
+Chẩn đoán không gian đặc trưng dạng bảng (tương quan + nhúng)</h2>
+<p>Bộ đệm đặc trưng dạng bảng được chuẩn hóa (z-score) trên tập huấn luyện
+và sau đó được trực quan hóa qua bản đồ nhiệt tương quan và nhúng 2D.</p>
+<p><strong>Hình 35.</strong> Bản đồ nhiệt tương quan đặc trưng (tập con
+của 40 đặc trưng đầu tiên).</p>
+<figure>
+<img
+src="outputs/visualize-features-tabular/figures/feature_correlation.png"
+alt="Hình 35: Bản đồ nhiệt tương quan đặc trưng cho đầu vào dạng bảng." />
+<figcaption aria-hidden="true">Hình 35: Bản đồ nhiệt tương quan đặc trưng
+cho đầu vào dạng bảng.</figcaption>
+</figure>
+<p><strong>Hình 36–38.</strong> Nhúng của các đặc trưng dạng bảng.</p>
+<p><img
+src="outputs/visualize-features-tabular/figures/embedding_pca.png"
+alt="Hình 36: Nhúng PCA (dạng bảng)." /> <img
+src="outputs/visualize-features-tabular/figures/embedding_tsne.png"
+alt="Hình 37: Nhúng t-SNE (dạng bảng)." /> <img
+src="outputs/visualize-features-tabular/figures/embedding_umap.png"
+alt="Hình 38: Nhúng UMAP (dạng bảng)." /></p>
+<p><strong>Diễn giải.</strong> Sự phân cụm rõ ràng trong các nhúng này
+có thể chỉ ra khả năng phân tách của các lớp trong không gian đặc trưng được thiết kế.
+Tuy nhiên, vì phân chia dạng bảng không tách biệt theo bản nhạc, sự phân
+tách rõ ràng có thể một phần phản ánh các dấu hiệu riêng của bản nhạc bị rò rỉ
+qua các tập.</p>
+<hr />
+<h1 id="model-architecture-analysis">5. Phân tích Kiến trúc Mô hình</h1>
+<p>Kho lưu trữ bao gồm một "vườn mô hình" trải dài từ ML cổ điển
+(scikit-learn) đến các mô hình nơ-ron (PyTorch). Định nghĩa mô hình và
+cấu hình nằm trong: - <code>src/models/</code> (triển khai) -
+<code>configs/model.yaml</code> (siêu tham số)</p>
+<h2 id="classical-ml-baselines-tabular-scikit-learn">5.1 Đường cơ sở ML
+cổ điển (dạng bảng, scikit-learn)</h2>
+<p>Được triển khai qua <code>src/models/sklearn_models.py</code> với
+các tên được hỗ trợ:
+<code>knn, svm_rbf, linear_svm, logreg, naive_bayes, lda, qda, random_forest, extra_trees, ada_boost, gbdt, xgboost, lightgbm</code>.</p>
+<p><strong>Lý do.</strong> Các phương pháp này mạnh mẽ và hiệu quả
+cho dữ liệu dạng bảng chiều thấp. Các phương pháp cây tổ hợp (ExtraTrees,
+RandomForest, GBDT, XGBoost, LightGBM) có thể nắm bắt các tương tác đặc trưng
+phi tuyến mà không cần tiền xử lý mở rộng ngoài chuẩn hóa.</p>
+<p><strong>Chi tiết triển khai đáng chú ý.</strong> -
+<code>svm_rbf</code> sử dụng <code>SVC(probability=True)</code> để cho phép
+đường cong ROC/PR (nặng hơn về mặt tính toán nhưng mang tính thông tin). -
+<code>linear_svm</code> sử dụng <code>LinearSVC</code>, không
+tạo ra ước lượng xác suất; do đó ROC-AUC
+và đường cong PR có thể không khả dụng cho lần chạy đó.</p>
+<h2 id="mlp-for-tabular-features-pytorch">5.2 MLP cho đặc trưng dạng bảng
+(PyTorch)</h2>
+<p>Được định nghĩa trong <code>src/models/model.py::MLP</code>: - Đầu vào: vector 58D
+- Kiến trúc:
+<code>Dropout -&gt; (Linear + ReLU + Dropout) × 5 -&gt; Linear(n_classes)</code>
+- Kích thước ẩn: <code>[512, 256, 128, 64, 32]</code>, dropout
+<code>0.2</code> (từ <code>configs/model.yaml</code>)</p>
+<p><strong>Điểm mạnh/yếu.</strong> - Bộ xấp xỉ hàm phi tuyến linh hoạt.
+- Yêu cầu chính quy hóa cẩn thận và đủ dữ liệu; có thể
+quá khớp dưới rò rỉ hoặc chế độ mẫu nhỏ.</p>
+<h2 id="cnn-on-mel-spectrogram-pytorch">5.3 CNN trên mel spectrogram
+(PyTorch)</h2>
+<p>Được định nghĩa trong <code>src/models/cnn.py::CNNMel</code>: - Đầu vào: mel
+tensor hình dạng <code>(B, 1, n_mels, time)</code> - Các khối:
+<code>Conv2d -&gt; BatchNorm -&gt; ReLU -&gt; MaxPool2d -&gt; Dropout</code>
+(lặp lại 3 lần) - Cuối:
+<code>AdaptiveAvgPool2d((1,1)) -&gt; Linear -&gt; logits</code> -
+Kênh: <code>[32, 64, 128]</code>, dropout <code>0.3</code></p>
+<p><strong>Lý do.</strong> Tích chập nắm bắt các mẫu thời gian–tần số
+cục bộ như nhất thời nhịp điệu, chồng hòa âm và đường bao
+phổ.</p>
+<h2 id="lstm-on-mel-sequences-pytorch">5.4 LSTM trên chuỗi mel
+(PyTorch)</h2>
+<p>Được định nghĩa trong <code>src/models/lstm.py::LSTMMel</code>: - Đầu vào:
+hình dạng chuỗi <code>(B, time, n_mels)</code> (ảnh mel được định hình lại thành
+chuỗi thời gian) - LSTM hai chiều 2 lớp với kích thước ẩn 128 và
+dropout 0.2 - Đầu:
+<code>LayerNorm -&gt; Dropout -&gt; Linear(n_classes)</code></p>
+<p><strong>Lý do.</strong> LSTM mô hình hóa các phụ thuộc thời gian qua
+các khung (ví dụ: nhịp điệu/hòa âm đang tiến triển).</p>
+<p><strong>Sự đánh đổi.</strong> LSTM có thể nhạy cảm hơn với
+tối ưu hóa và có thể hoạt động kém hơn CNN đối với đầu vào dạng spectrogram khi
+tính cục bộ không gian theo tần số là quan trọng.</p>
+<hr />
+<h1 id="training-configuration">6. Cấu hình Huấn luyện</h1>
+<p>Cấu hình được tập trung trong <code>configs/config.yaml</code> và
+<code>configs/train.yaml</code>.</p>
+<h2 id="global-settings">6.1 Cài đặt toàn cục</h2>
+<ul>
+<li>Seed: <code>42</code></li>
+<li>Thiết bị: tự động phát hiện (<code>cuda &gt; mps &gt; cpu</code>) với
+hỗ trợ ghi đè (<code>--device</code>).</li>
+<li>Nhân công DataLoader: <code>2</code></li>
+</ul>
+<h2 id="tabular-training-torch-mlp">6.2 Huấn luyện dạng bảng (torch
+MLP)</h2>
+<ul>
+<li>Số epoch: <code>120</code></li>
+<li>Kích thước batch: <code>256</code> (train), <code>512</code> (eval)</li>
+<li>Bộ tối ưu: Adam (<code>configs/train.yaml</code>)</li>
+<li>Tốc độ học: <code>1.46e-4</code></li>
+<li>Giảm trọng số: <code>1.0e-4</code></li>
+<li>Bộ điều chỉnh: ReduceLROnPlateau với hệ số <code>0.5</code>, kiên nhẫn
+<code>5</code>, LR tối thiểu <code>1e-6</code></li>
+<li>Dừng sớm: được bật, kiên nhẫn <code>15</code>, giám sát
+<code>val_loss</code>, chế độ <code>min</code></li>
+</ul>
+<h2 id="mel-feature-extraction-end-to-end-track">6.3 Trích xuất đặc trưng
+mel (đường ống từ đầu đến cuối)</h2>
+<ul>
+<li>Lấy mẫu: <code>22050 Hz</code>, mono</li>
+<li>Độ dài đoạn: <code>3.0 s</code></li>
+<li>STFT: <code>n_fft=2048</code>, <code>hop_length=512</code></li>
+<li>Băng mel: <code>128</code>, <code>fmin=20</code>,
+<code>fmax=8000</code></li>
+</ul>
+<h2
+id="data-augmentation-strategies-configured-in-data.augmentation">6.4
+Chiến lược tăng cường dữ liệu (cấu hình trong
+<code>data.augmentation</code>)</h2>
+<p>Ba thách thức đã thúc đẩy các phương pháp tăng cường sau, tất cả
+đều được triển khai trong <code>src/data/augmentation.py</code>:</p>
+<h3 id="genre-overlap-mixup-data.augmentation.mixup">Chồng lấn Thể loại →
+Mixup (<code>data.augmentation.mixup</code>)</h3>
+<p>Mixup nội suy các cặp mẫu huấn luyện để cho mô hình thấy
+các ví dụ ranh giới tổng hợp: $$x_{} = x_i + (1-) x_j, y_{} = y_i + (1-)
+y_j, (, )$$ Điều này chính quy hóa mô hình để dự đoán các chuyển tiếp mượt
+giữa các phân bố thể loại, thay vì cam kết vào các ranh giới
+quyết định sắc nét. Hiệu quả cho các thể loại chia sẻ nhạc cụ (rock/metal,
+blues/country).</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Mặc định</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td>Bật cho huấn luyện MLP/CNN/LSTM</td>
+</tr>
+<tr>
+<td><code>alpha</code></td>
+<td><code>0.2</code></td>
+<td>Kiểm soát cường độ nội suy; cao hơn = trộn nhiều hơn</td>
+</tr>
+<tr>
+<td><code>prob</code></td>
+<td><code>1.0</code></td>
+<td>Tỷ lệ các batch được áp dụng</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-shift-specaugment-data.augmentation.spec_augment">Dịch
+chuyển Miền → SpecAugment (<code>data.augmentation.spec_augment</code>)</h3>
+<p>SpecAugment (Park et al., 2019) che các băng tần số liên tiếp
+và các khung thời gian của mel spectrogram: - <strong>Che tần
+số</strong>: đặt $f$ bins mel liên tiếp về 0, mô phỏng
+sự suy giảm micro hoặc môi trường giới hạn băng tần. - <strong>Che thời
+gian</strong>: đặt $t$ khung thời gian liên tiếp về 0, mô phỏng
+mất ghi âm hoặc nhiễu bùng phát.</p>
+<p>Điều này buộc mô hình phải dựa vào tín hiệu nguyên vẹn còn lại thay vì
+ghi nhớ các dấu hiệu tần số/thời gian cụ thể của miền huấn luyện.</p>
+<table>
+<thead>
+<tr>
+<th>Tham số</th>
+<th>Mặc định</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td>Chỉ áp dụng cho <code>mel_from_audio</code></td>
+</tr>
+<tr>
+<td><code>freq_mask_param</code></td>
+<td><code>20</code></td>
+<td>Số bins mel tối đa để che</td>
+</tr>
+<tr>
+<td><code>time_mask_param</code></td>
+<td><code>20</code></td>
+<td>Số khung thời gian tối đa để che</td>
+</tr>
+<tr>
+<td><code>n_freq_masks</code></td>
+<td><code>2</code></td>
+<td>Số mặt nạ tần số</td>
+</tr>
+<tr>
+<td><code>n_time_masks</code></td>
+<td><code>2</code></td>
+<td>Số mặt nạ thời gian</td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-leakage-fixed-at-split-level-no-augmentation-needed">Rò rỉ
+Dữ liệu → Đã sửa ở cấp phân chia (không cần tăng cường)</h3>
+<p>Rò rỉ cấp bản nhạc được <strong>loại bỏ về mặt cấu trúc</strong> bởi
+phân chia cấp nhóm (<code>make_group_splits_from_filenames</code>).
+Không có phương pháp tăng cường nào có thể thay thế cho một phân chia chính xác.</p>
+<hr />
+<h1 id="experimental-results">7. Kết quả Thực nghiệm</h1>
+<p>Tất cả các sản phẩm thực nghiệm được tham chiếu ở đây được lưu trữ trong
+<code>outputs/</code> trong các thư mục theo từng lần chạy với: - log:
+<code>outputs/&lt;run&gt;/logs/*.log</code> - biểu đồ:
+<code>outputs/&lt;run&gt;/figures/*.png</code> - báo cáo:
+<code>outputs/&lt;run&gt;/reports/*</code></p>
+<h2 id="cross-model-summary-from-evaluation-reports">7.1 Tổng hợp chéo mô hình
+(từ báo cáo đánh giá)</h2>
+<p>Bảng dưới đây tổng hợp các chỉ số từ
+<code>outputs/*/reports/evaluation_report.md</code> và thời gian
+huấn luyện xấp xỉ từ phiên cuối trong
+<code>outputs/*/logs/train.log</code>.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 26%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Lần chạy</th>
+<th style="text-align: right;">Độ chính xác</th>
+<th style="text-align: right;">Macro-F1</th>
+<th style="text-align: right;">ROC-AUC (OvR, macro)</th>
+<th style="text-align: right;">Thời gian huấn luyện (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">tabular_lightgbm</td>
+<td style="text-align: right;">0.9129</td>
+<td style="text-align: right;">0.9127</td>
+<td style="text-align: right;">0.9955</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_svm_rbf</td>
+<td style="text-align: right;">0.9069</td>
+<td style="text-align: right;">0.9068</td>
+<td style="text-align: right;">0.9946</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_xgboost</td>
+<td style="text-align: right;">0.9044</td>
+<td style="text-align: right;">0.9042</td>
+<td style="text-align: right;">0.9946</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_extra_trees</td>
+<td style="text-align: right;">0.8904</td>
+<td style="text-align: right;">0.8900</td>
+<td style="text-align: right;">0.9902</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_knn</td>
+<td style="text-align: right;">0.8744</td>
+<td style="text-align: right;">0.8740</td>
+<td style="text-align: right;">0.9720</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_random_forest</td>
+<td style="text-align: right;">0.8694</td>
+<td style="text-align: right;">0.8687</td>
+<td style="text-align: right;">0.9887</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_gbdt</td>
+<td style="text-align: right;">0.8544</td>
+<td style="text-align: right;">0.8549</td>
+<td style="text-align: right;">0.9886</td>
+<td style="text-align: right;">814</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_mlp</td>
+<td style="text-align: right;">0.8078</td>
+<td style="text-align: right;">0.8064</td>
+<td style="text-align: right;">0.9777</td>
+<td style="text-align: right;">2092</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_qda</td>
+<td style="text-align: right;">0.7487</td>
+<td style="text-align: right;">0.7486</td>
+<td style="text-align: right;">0.9633</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_logreg</td>
+<td style="text-align: right;">0.7152</td>
+<td style="text-align: right;">0.7129</td>
+<td style="text-align: right;">0.9565</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_linear_svm</td>
+<td style="text-align: right;">0.6977</td>
+<td style="text-align: right;">0.6919</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_lda</td>
+<td style="text-align: right;">0.6627</td>
+<td style="text-align: right;">0.6611</td>
+<td style="text-align: right;">0.9403</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">mel_cnn</td>
+<td style="text-align: right;">0.6310</td>
+<td style="text-align: right;">0.6211</td>
+<td style="text-align: right;">0.9211</td>
+<td style="text-align: right;">1602</td>
+</tr>
+<tr>
+<td style="text-align: left;">mel_lstm</td>
+<td style="text-align: right;">0.5195</td>
+<td style="text-align: right;">0.5168</td>
+<td style="text-align: right;">0.8782</td>
+<td style="text-align: right;">1185</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_naive_bayes</td>
+<td style="text-align: right;">0.4990</td>
+<td style="text-align: right;">0.4795</td>
+<td style="text-align: right;">0.8807</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">tabular_ada_boost</td>
+<td style="text-align: right;">0.4299</td>
+<td style="text-align: right;">0.4155</td>
+<td style="text-align: right;">0.8409</td>
+<td style="text-align: right;">26</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lưu ý quan trọng (tính giá trị).</strong> Các lần chạy dạng bảng ở trên
+được đánh giá trên một phân chia đoạn với <strong>rò rỉ bản nhạc</strong>
+(Mục 3.4.1). Các lần chạy mel được đánh giá trên một phân chia
+<strong>tách biệt bản nhạc</strong> và nên được coi là ước lượng
+đáng tin cậy hơn về khả năng tổng quát hóa cho các bản nhạc chưa thấy.</p>
+<h2 id="end-to-end-mel-models-cnn-vs.-lstm">7.2 Mô hình mel từ đầu đến cuối:
+CNN so với LSTM</h2>
+<h3 id="training-curves">7.2.1 Đường cong huấn luyện</h3>
+<p><strong>Hình 39.</strong> Đường cong huấn luyện CNN
+(<code>outputs/mel_cnn/figures/training_curves.png</code>).</p>
+<figure>
+<img src="outputs/mel_cnn/figures/training_curves.png"
+alt="Hình 39: Đường cong huấn luyện cho mel CNN." />
+<figcaption aria-hidden="true">Hình 39: Đường cong huấn luyện cho mel
+CNN.</figcaption>
+</figure>
+<p><strong>Hình 40.</strong> Đường cong huấn luyện LSTM
+(<code>outputs/mel_lstm/figures/training_curves.png</code>).</p>
+<figure>
+<img src="outputs/mel_lstm/figures/training_curves.png"
+alt="Hình 40: Đường cong huấn luyện cho mel LSTM." />
+<figcaption aria-hidden="true">Hình 40: Đường cong huấn luyện cho mel
+LSTM.</figcaption>
+</figure>
+<h3 id="confusion-matrices-and-ranking-curves">7.2.2 Ma trận nhầm lẫn
+và đường cong xếp hạng</h3>
+<p><strong>Hình 41–43.</strong> Biểu đồ đánh giá CNN.</p>
+<p><img src="outputs/mel_cnn/figures/confusion_matrix.png"
+alt="Hình 41: Ma trận nhầm lẫn (mel CNN, đã chuẩn hóa)." /> <img
+src="outputs/mel_cnn/figures/roc_ovr.png"
+alt="Hình 42: Đường cong ROC (OvR) cho mel CNN." /> <img
+src="outputs/mel_cnn/figures/pr_ovr.png"
+alt="Hình 43: Đường cong Precision–Recall (OvR) cho mel CNN." /></p>
+<p><strong>Hình 44–46.</strong> Biểu đồ đánh giá LSTM.</p>
+<p><img src="outputs/mel_lstm/figures/confusion_matrix.png"
+alt="Hình 44: Ma trận nhầm lẫn (mel LSTM, đã chuẩn hóa)." /> <img
+src="outputs/mel_lstm/figures/roc_ovr.png"
+alt="Hình 45: Đường cong ROC (OvR) cho mel LSTM." /> <img
+src="outputs/mel_lstm/figures/pr_ovr.png"
+alt="Hình 46: Đường cong Precision–Recall (OvR) cho mel LSTM." /></p>
+<h3 id="class-wise-performance-highlights-from-evaluation-reports">7.2.3
+Điểm nhấn hiệu suất theo lớp (từ báo cáo đánh giá)</h3>
+<p>Đối với <code>mel_cnn</code>, các lớp có F1 thấp nhất là: - rock (F1 ≈
+0.4377), country (≈ 0.4741), pop (≈ 0.4935).</p>
+<p>Đối với <code>mel_lstm</code>, độ chính xác tổng thể thấp hơn (0.5195),
+phù hợp với sự đánh đổi về kiến trúc: xử lý mel như một chuỗi thời gian
+1D có thể loại bỏ các vùng lân cận tần số cục bộ hữu ích mà CNN
+khai thác.</p>
+<p><strong>Các mẫu lỗi quan sát được (từ
+<code>outputs/mel_cnn/reports/misclassified.csv</code>, 200 lỗi
+đầu tiên).</strong> Các nhầm lẫn thường gặp nhất bao gồm: - country →
+classical / rock, - blues → country / disco, chỉ ra rằng các đoạn
+3 giây ngắn có thể gây nhầm lẫn và một số dấu hiệu thể loại yêu cầu
+ngữ cảnh thời gian dài hơn.</p>
+<h2 id="tabular-models-with-leakage-caveat">7.3 Mô hình dạng bảng (với
+cảnh báo về rò rỉ)</h2>
+<p>Mặc dù phân chia rò rỉ, các thí nghiệm dạng bảng vẫn cho thấy
+họ mô hình nào phù hợp nhất với không gian đặc trưng được thiết kế.</p>
+<h3 id="lightgbm-best-tabular-run">7.3.1 LightGBM (lần chạy dạng bảng tốt
+nhất)</h3>
+<p><strong>Hình 47–49.</strong> Biểu đồ đánh giá LightGBM.</p>
+<p><img src="outputs/tabular_lightgbm/figures/confusion_matrix.png"
+alt="Hình 47: Ma trận nhầm lẫn (tabular LightGBM, đã chuẩn hóa)." />
+<img src="outputs/tabular_lightgbm/figures/roc_ovr.png"
+alt="Hình 48: Đường cong ROC (OvR) cho tabular LightGBM." /> <img
+src="outputs/tabular_lightgbm/figures/pr_ovr.png"
+alt="Hình 49: Đường cong Precision–Recall (OvR) cho tabular LightGBM." /></p>
+<p><strong>Các điểm cực trị theo lớp (từ
+<code>outputs/tabular_lightgbm/reports/evaluation_report.md</code>).</strong>
+- Mạnh nhất: classical (F1 ≈ 0.9630), metal (≈ 0.9602) - Yếu nhất:
+country (≈ 0.8722), rock (≈ 0.8855)</p>
+<p><strong>Các mẫu lỗi quan sát được (từ
+<code>outputs/tabular_lightgbm/reports/misclassified.csv</code>, 200 lỗi
+đầu tiên).</strong> Các nhầm lẫn thường gặp bao gồm: - country → blues, -
+pop → disco / hiphop, - jazz → classical, cho thấy sự chồng lấn giữa các
+dấu hiệu hòa âm/âm sắc cho các đoạn ngắn.</p>
+<h3 id="svm-rbf-and-xgboost-competitive-tabular-runs">7.3.2 SVM-RBF và
+XGBoost (các lần chạy dạng bảng cạnh tranh)</h3>
+<p><strong>Hình 50–52.</strong> Biểu đồ đánh giá SVM-RBF.</p>
+<p><img src="outputs/tabular_svm_rbf/figures/confusion_matrix.png"
+alt="Hình 50: Ma trận nhầm lẫn (tabular SVM-RBF)." /> <img
+src="outputs/tabular_svm_rbf/figures/roc_ovr.png"
+alt="Hình 51: Đường cong ROC (OvR) cho tabular SVM-RBF." /> <img
+src="outputs/tabular_svm_rbf/figures/pr_ovr.png"
+alt="Hình 52: Đường cong Precision–Recall (OvR) cho tabular SVM-RBF." /></p>
+<p><strong>Hình 53–55.</strong> Biểu đồ đánh giá XGBoost.</p>
+<p><img src="outputs/tabular_xgboost/figures/confusion_matrix.png"
+alt="Hình 53: Ma trận nhầm lẫn (tabular XGBoost)." /> <img
+src="outputs/tabular_xgboost/figures/roc_ovr.png"
+alt="Hình 54: Đường cong ROC (OvR) cho tabular XGBoost." /> <img
+src="outputs/tabular_xgboost/figures/pr_ovr.png"
+alt="Hình 55: Đường cong Precision–Recall (OvR) cho tabular XGBoost." /></p>
+<h3 id="mlp-tabular-neural-baseline">7.3.3 MLP (dạng bảng, đường cơ sở
+nơ-ron)</h3>
+<p><strong>Hình 56–58.</strong> Biểu đồ MLP dạng bảng.</p>
+<p><img src="outputs/tabular_mlp/figures/training_curves.png"
+alt="Hình 56: Đường cong huấn luyện (tabular MLP)." /> <img
+src="outputs/tabular_mlp/figures/confusion_matrix.png"
+alt="Hình 57: Ma trận nhầm lẫn (tabular MLP)." /> <img
+src="outputs/tabular_mlp/figures/roc_ovr.png"
+alt="Hình 58: Đường cong ROC (OvR) cho tabular MLP." /></p>
+<hr />
+<h1 id="comparative-analysis">8. Phân tích So sánh</h1>
+<h2 id="performance-vs.-protocol-correctness">8.1 Hiệu suất
+so với tính đúng đắn của giao thức</h2>
+<p><strong>Đường ống dạng bảng (phân chia v2, đã sửa):</strong> cả hai đường ống hiện
+đều sử dụng phân chia nhóm tách biệt bản nhạc. Các kết quả trước đó dưới phân chia rò rỉ
+<code>split_v1.csv</code> bị vô hiệu hóa; cần chạy lại để có được
+ước lượng dạng bảng hợp lệ. - <strong>Đường ống mel (phân chia nhóm):</strong>
+được đánh giá dưới giao thức tách biệt bản nhạc (CNN 0.6310, LSTM 0.5195 trong
+lần chạy gốc). Các con số này vẫn hợp lệ dưới giao thức đã sửa
+vì không có thay đổi nào được thực hiện cho phân chia mel.</p>
+<p><strong>Trạng thái hiện tại.</strong> Tính đến phiên bản này, cả hai đường ống đều chia sẻ
+cùng một giao thức đánh giá. Kết quả dạng bảng đang chờ chạy lại với
+<code>features.kind=tabular_csv</code> sau khi xóa bộ đệm v1
+(<code>Data/features/tabular_features_v1.npz</code>).</p>
+<h2 id="efficiency-and-complexity-trade-offs-as-observed-from-logs">8.2
+Sự đánh đổi giữa hiệu quả và độ phức tạp (quan sát từ log)</h2>
+<ul>
+<li>Các tổ hợp cây (ExtraTrees/RandomForest) huấn luyện trong vài giây và
+hoạt động mạnh mẽ dưới giao thức rò rỉ.</li>
+<li>Các phương pháp tăng cường (GBDT) có thể chậm hơn đáng kể (hàng trăm
+giây) nhưng vẫn cạnh tranh.</li>
+<li>Torch MLP và mel CNN/LSTM yêu cầu vài phút huấn luyện (theo
+dấu thời gian <code>train.log</code>), phản ánh chi phí tính toán
+cao hơn.</li>
+</ul>
+<hr />
+<h1 id="discussion">9. Thảo luận</h1>
+<h2 id="strengths-of-the-project">9.1 Điểm mạnh của dự án</h2>
+<ul>
+<li><strong>Đường ống mô-đun:</strong> thực thi theo từng giai đoạn
+(<code>preprocess</code>, <code>feature</code>, <code>train</code>,
+<code>evaluate</code>, <code>visualize</code>) với các đầu ra có cấu trúc.</li>
+<li><strong>Tái lập:</strong> kiểm soát seed, đặc trưng được lưu đệm,
+tệp phân chia và <code>config_snapshot.json</code> cho mỗi lần chạy.</li>
+<li><strong>Trực quan hóa toàn diện:</strong> dạng sóng,
+STFT/mel/MFCC/chroma/contrast/tempogram/HPSS, cùng với nhúng và
+phân tích tương quan.</li>
+<li><strong>Vườn mô hình:</strong> phủ rộng đường cơ sở cho học dạng
+bảng, cộng với CNN/LSTM cho mel.</li>
+<li><strong>Giao thức đánh giá chính xác (v2):</strong> cả đường ống dạng bảng và
+mel hiện đều sử dụng phân chia nhóm tách biệt bản nhạc, loại bỏ rò rỉ
+dữ liệu.</li>
+<li><strong>Bộ tăng cường:</strong> Mixup (chồng lấn thể loại),
+SpecAugment (dịch chuyển miền) và các tăng cường cấp dạng sóng (nhiễu,
+kéo dài thời gian, dịch chuyển cao độ) đều được triển khai và có thể cấu hình.</li>
+</ul>
+<h2 id="remaining-limitations-and-risks">9.2 Hạn chế và rủi ro còn lại</h2>
+<h3 id="a-short-context-ambiguity-for-mel-models">(A) Nhập nhằng ngữ cảnh
+ngắn cho mô hình mel</h3>
+<p>Các mô hình mel hoạt động trên các đoạn 3 giây. Nhiều dấu hiệu thể loại mang tính
+toàn cục (cấu trúc cấp bài hát) hơn là cục bộ (đoạn ngắn). Các nhầm lẫn
+như country ↔︎ rock/classical trong <code>mel_cnn</code> phù hợp với
+hạn chế này.</p>
+<h3 id="b-dataset-size-and-domain-constraints">(B) Kích thước bộ dữ liệu và
+ràng buộc miền</h3>
+<p>GTZAN tương đối nhỏ và có thể nhạy cảm với các tạo tác ghi âm
+và các vấn đề trùng lặp qua các bản sao. Đường ống đã xử lý đúng
+các kiểm tra siêu dữ liệu và xử lý hỏng hóc (một tệp không đọc được
+đã được phát hiện).</p>
+<h3 id="c-augmentation-not-yet-wired-into-training-loop">(C) Tăng cường chưa
+được kết nối vào vòng lặp huấn luyện</h3>
+<p>Mixup (<code>src/data/augmentation.py::mixup_batch</code>) và
+SpecAugment (<code>apply_spec_augment</code>) đã được triển khai và
+kiểm tra đơn vị, nhưng chưa được tích hợp vào vòng lặp huấn luyện PyTorch
+trong <code>src/models/trainer.py</code>. Đây là bước kỹ thuật tiếp theo
+trước khi chạy các thí nghiệm ablation.</p>
+<h2 id="future-improvements-actionable">9.3 Cải tiến trong tương lai
+(có thể hành động)</h2>
+<ol type="1">
+<li><strong>Kết nối Mixup vào vòng lặp huấn luyện MLP/CNN/LSTM</strong> — gọi
+<code>mixup_batch</code> cho mỗi batch bên trong
+<code>src/models/trainer.py</code> khi
+<code>cfg.data.augmentation.mixup.enabled=true</code>.</li>
+<li><strong>Kết nối SpecAugment vào MelDataset</strong> — áp dụng
+<code>apply_spec_augment</code> trong <code>MelDataset.__getitem__</code>
+chỉ trong quá trình huấn luyện.</li>
+<li><strong>Tổng hợp đánh giá cấp bản nhạc</strong> — tổng hợp
+dự đoán đoạn theo bản nhạc (bỏ phiếu đa số hoặc xác suất trung bình) để
+báo cáo độ chính xác cấp bài hát cùng với độ chính xác cấp đoạn.</li>
+<li><strong>Kiến trúc mel mạnh hơn</strong> — xem xét CRNN (CNN
+front-end + mô hình hóa thời gian hồi tiếp) hoặc gộp dựa trên attention
+theo thời gian.</li>
+<li><strong>Chạy lại tất cả thí nghiệm dạng bảng</strong> với phân chia nhóm v2
+để có được các con số đường cơ sở hợp lệ để so sánh với các mô hình
+mel.</li>
+</ol>
+<hr />
+<h1 id="conclusion">10. Kết luận</h1>
+<p>Kho lưu trữ này cung cấp một đường ống nghiên cứu được thiết kế tốt,
+có phương pháp luận vững chắc cho phân loại thể loại nhạc GTZAN, tích hợp
+lưu đệm đặc trưng, ghi log, lưu điểm kiểm tra và trực quan hóa phong phú.
+Rò rỉ dữ liệu cấp bản nhạc quan trọng trước đây đã ảnh hưởng đến giao thức
+đánh giá dạng bảng đã được <strong>loại bỏ</strong>: cả đường ống dạng bảng
+và mel hiện đều sử dụng phân chia nhóm tách biệt bản nhạc, đảm bảo không có
+đoạn nào từ bản nhạc huấn luyện xuất hiện trong tập kiểm định hay kiểm tra. Hai
+chiến lược tăng cường — Mixup (cho chồng lấn thể loại) và SpecAugment (cho
+dịch chuyển miền) — đã được triển khai và sẵn sàng cho tích hợp
+thực nghiệm. Các ưu tiên tiếp theo là kết nối tăng cường vào vòng lặp huấn
+luyện, chạy lại các thí nghiệm dạng bảng dưới giao thức đã sửa và triển khai
+tổng hợp dự đoán cấp bản nhạc để đánh giá thực tế công bằng hơn.</p>
+<hr />
+<h1 id="references">11. Tài liệu tham khảo</h1>
+<ol type="1">
+<li>G. Tzanetakis and P. Cook, "Musical genre classification of audio
+signals," <em>IEEE Transactions on Speech and Audio Processing</em>,
+2002. (GTZAN)</li>
+<li>B. McFee et al., "librosa: Audio and music signal analysis in
+Python," <em>Proceedings of the 14th Python in Science Conference</em>,
+2015.</li>
+<li>F. Pedregosa et al., "Scikit-learn: Machine Learning in Python,"
+<em>Journal of Machine Learning Research</em>, 2011.</li>
+<li>A. Paszke et al., "PyTorch: An Imperative Style, High-Performance
+Deep Learning Library," <em>NeurIPS</em>, 2019.</li>
+<li>T. Chen and C. Guestrin, "XGBoost: A Scalable Tree Boosting System,"
+<em>KDD</em>, 2016.</li>
+<li>G. Ke et al., "LightGBM: A Highly Efficient Gradient Boosting
+Decision Tree," <em>NeurIPS</em>, 2017.</li>
+<li>H. Zhang et al., "mixup: Beyond Empirical Risk Minimization,"
+<em>ICLR</em>, 2018.</li>
+<li>D. S. Park et al., "SpecAugment: A Simple Data Augmentation Method
+for Automatic Speech Recognition," <em>Interspeech</em>, 2019.</li>
+</ol>
+</body>
+</html>
